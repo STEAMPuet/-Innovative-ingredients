@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Практичне заняття 6 — Технологічні добавки</title>
+<style>
+/* =========================================================
+   Інтерактивне практичне заняття 6
+   Структура: HUD → hero (паралакс) → липкі вкладки → панель-розділ (шапка, зміст, групи, блоки, висновок)
+   Стиль — як у паралакс-презентації: теплий графіт, бурштин/томат/м'ята/лаванда, Unbounded + Manrope.
+   Шрифти — локальні файли з папки fonts/ (працює без інтернету).
+   ========================================================= */
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-cyrillic-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-cyrillic-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+
+/* ---------- палітра: темна (як у презентації) за замовчуванням ---------- */
+:root{
+  --bg:#14120F; --bg-panel:#1D1A16; --bg-soft:#26211B; --line:#3A332A; --line-strong:#4D443A;
+  --ink:#F5EDDF; --ink-soft:#BDB09B;
+  --amber:#F2A541; --amber-ink:#FFD39A; --tomato:#E8573A; --tomato-ink:#FFB6A4; --mint:#6CC3A0; --mint-ink:#B5EBD5; --plum:#A387E6; --plum-ink:#D8CBFA; --sky:#62A9E0;
+  --tint-amber:rgba(242,165,65,.13); --tint-tomato:rgba(232,87,58,.13); --tint-mint:rgba(108,195,160,.12); --tint-plum:rgba(163,135,230,.13); --tint-sky:rgba(98,169,224,.13);
+  --dots:rgba(245,237,223,.07); --nav-bg:rgba(29,26,22,.86);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  --shadow-lg:0 2px 6px rgba(0,0,0,.3), 0 26px 64px rgba(0,0,0,.5);
+  --hero-bg:radial-gradient(640px 380px at 85% 10%, rgba(242,165,65,.28), transparent 62%), radial-gradient(520px 340px at 0% 110%, rgba(232,87,58,.22), transparent 62%), linear-gradient(135deg,#1A1713 0%,#221D17 55%,#1C1A15 100%);
+  --radius:20px; color-scheme:dark;
+  --f-display:"Unbounded","Segoe UI",system-ui,sans-serif;
+  --f-body:"Manrope","Segoe UI",system-ui,sans-serif;
+  --f-mono:"Cascadia Mono","JetBrains Mono",Consolas,ui-monospace,monospace;
+}
+/* світла тема (кнопка в HUD) */
+:root[data-theme="light"]{
+  --bg:#F6F1E8; --bg-panel:#FFFFFF; --bg-soft:#F2EBDF; --line:#E4D9C7; --line-strong:#D3C5AE;
+  --ink:#22190F; --ink-soft:#6B5C48;
+  --amber:#C27512; --amber-ink:#8A520A; --tomato:#C8402A; --tomato-ink:#9C2F1D; --mint:#2C8C68; --mint-ink:#1F6A4E; --plum:#6B4CC2; --plum-ink:#4F3696; --sky:#2F78B5;
+  --tint-amber:rgba(194,117,18,.10); --tint-tomato:rgba(200,64,42,.09); --tint-mint:rgba(44,140,104,.10); --tint-plum:rgba(107,76,194,.09); --tint-sky:rgba(47,120,181,.09);
+  --dots:rgba(34,25,15,.08); --nav-bg:rgba(255,255,255,.86);
+  --shadow:0 1px 2px rgba(34,25,15,.05), 0 8px 26px rgba(34,25,15,.08);
+  --shadow-lg:0 2px 6px rgba(34,25,15,.06), 0 24px 60px rgba(34,25,15,.14);
+  --hero-bg:radial-gradient(640px 380px at 85% 10%, rgba(242,165,65,.35), transparent 62%), radial-gradient(520px 340px at 0% 110%, rgba(232,87,58,.18), transparent 62%), linear-gradient(135deg,#FFFDF8 0%,#FBF1E2 55%,#F6EDE1 100%);
+  color-scheme:light;
+}
+
+/* ---------- база ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0; background:var(--bg);
+  color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.68; min-height:100vh; -webkit-font-smoothing:antialiased; overflow-x:hidden}
+::selection{background:var(--amber); color:#1B1408}
+h1,h2,h3,h4{margin:0 0 .5em; text-wrap:balance; line-height:1.25}
+h3,h4{font-family:var(--f-body); font-weight:800}
+p{margin:0 0 .8em}
+b,strong{font-weight:800}
+.mono{font-family:var(--f-mono)}
+[hidden]{display:none!important}
+.frame{position:relative; z-index:1; max-width:1240px; margin:0 auto; padding-block:18px 80px; padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* ---------- ФОН З ПАРАЛАКСОМ: три шари рухаються з різною швидкістю при прокрутці та за мишею ---------- */
+.bg-px{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden}
+.bg-px > div{position:absolute; inset:-60px; will-change:background-position, translate; transition:translate 1.1s cubic-bezier(.2,.7,.2,1)}
+.bg-glow{background:radial-gradient(560px 440px at 86% 22%, var(--glow-a), transparent 66%), radial-gradient(520px 420px at 8% 72%, var(--glow-b), transparent 66%);
+  background-size:100% 1500px; background-repeat:repeat-y}
+.bg-dots{background:radial-gradient(var(--dots) 1.3px, transparent 1.5px) 0 0/28px 28px}
+.bg-dots2{background:radial-gradient(var(--dots2) 2.6px, transparent 3px) 14px 14px/112px 112px}
+:root{--glow-a:rgba(242,165,65,.10); --glow-b:rgba(232,87,58,.08); --dots2:rgba(242,165,65,.16)}
+:root[data-theme="light"]{--glow-a:rgba(242,165,65,.16); --glow-b:rgba(232,87,58,.09); --dots2:rgba(194,117,18,.18)}
+
+/* ---------- ФОНОВИЙ ПАРАЛАКС: «плаваючі» Е-коди та молекули на різній глибині ---------- */
+.px-field{position:absolute; left:0; top:0; width:100%; pointer-events:none; z-index:0; overflow:hidden}
+.px-item{position:absolute; font-family:var(--f-display); font-weight:800; color:var(--ink); opacity:.06; white-space:nowrap; will-change:translate}
+.px-item svg{display:block}
+
+/* ---------- HUD ---------- */
+.hud-bar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; padding:9px 10px 9px 18px; background:var(--nav-bg);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid var(--line); border-radius:14px; margin-bottom:14px; box-shadow:var(--shadow);
+  font-family:var(--f-mono); font-size:11.5px; letter-spacing:.04em; color:var(--ink-soft)}
+.hud-bar .dot{display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--mint); margin-right:8px; box-shadow:0 0 0 3px var(--tint-mint)}
+.theme-btn{font-family:var(--f-body); font-weight:700; font-size:12.5px; background:var(--bg-soft); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:7px 13px; cursor:pointer; transition:.18s}
+.theme-btn:hover{border-color:var(--amber); color:var(--amber)}
+
+/* ---------- HERO з паралакс-сценою ---------- */
+header.hero{position:relative; isolation:isolate; overflow:hidden; border-radius:28px; padding:clamp(28px,5vw,58px) clamp(20px,4.5vw,54px) clamp(26px,4.5vw,50px);
+  margin-bottom:16px; background:var(--hero-bg); border:1px solid var(--line); box-shadow:var(--shadow-lg);
+  display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:20px; align-items:center}
+header.hero::before{content:""; position:absolute; inset:0; z-index:-1; background:radial-gradient(var(--dots) 1.4px, transparent 1.6px) 0 0/26px 26px;
+  -webkit-mask-image:linear-gradient(105deg, transparent 15%, #000 70%); mask-image:linear-gradient(105deg, transparent 15%, #000 70%)}
+.hero-num{position:absolute; right:-10px; bottom:-.3em; z-index:-1; font-family:var(--f-display); font-weight:900; line-height:1; font-size:clamp(150px,25vw,320px);
+  color:transparent; -webkit-text-stroke:1.5px color-mix(in srgb, var(--amber) 30%, transparent); user-select:none; pointer-events:none}
+.hero-tag{display:inline-block; font-family:var(--f-mono); font-size:11.5px; letter-spacing:.14em; color:var(--amber-ink); background:var(--tint-amber); border:1px solid color-mix(in srgb,var(--amber) 45%,transparent); padding:5px 13px; border-radius:20px; margin-bottom:20px}
+header.hero h1{font-family:var(--f-display); font-size:clamp(25px,3.6vw,44px); font-weight:700; line-height:1.14; letter-spacing:-.015em;
+  background:linear-gradient(92deg, var(--ink) 30%, var(--amber) 75%, var(--tomato)); -webkit-background-clip:text; background-clip:text; color:transparent}
+header.hero p.sub{color:var(--ink-soft); max-width:640px; font-size:17.5px; margin:14px 0 26px; line-height:1.6}
+.hero-meta{display:flex; flex-wrap:wrap; gap:10px}
+.hero-meta .chip{display:inline-flex; align-items:baseline; gap:8px; background:color-mix(in srgb, var(--bg-panel) 70%, transparent); border:1px solid var(--line); color:var(--ink);
+  backdrop-filter:blur(6px); padding:9px 15px; border-radius:13px; font-size:14px; font-weight:700}
+.hero-meta .chip b{font-family:var(--f-display); font-size:17px; color:var(--amber)}
+.hero-scene{position:relative; height:360px}
+.hero-scene .lyr{position:absolute; inset:0; will-change:transform}
+.hero-scene .lyr svg{position:absolute; left:0; top:0; width:100%; height:100%; overflow:visible}
+.hero-scene .echip{position:absolute; font-family:var(--f-display); font-weight:700; font-size:16px; padding:8px 13px; border-radius:12px; background:color-mix(in srgb, var(--bg-panel) 60%, transparent);
+  border:1px solid var(--line-strong); color:var(--ink); backdrop-filter:blur(3px); white-space:nowrap}
+[data-depth]{transition:translate .9s cubic-bezier(.2,.7,.2,1)}
+@media (max-width:860px){ header.hero{grid-template-columns:minmax(0,1fr)} .hero-scene{height:260px; order:-1; margin:-10px 0 0} }
+
+/* ---------- вкладки ---------- */
+nav.tabs{position:sticky; top:calc(env(safe-area-inset-top,0px) + 8px); z-index:50; display:flex; gap:4px; overflow-x:auto; background:var(--nav-bg);
+  backdrop-filter:blur(14px) saturate(1.3); -webkit-backdrop-filter:blur(14px) saturate(1.3); border:1px solid var(--line); border-radius:16px; padding:6px; margin-bottom:20px; box-shadow:var(--shadow); scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:0 0 auto; font-family:var(--f-body); font-weight:700; font-size:13.5px; background:transparent; color:var(--ink-soft); border:1px solid transparent; padding:9px 15px; border-radius:11px; cursor:pointer; transition:.18s; white-space:nowrap}
+nav.tabs button:hover{background:var(--bg-soft); color:var(--ink)}
+nav.tabs button.active{background:linear-gradient(135deg, var(--amber), var(--tomato)); color:#1B1408; box-shadow:0 6px 16px rgba(232,87,58,.28)}
+.nav-progress{position:absolute; left:16px; right:16px; bottom:0; height:2px; border-radius:2px; overflow:hidden; pointer-events:none}
+.nav-progress i{display:block; height:100%; width:0; background:linear-gradient(90deg, var(--amber), var(--tomato)); transition:width .12s linear}
+button:focus-visible, .opt:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible{outline:2px solid var(--amber); outline-offset:2px}
+
+/* ---------- панель-розділ ---------- */
+section.panel{display:none; margin-bottom:22px}
+section.panel.active{display:grid; grid-template-columns:minmax(0,1fr) 262px; gap:20px 24px; align-items:start; animation:fadeIn .45s ease}
+section.panel.plain.active{display:block}
+@keyframes fadeIn{from{opacity:.3; transform:translateY(8px)} to{opacity:1; transform:none}}
+.sec-head{grid-column:1 / -1; position:relative; overflow:hidden; display:grid; grid-template-columns:auto minmax(0,1fr); gap:clamp(14px,3vw,30px); align-items:start;
+  background:var(--bg-panel); border:1px solid var(--line); border-radius:24px; padding:clamp(20px,3.4vw,34px); box-shadow:var(--shadow)}
+section.panel.plain .sec-head{margin-bottom:18px}
+.sec-head .deco{position:absolute; right:-20px; top:-30px; width:260px; height:220px; pointer-events:none; opacity:.9}
+.sec-idx{font-family:var(--f-display); font-weight:900; font-size:clamp(44px,6.5vw,78px); line-height:.92; letter-spacing:-.05em;
+  background:linear-gradient(140deg, var(--amber), var(--tomato)); -webkit-background-clip:text; background-clip:text; color:transparent; min-width:1.2em}
+.sec-kicker{font-family:var(--f-mono); font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--amber)}
+.sec-head h2{font-family:var(--f-display); font-weight:700; font-size:clamp(19px,2.4vw,26px); line-height:1.28; letter-spacing:-.01em; margin:8px 0 12px; position:relative}
+.sec-head .lede{margin:0; max-width:78ch; position:relative}
+.sec-meta{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; position:relative}
+.sec-meta:empty{display:none}
+.sec-meta span{font-size:12.5px; font-weight:700; padding:5px 11px; border-radius:999px; background:var(--bg-soft); border:1px solid var(--line); color:var(--ink-soft)}
+.sec-meta span b{font-family:var(--f-display); color:var(--ink); margin-right:3px}
+.sec-main{min-width:0; grid-column:1; grid-row:2}
+.sec-head, .sec-toc{min-width:0}
+@media(max-width:640px){ .sec-head{grid-template-columns:minmax(0,1fr); gap:4px} .sec-head .deco{display:none} }
+
+/* ---------- зміст розділу + scroll-spy ---------- */
+.sec-toc{grid-column:2; grid-row:2; position:sticky; top:84px; max-height:calc(100vh - 104px); overflow:auto; scrollbar-width:thin;
+  background:var(--bg-panel); border:1px solid var(--line); border-radius:18px; padding:16px 12px 14px; box-shadow:var(--shadow)}
+.toc-title{font-family:var(--f-mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-soft); padding:0 8px 6px}
+.toc-list{display:flex; flex-direction:column; gap:1px}
+.toc-group{font-size:11.5px; font-weight:800; color:var(--ink); padding:12px 8px 4px; display:flex; gap:8px; align-items:center}
+.toc-group i{font-style:normal; font-family:var(--f-display); font-size:10.5px; color:#1B1408; background:var(--amber); width:20px; height:20px; border-radius:6px; display:grid; place-items:center; flex:none}
+.toc-list a{--k:var(--amber); --kt:var(--tint-amber); display:flex; gap:8px; padding:6px 8px; border-radius:9px; font-size:13px; line-height:1.38; color:var(--ink-soft); text-decoration:none; transition:.15s}
+.toc-list a[data-kind="sim"]{--k:var(--tomato); --kt:var(--tint-tomato)}
+.toc-list a[data-kind="data"]{--k:var(--mint); --kt:var(--tint-mint)}
+.toc-list a[data-kind="extra"]{--k:var(--plum); --kt:var(--tint-plum)}
+.toc-list a[data-kind="end"]{--k:var(--mint); --kt:var(--tint-mint); margin-top:8px; border-top:1px dashed var(--line); padding-top:10px; border-radius:0 0 9px 9px}
+.toc-list a .toc-no{font-family:var(--f-mono); font-size:11px; font-weight:700; color:var(--k); min-width:30px; padding-top:1px}
+.toc-list a:hover{background:var(--bg-soft); color:var(--ink)}
+.toc-list a.on{background:var(--kt); color:var(--ink); font-weight:700; box-shadow:inset 3px 0 0 var(--k)}
+.toc-legend{display:flex; flex-wrap:wrap; gap:6px 12px; margin:12px 8px 0; padding-top:12px; border-top:1px solid var(--line); font-size:11px; color:var(--ink-soft)}
+.toc-legend span::before{content:""; display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:6px; background:var(--k)}
+@media(max-width:1020px){
+  section.panel.active{grid-template-columns:minmax(0,1fr)}
+  .sec-toc{grid-column:1; grid-row:auto; position:sticky; top:72px; z-index:40; max-height:none; overflow:visible; padding:8px; border-radius:14px; background:var(--nav-bg); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px)}
+  .sec-main{grid-row:auto}
+  .toc-title, .toc-group, .toc-legend{display:none}
+  .toc-list{flex-direction:row; overflow-x:auto; gap:4px; scrollbar-width:none}
+  .toc-list::-webkit-scrollbar{display:none}
+  .toc-list a{flex:0 0 auto; white-space:nowrap; max-width:240px; overflow:hidden; text-overflow:ellipsis; border:1px solid var(--line); background:var(--bg-panel)}
+  .toc-list a[data-kind="end"]{margin-top:0; border-top:1px solid var(--line); padding-top:6px; border-radius:9px}
+}
+
+/* ---------- тематичні групи ---------- */
+.group-label{display:flex; align-items:center; gap:12px; margin:30px 2px 14px; font-weight:800; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft)}
+.sec-main > .group-label:first-child{margin-top:4px}
+.group-label b{font-family:var(--f-display); font-size:12.5px; color:#1B1408; background:linear-gradient(135deg,var(--amber),var(--tomato)); width:30px; height:30px; border-radius:9px; display:grid; place-items:center; letter-spacing:0; flex:none}
+.group-label::after{content:""; flex:1; height:1px; background:linear-gradient(90deg, var(--line-strong), transparent)}
+
+/* ---------- блоки ---------- */
+article.block{--k:var(--amber); --kt:var(--tint-amber); position:relative; background:var(--bg-panel); border:1px solid var(--line); border-radius:var(--radius);
+  padding:22px clamp(16px,2.6vw,28px) 24px; box-shadow:var(--shadow); margin-bottom:16px; scroll-margin-top:90px; min-width:0}
+@media(max-width:1020px){ article.block{scroll-margin-top:136px} }
+article.block::before{content:""; position:absolute; left:-1px; top:24px; height:44px; width:4px; border-radius:0 4px 4px 0; background:var(--k)}
+article.block[data-kind="sim"]{--k:var(--tomato); --kt:var(--tint-tomato)}
+article.block[data-kind="data"]{--k:var(--mint); --kt:var(--tint-mint)}
+article.block[data-kind="extra"]{--k:var(--plum); --kt:var(--tint-plum)}
+.block-head{display:flex; gap:14px; align-items:center; margin-bottom:14px}
+.block-no{flex:none; min-width:48px; height:48px; padding:0 8px; border-radius:14px; display:grid; place-items:center; font-family:var(--f-display); font-weight:700; font-size:14px; color:var(--k); background:var(--kt); border:1px solid color-mix(in srgb, var(--k) 30%, transparent)}
+.kind{display:block; font-family:var(--f-mono); font-size:10.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--k)}
+.block[data-kind="theory"] .kind::before{content:"◆  Теорія"}
+.block[data-kind="sim"] .kind::before{content:"▶  Симулятор"}
+.block[data-kind="data"] .kind::before{content:"▦  Схема · таблиця"}
+.block[data-kind="extra"] .kind::before{content:"＋  Поглиблення"}
+.block-head h3{margin:3px 0 0; font-size:clamp(17px,1.9vw,19.5px); line-height:1.3}
+
+/* ---------- текст і компоненти ---------- */
+.lede{color:var(--ink-soft); font-size:16px; max-width:78ch}
+.prose{max-width:80ch}
+.muted{color:var(--ink-soft)}
+.a{color:var(--amber)} .t{color:var(--tomato)} .g{color:var(--mint)} .pl{color:var(--plum)}
+.mini-title{display:block; font-family:var(--f-mono); font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); margin:20px 0 10px}
+.mini-title:first-child{margin-top:4px}
+.tag-sim{display:inline-block; font-family:var(--f-mono); font-size:10.5px; font-weight:700; letter-spacing:.1em; color:var(--tomato); background:var(--tint-tomato); border:1px solid color-mix(in srgb, var(--tomato) 40%, transparent); border-radius:6px; padding:1px 7px; margin:0 2px; vertical-align:middle}
+.definition{position:relative; padding:20px 22px 20px 24px; border-radius:16px; background:linear-gradient(135deg, var(--tint-amber), transparent 80%); border:1px solid color-mix(in srgb, var(--amber) 30%, transparent)}
+.definition .term{display:block; font-family:var(--f-display); font-weight:700; font-size:18px; color:var(--amber); margin-bottom:4px}
+.definition p{margin:0; font-size:17px}
+.points{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin:14px 0}
+.point{padding:14px 16px; border-radius:14px; background:var(--bg-soft); border:1px solid var(--line); border-top:3px solid var(--amber)}
+.point.warn{border-top-color:var(--tomato)} .point.ok{border-top-color:var(--mint)} .point.pl{border-top-color:var(--plum)}
+.point b{display:block; font-weight:800; margin-bottom:4px}
+.point p{margin:0; color:var(--ink-soft); font-size:15px; line-height:1.6}
+.checklist{list-style:none; padding:0; margin:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:8px}
+.checklist li{display:flex; gap:10px; align-items:flex-start; padding:10px 14px; border-radius:12px; background:var(--tint-mint); border:1px solid color-mix(in srgb,var(--mint) 28%,transparent); font-weight:700; font-size:15px; line-height:1.45}
+.checklist li::before{content:"✓"; color:var(--mint); font-weight:800}
+.checklist.no li{background:var(--tint-tomato); border-color:color-mix(in srgb,var(--tomato) 28%,transparent)}
+.checklist.no li::before{content:"✕"; color:var(--tomato)}
+.io{display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:12px; align-items:stretch; margin:14px 0}
+.io-cell{padding:14px 16px; border-radius:14px; background:var(--bg-soft); border:1px solid var(--line); font-weight:700; line-height:1.45}
+.io-cell .l{display:block; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--amber); margin-bottom:5px}
+.io-arrow{display:grid; place-items:center; font-size:22px; color:var(--amber); font-weight:800}
+@media(max-width:640px){ .io{grid-template-columns:minmax(0,1fr)} .io-arrow{transform:rotate(90deg)} }
+.pills{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0}
+.pill{display:inline-block; font-weight:800; font-size:13.5px; padding:6px 13px; border-radius:999px; background:var(--bg-soft); border:1px solid var(--line); color:var(--ink)}
+.pill.a{background:var(--tint-amber); border-color:color-mix(in srgb,var(--amber) 45%,transparent); color:var(--amber-ink)}
+.pill.t{background:var(--tint-tomato); border-color:color-mix(in srgb,var(--tomato) 45%,transparent); color:var(--tomato-ink)}
+.pill.g{background:var(--tint-mint); border-color:color-mix(in srgb,var(--mint) 45%,transparent); color:var(--mint-ink)}
+.pill.pl{background:var(--tint-plum); border-color:color-mix(in srgb,var(--plum) 45%,transparent); color:var(--plum-ink)}
+
+/* висновок */
+.takeaway{position:relative; overflow:hidden; display:grid; grid-template-columns:auto minmax(0,1fr); gap:18px; align-items:start; padding:24px clamp(18px,3vw,28px);
+  border-radius:20px; margin:26px 0 6px; color:#F5EDDF; scroll-margin-top:90px; isolation:isolate;
+  background:radial-gradient(420px 220px at 100% 0%, rgba(242,165,65,.35), transparent 65%), linear-gradient(135deg, #2A2119, #3A2A1C); box-shadow:var(--shadow-lg)}
+.takeaway .tk-deco{position:absolute; right:-60px; bottom:-70px; width:200px; height:200px; z-index:-1; opacity:.18}
+.tk-icon{width:46px; height:46px; border-radius:14px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); display:grid; place-items:center; font-size:20px; font-weight:800; color:#FFD39A}
+.tk-label{font-family:var(--f-mono); font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#FFD39A}
+.takeaway p{margin:6px 0 0; color:rgba(245,237,223,.92); font-size:16.5px; line-height:1.65; max-width:84ch}
+
+/* акордеони */
+details.acc{border:1px solid var(--line); border-radius:14px; margin-bottom:10px; overflow:hidden; background:var(--bg-panel); transition:border-color .2s, box-shadow .2s}
+details.acc[open]{border-color:color-mix(in srgb, var(--amber) 40%, var(--line)); box-shadow:0 6px 20px rgba(0,0,0,.12)}
+details.acc summary{cursor:pointer; list-style:none; padding:14px 16px 14px 18px; display:flex; justify-content:space-between; gap:12px; align-items:center; font-weight:800; font-size:15.5px; line-height:1.4; transition:background .15s}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary:hover{background:var(--bg-soft); color:var(--amber)}
+details.acc summary .arrow{flex:0 0 auto; width:28px; height:28px; border-radius:50%; display:grid; place-items:center; font-size:9px; color:var(--amber); background:var(--tint-amber); transition:transform .25s}
+details.acc[open] summary .arrow{transform:rotate(90deg)}
+details.acc .acc-body{padding:14px 20px 8px; max-width:86ch; border-top:1px dashed var(--line)}
+
+/* сітки й картки */
+.grid2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px}
+.grid3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+.grid4{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px}
+.grid5{display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:12px}
+@media(max-width:900px){.grid4,.grid5{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:800px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:480px){.grid4,.grid5{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--bg-soft); border:1px solid var(--line); border-radius:14px; padding:16px 18px; min-width:0; line-height:1.55}
+.card h4{color:var(--amber); font-size:15.5px; margin-bottom:6px}
+.card p:last-child{margin-bottom:0}
+.card .k{font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft)}
+a.card{color:inherit; text-decoration:none; cursor:pointer; transition:.2s}
+a.card:hover{border-color:var(--amber); transform:translateY(-3px); box-shadow:var(--shadow)}
+.plan-card{display:flex; flex-direction:column; gap:4px; background:var(--bg-panel)}
+.plan-card .plan-n{font-family:var(--f-display); font-weight:900; font-size:30px; line-height:1; margin-bottom:8px; background:linear-gradient(140deg, var(--amber), var(--tomato)); -webkit-background-clip:text; background-clip:text; color:transparent}
+.plan-card p{color:var(--ink-soft); font-size:14.5px; flex:1}
+.plan-card .k{color:var(--amber); font-weight:700}
+.big-card{background:var(--bg-panel); border:1px solid var(--line); border-radius:16px; padding:16px 18px}
+.big-card .big{font-family:var(--f-display); font-weight:900; font-size:clamp(30px,4vw,44px); line-height:1.05; color:var(--amber)}
+.big-card .big.t{color:var(--tomato)}
+.big-card .l{font-size:14px; color:var(--ink-soft); margin-top:6px}
+.ill{display:grid; place-items:center; height:96px; margin-bottom:8px}
+.ill svg{height:88px; width:auto; overflow:visible}
+
+/* кнопки */
+.btn{font-family:var(--f-body); font-weight:800; font-size:13.5px; cursor:pointer; border:1px solid var(--amber); background:var(--amber); color:#1B1408; padding:9px 16px; border-radius:11px; transition:.18s; line-height:1.3}
+.btn:hover{filter:brightness(1.08); transform:translateY(-1px)}
+.btn.ghost{background:var(--bg-panel); color:var(--ink); border-color:var(--line-strong)}
+.btn.ghost:hover{border-color:var(--amber); color:var(--amber); background:var(--tint-amber); filter:none}
+.btn.warn{background:var(--bg-panel); color:var(--tomato); border-color:color-mix(in srgb, var(--tomato) 50%, transparent)}
+.btn.small{padding:6px 12px; font-size:12.5px; border-radius:9px}
+.btn.active{background:var(--amber); border-color:var(--amber); color:#1B1408; box-shadow:0 4px 12px color-mix(in srgb, var(--amber) 30%, transparent)}
+.btn:disabled{opacity:.5; cursor:default; transform:none}
+.btn.active:disabled{opacity:1}
+.btnrow{display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; align-items:center}
+
+/* сцени симуляторів */
+.mindmap-wrap{background:radial-gradient(var(--dots) 1.2px, transparent 1.4px) 0 0/18px 18px, var(--bg-soft); border:1px solid var(--line); border-radius:16px; padding:14px; margin:14px 0; overflow-x:auto}
+.mindmap-wrap svg{width:100%; min-width:560px; height:auto; display:block; overflow:visible}
+.sim-stage{background:radial-gradient(var(--dots) 1.2px, transparent 1.4px) 0 0/18px 18px, var(--bg-soft); border:1px solid var(--line); border-radius:16px; padding:12px; overflow-x:auto}
+.sim-stage svg{width:100%; height:auto; display:block; overflow:visible}
+.sim-log{position:relative; background:var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding:11px 16px 11px 34px; font-size:14.5px; line-height:1.55; min-height:46px; margin-top:10px}
+.sim-log::before{content:"›"; position:absolute; left:14px; top:8px; font-family:var(--f-mono); font-weight:700; font-size:18px; color:var(--tomato)}
+.result-box{background:linear-gradient(135deg, var(--tint-amber), transparent 85%), var(--bg-panel); border:1px solid color-mix(in srgb, var(--amber) 35%, var(--line)); border-radius:14px; padding:16px 20px; margin-top:10px}
+.result-box .big{font-size:24px; line-height:1.3; color:var(--amber); font-family:var(--f-display); font-weight:700; font-variant-numeric:tabular-nums; margin:2px 0}
+
+/* svg-токени */
+.sv-bg{fill:var(--bg-soft)} .sv-node{fill:var(--bg-panel); stroke:var(--line-strong); stroke-width:2}
+.sv-core{fill:url(#gCore)} .sv-core-t{fill:#1B1408} .sv-core-t2{fill:#3A2208}
+.sv-t{fill:var(--ink); font-family:var(--f-body); font-size:13px} .sv-ts{fill:var(--ink-soft); font-family:var(--f-mono); font-size:10.5px}
+.sv-line{stroke:var(--line-strong); stroke-width:2; fill:none} .sv-arrow{fill:var(--ink-soft)}
+.st-a{stroke:var(--amber)} .st-t{stroke:var(--tomato)} .st-g{stroke:var(--mint)} .st-p{stroke:var(--plum)}
+.sv-node.on{fill:var(--tint-amber); stroke:var(--amber); stroke-width:3}
+.sv-node.done{stroke:var(--mint)}
+
+/* таблиці */
+.table-wrap{overflow-x:auto; margin:12px 0; border:1px solid var(--line); border-radius:14px; background:var(--bg-panel)}
+table{border-collapse:separate; border-spacing:0; width:100%; font-size:14.5px}
+th,td{padding:10px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line)}
+tbody tr:last-child td{border-bottom:none}
+th{background:var(--bg-soft); font-size:11.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft)}
+tbody tr:nth-child(even) td{background:color-mix(in srgb, var(--bg-soft) 55%, transparent)}
+caption{caption-side:top; text-align:left; font-family:var(--f-mono); font-size:11.5px; font-weight:700; letter-spacing:.06em; color:var(--ink-soft); padding:12px 14px 10px; border-bottom:1px solid var(--line)}
+tr.hl td{background:var(--tint-amber)!important}
+tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--amber)}
+
+/* кроки */
+.steps{counter-reset:step; margin-top:12px}
+.step{position:relative; padding:6px 10px 16px 34px; border-left:2px solid var(--line-strong); margin-left:14px}
+.step:last-child{border-left-color:transparent}
+.step::before{counter-increment:step; content:counter(step); position:absolute; left:-15px; top:4px; width:28px; height:28px; border-radius:50%;
+  background:linear-gradient(135deg, var(--amber), var(--tomato)); color:#1B1408; display:flex; align-items:center; justify-content:center; font-family:var(--f-display); font-weight:700; font-size:12px; box-shadow:0 0 0 4px var(--bg-panel)}
+
+/* виноски */
+.callout{--c:var(--tomato); --ct:var(--tint-tomato); position:relative; border:1px solid color-mix(in srgb, var(--c) 28%, transparent); border-left:4px solid var(--c); background:var(--ct);
+  padding:13px 18px; border-radius:6px 14px 14px 6px; margin:14px 0; max-width:88ch; line-height:1.6}
+.callout.a{--c:var(--amber); --ct:var(--tint-amber)} .callout.ok{--c:var(--mint); --ct:var(--tint-mint)} .callout.pl{--c:var(--plum); --ct:var(--tint-plum)}
+.callout > b:first-child{display:block; color:var(--c); font-weight:800; margin-bottom:2px}
+
+/* поля */
+.field{display:flex; flex-direction:column; gap:5px; font-size:12px; font-weight:800; color:var(--ink-soft)}
+.field input, .field select, .field textarea{font-family:var(--f-mono); font-size:15px; padding:9px 11px; border:1px solid var(--line-strong); border-radius:10px; background:var(--bg-panel); color:var(--ink); width:100%; transition:border-color .15s, box-shadow .15s}
+.field textarea{font-family:var(--f-body)}
+.field input:focus, .field select:focus, .field textarea:focus{outline:none; border-color:var(--amber); box-shadow:0 0 0 3px var(--tint-amber)}
+.calc{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin:12px 0; padding:16px; border-radius:14px; background:var(--bg-soft); border:1px solid var(--line)}
+.kv{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-top:10px}
+.kv > div{background:var(--bg-panel); border:1px solid var(--line); border-radius:14px; padding:12px 14px; min-width:0}
+.kv .l{font-family:var(--f-mono); font-size:10.5px; font-weight:700; color:var(--ink-soft); letter-spacing:.08em}
+.kv .v{font-family:var(--f-display); font-weight:700; font-size:20px; line-height:1.35; font-variant-numeric:tabular-nums}
+.kv .v.t{color:var(--tomato)} .kv .v.g{color:var(--mint)} .kv .v.a{color:var(--amber)}
+.kv .k{font-size:12px; color:var(--ink-soft)}
+
+/* класифікатор */
+.cls-item{display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center; justify-content:space-between; padding:11px 14px; border:1px solid var(--line); border-radius:12px; background:var(--bg-panel); margin-bottom:8px; transition:.2s}
+.cls-item .txt{flex:1 1 260px; min-width:0; font-weight:700}
+.cls-item .opts{display:flex; gap:6px; flex-wrap:wrap}
+.cls-item.right{border-color:var(--mint); background:var(--tint-mint)}
+.cls-item.wrong{border-color:var(--tomato); background:var(--tint-tomato)}
+.cls-item .fb{flex-basis:100%; font-size:14px; color:var(--ink-soft)}
+.badge{display:inline-block; font-family:var(--f-mono); font-size:11px; font-weight:700; padding:2px 9px; border-radius:20px; border:1px solid currentColor}
+.badge.g{color:var(--mint)} .badge.t{color:var(--tomato)} .badge.a{color:var(--amber)} .badge.pl{color:var(--plum)}
+
+/* сітка 23 класів */
+.cgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(132px,1fr)); gap:8px}
+.ctile{text-align:left; cursor:pointer; padding:10px 11px; border-radius:12px; border:1px solid var(--line); background:var(--bg-soft); color:var(--ink); font-family:var(--f-body); font-weight:700; font-size:13px; line-height:1.25; min-height:64px; transition:.18s}
+.ctile i{display:block; font-style:normal; font-family:var(--f-display); font-size:12px; color:var(--amber); margin-bottom:3px}
+.ctile:hover{border-color:var(--amber); transform:translateY(-2px)}
+.ctile.on{background:linear-gradient(135deg,var(--amber),var(--tomato)); color:#1B1408; border-color:transparent}
+.ctile.on i{color:#1B1408}
+
+/* декодер Е-коду */
+.edec{display:flex; flex-wrap:wrap; gap:10px; align-items:end}
+.edec .field{flex:0 1 220px}
+.edec input{font-family:var(--f-display)!important; font-size:22px!important; letter-spacing:.04em}
+
+/* етикетка */
+.label-mock{background:#FFFDF7; color:#22190F; border:2px dashed #B9A88E; border-radius:16px; padding:18px 22px; box-shadow:var(--shadow); transform:rotate(-1.2deg); max-width:560px}
+.label-mock .prod{font-family:var(--f-display); font-weight:800; font-size:20px; letter-spacing:.04em}
+.label-mock p{margin:8px 0 0; font-size:16px; line-height:1.6}
+.label-mock mark{background:#FCD9CF; color:#7E2412; padding:1px 6px; border-radius:6px; font-weight:800; white-space:nowrap}
+
+/* практика і тест */
+.quiz-q{border:1px solid var(--line); border-radius:var(--radius); padding:20px clamp(16px,2.6vw,24px); margin-bottom:14px; background:var(--bg-panel); box-shadow:var(--shadow)}
+.quiz-q h4{font-size:16.5px; margin-bottom:12px; display:flex; gap:10px; align-items:baseline}
+.opt{display:block; width:100%; text-align:left; margin-bottom:8px; padding:11px 14px; border-radius:11px; border:1px solid var(--line-strong); background:var(--bg-soft); color:var(--ink); cursor:pointer; font-family:var(--f-body); font-size:15px; font-weight:700; transition:.15s}
+.opt:hover:not(:disabled){border-color:var(--amber); background:var(--tint-amber)}
+.opt:disabled{cursor:default}
+.opt.correct{background:var(--tint-mint); border-color:var(--mint)}
+.opt.correct::after{content:"  ✓"; color:var(--mint); font-weight:800}
+.opt.wrong{background:var(--tint-tomato); border-color:var(--tomato)}
+.quiz-fb{font-size:14.5px; margin-top:8px; color:var(--ink-soft); padding:10px 14px; border-radius:10px; background:var(--bg-soft)}
+#quizScoreBar{position:sticky; bottom:calc(env(safe-area-inset-bottom,0px) + 12px); background:linear-gradient(135deg, var(--amber), var(--tomato)); color:#1B1408; padding:12px 14px 12px 20px; border-radius:16px; font-weight:800; display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center; box-shadow:var(--shadow-lg)}
+#quizScore{font-family:var(--f-display)}
+#quizScoreBar .btn{background:#1B1408; color:#FFD39A; border-color:#1B1408}
+.idx{font-family:var(--f-mono); font-size:12px; color:#1B1408; background:linear-gradient(135deg, var(--amber), var(--tomato)); padding:3px 9px; border-radius:7px; font-weight:700; flex:0 0 auto}
+
+/* глосарій */
+.gloss{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:0}
+@media(max-width:800px){.gloss{grid-template-columns:minmax(0,1fr)}}
+.gloss div{padding:14px 16px; border:1px solid var(--line); border-radius:14px; background:var(--bg-panel); border-left:3px solid var(--amber)}
+.gloss dt{font-weight:800; color:var(--amber); font-size:15.5px}
+.gloss dd{margin:4px 0 0; color:var(--ink-soft); font-size:15px; line-height:1.55}
+footer{text-align:center; color:var(--ink-soft); font-family:var(--f-mono); font-size:11.5px; padding:24px 0 0}
+
+/* поява під час прокручування */
+.rv{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .8s cubic-bezier(.16,1,.3,1); transition-delay:calc(var(--i,0) * 70ms)}
+.rv.from-top{transform:translateY(-26px)}
+.rv.in{opacity:1; transform:none}
+
+/* ментальні карти: поява + відштовхування від курсора */
+.mm-node .mm-in{transform-box:fill-box; transform-origin:center}
+.mm-node rect{transition:stroke-width .2s, filter .25s}
+.mm-node.mm-hot rect{stroke-width:3; filter:drop-shadow(0 8px 16px rgba(242,165,65,.3))}
+.mm-wait .mm-in, .mm-wait .mm-link{opacity:0}
+.mm-anim .mm-in{animation:mmPop .75s cubic-bezier(.2,1.35,.4,1) both; animation-delay:calc(var(--i,0) * 95ms + 80ms)}
+@keyframes mmPop{from{opacity:0; transform:translateY(14px) scale(.8)} to{opacity:1; transform:none}}
+
+/* картки-перевертні */
+.fcard{position:relative; perspective:1100px; cursor:pointer; outline:none; min-width:0; -webkit-tap-highlight-color:transparent}
+.fcard-inner{display:grid; height:100%; transform-style:preserve-3d; transition:transform .8s cubic-bezier(.3,1.3,.45,1)}
+.fcard:hover .fcard-inner{transform:rotateY(-8deg) rotateX(3deg)}
+.fcard.flipped .fcard-inner{transform:rotateY(180deg)}
+.fcard.flipped:hover .fcard-inner{transform:rotateY(172deg) rotateX(3deg)}
+.fcard:focus-visible .fcard-face{outline:2px solid var(--amber); outline-offset:2px}
+.fcard-face{grid-area:1 / 1; position:relative; overflow:hidden; display:flex; flex-direction:column; min-height:136px; padding:16px 18px; border-radius:16px; border:1px solid var(--line); -webkit-backface-visibility:hidden; backface-visibility:hidden}
+.fcard-face.front{background:linear-gradient(155deg, var(--bg-panel) 30%, var(--bg-soft)); box-shadow:var(--shadow)}
+.fcard-face.front::after{content:""; position:absolute; right:-36px; top:-36px; width:120px; height:120px; border-radius:50%; background:radial-gradient(circle, var(--tint-amber), transparent 70%); pointer-events:none}
+.fcard-face.front h4{margin:auto 0 0; padding-top:14px; font-size:16.5px; line-height:1.3; color:var(--ink)}
+.fnum{font-family:var(--f-display); font-weight:800; font-size:13px; color:var(--amber)}
+.fhint{margin-top:10px; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.06em; color:var(--ink-soft); transition:color .2s}
+.fcard:hover .fhint{color:var(--amber)}
+.fcard-face.back{transform:rotateY(180deg); font-size:14.5px; line-height:1.55; color:var(--ink); background:linear-gradient(155deg, var(--tint-amber), transparent 75%), var(--bg-panel); border-color:color-mix(in srgb, var(--amber) 40%, var(--line)); box-shadow:var(--shadow)}
+.fback-t{font-family:var(--f-mono); font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--amber); margin-bottom:8px}
+.fcard-face.back p{margin:6px 0 0}
+
+/* анімації векторних ілюстрацій */
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes fall{0%{transform:translateY(-6px);opacity:0}15%{opacity:1}100%{transform:translateY(90px);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes mergeL{from{transform:translate(-50px,-6px)}to{transform:none}}
+@keyframes mergeR{from{transform:translate(50px,-6px)}to{transform:none}}
+@keyframes mergeB{from{transform:translate(0,44px)}to{transform:none}}
+.bob{animation:bob 6s ease-in-out infinite}
+.bob2{animation:bob 7.5s ease-in-out -2s infinite}
+.fall{animation:fall 2.2s ease-in infinite}
+.spin,.spinr{transform-box:view-box}
+.spin{animation:spin 14s linear infinite} .spinr{animation:spin 10s linear reverse infinite}
+/* круги комплексної ХД: у темній темі «світять» (screen), у світлій — насичено змішуються (multiply) */
+.mix-blend{mix-blend-mode:screen}
+:root[data-theme="light"] .mix-blend{mix-blend-mode:multiply}
+:root[data-theme="light"] #mixSvg circle{fill-opacity:.88}
+:root[data-theme="light"] #mixSvg .mL{fill:#E8573A} :root[data-theme="light"] #mixSvg .mR{fill:#3FAE84} :root[data-theme="light"] #mixSvg .mB{fill:#8C6BDA}
+.merge .mL{animation:mergeL 1.6s cubic-bezier(.2,.8,.2,1) both} .merge .mR{animation:mergeR 1.6s cubic-bezier(.2,.8,.2,1) both} .merge .mB{animation:mergeB 1.6s cubic-bezier(.2,.8,.2,1) both}
+
+/* граф понять */
+.cg-bar{display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center; margin-bottom:12px}
+.cg-search{flex:1 1 200px; min-width:0; max-width:300px; font-family:var(--f-body); font-size:14px; padding:8px 12px; border:1px solid var(--line-strong); border-radius:10px; background:var(--bg-panel); color:var(--ink)}
+.cg-search:focus{outline:none; border-color:var(--amber); box-shadow:0 0 0 3px var(--tint-amber)}
+.cg-chips{display:flex; flex-wrap:wrap; gap:6px}
+.cg-chip{font-family:var(--f-body); font-size:12.5px; font-weight:800; cursor:pointer; padding:6px 11px; border-radius:999px; border:1px solid var(--line-strong); background:var(--bg-panel); color:var(--ink-soft); display:inline-flex; align-items:center; gap:7px; transition:.2s}
+.cg-chip i{width:10px; height:10px; border-radius:50%; background:var(--c, var(--ink-soft)); display:inline-block}
+.cg-chip:hover{border-color:var(--c, var(--amber)); color:var(--ink)}
+.cg-chip.on{border-color:var(--c, var(--amber)); background:color-mix(in srgb, var(--c, var(--amber)) 16%, var(--bg-panel)); color:var(--ink)}
+.cg-body{display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:14px; align-items:stretch}
+.cg-stage{background:radial-gradient(var(--dots) 1.2px, transparent 1.4px) 0 0/18px 18px, var(--bg-soft); border:1px solid var(--line); border-radius:16px; overflow-x:auto; overflow-y:hidden}
+.cg-stage svg{display:block; width:100%; min-width:720px; height:auto; user-select:none; -webkit-user-select:none}
+.cg .s1{--c:var(--amber)} .cg .s2{--c:var(--plum)} .cg .s3{--c:var(--tomato)} .cg .s4{--c:var(--mint)}
+.cg-zone{fill:none; stroke:var(--c); stroke-opacity:.22; stroke-width:1.5; stroke-dasharray:5 7}
+.cg-zt{fill:var(--c); opacity:.8; font-family:var(--f-mono); font-size:12px; font-weight:700; letter-spacing:.12em}
+.cg-e{stroke:var(--line-strong); stroke-width:1.4; opacity:.8; transition:opacity .25s, stroke .25s, stroke-width .25s}
+.cg-e.on{stroke:var(--ink-soft); stroke-width:2.6; opacity:1}
+.cg-e.dim{opacity:.1}
+.cg-n{cursor:pointer; outline:none; transition:opacity .25s}
+.cg-n circle{fill:color-mix(in srgb, var(--c) 26%, var(--bg-panel)); stroke:var(--c); stroke-width:2; transition:stroke-width .2s, fill .2s}
+.cg-n text{fill:var(--ink); font-family:var(--f-body); font-size:13px; font-weight:700; paint-order:stroke; stroke:var(--bg-soft); stroke-width:4px; stroke-linejoin:round}
+.cg-n:hover circle, .cg-n:focus-visible circle, .cg-n.focus circle{stroke-width:3.5; fill:color-mix(in srgb, var(--c) 48%, var(--bg-panel))}
+.cg-n.sel circle{fill:var(--c); stroke:var(--ink); stroke-width:3}
+.cg-n.dim{opacity:.16}
+.cg-panel{background:var(--bg-panel); border:1px solid var(--line); border-radius:16px; padding:16px 18px; min-width:0; max-height:560px; overflow:auto}
+.cg-tag{display:inline-flex; align-items:center; gap:7px; font-family:var(--f-mono); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--c)}
+.cg-tag i{width:9px; height:9px; border-radius:50%; background:var(--c)}
+.cg-title{font-family:var(--f-display); font-size:19px; font-weight:700; line-height:1.25; margin:8px 0 6px}
+.cg-def{margin:0 0 12px; font-size:15px; line-height:1.6}
+.cg-sub{font-family:var(--f-mono); font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); margin:12px 0 8px}
+.cg-links{list-style:none; padding:0; margin:0; display:grid; gap:6px}
+.cg-links button{width:100%; text-align:left; cursor:pointer; display:grid; grid-template-columns:auto minmax(0,1fr); gap:2px 9px; align-items:center; padding:8px 10px; border-radius:10px; border:1px solid var(--line); background:var(--bg-soft); color:var(--ink); font-family:var(--f-body); transition:.2s}
+.cg-links button:hover, .cg-links button:focus-visible{border-color:var(--c); background:color-mix(in srgb, var(--c) 12%, var(--bg-soft)); outline:none}
+.cg-links i{grid-row:span 2; width:10px; height:10px; border-radius:50%; background:var(--c)}
+.cg-links b{font-size:14px} .cg-links small{font-size:12px; color:var(--ink-soft)}
+.cg-go{margin-top:14px; width:100%}
+.cg-hint{font-size:14px; color:var(--ink-soft); line-height:1.55; margin:0 0 10px}
+.cg-stat{display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 4px}
+.cg-stat span{font-family:var(--f-mono); font-size:12px; padding:4px 9px; border-radius:8px; background:var(--bg-soft); border:1px solid var(--line); color:var(--ink-soft)}
+.cg-stat b{color:var(--ink)}
+.cg-flash{animation:cgFlash 1.8s ease}
+@keyframes cgFlash{0%,100%{box-shadow:var(--shadow)} 25%,60%{box-shadow:0 0 0 3px var(--amber), var(--shadow-lg)}}
+@media (max-width:860px){ .cg-body{grid-template-columns:minmax(0,1fr)} .cg-panel{max-height:none} }
+.cg-swipe{display:none; font-family:var(--f-mono); font-size:11px; color:var(--ink-soft); text-align:center; margin:6px 0 0}
+@media (max-width:760px){ .cg-swipe{display:block} }
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important; transition:none!important} html{scroll-behavior:auto}
+  .rv{opacity:1; transform:none} .fcard:hover .fcard-inner{transform:none} .fcard.flipped .fcard-inner{transform:rotateY(180deg)}
+}
+
+/* ---------- Тема 3: 5-й розділ, шкали, симулятори ---------- */
+.cg .s5{--c:var(--sky)}
+.sv-tm{fill:var(--ink-soft); font-family:var(--f-body); font-size:13px; font-weight:700}
+.sv-tb{fill:var(--ink); font-family:var(--f-body); font-size:13px; font-weight:800}
+.sv-num{fill:var(--ink); font-family:var(--f-display); font-size:13px; font-weight:700}
+.sv-grid{stroke:var(--line); stroke-width:1.5}
+.verdict{font-family:var(--f-display); font-weight:700; font-size:clamp(17px,2.2vw,22px); line-height:1.35; margin:2px 0}
+.verdict.ok{color:var(--mint)} .verdict.no{color:var(--tomato)} .verdict.a{color:var(--amber)}
+.bar-track{position:relative; height:14px; border-radius:7px; background:var(--bg-panel); border:1px solid var(--line); overflow:hidden; margin:8px 0 4px}
+.bar-track i{position:absolute; left:0; top:0; bottom:0; border-radius:7px; background:var(--mint); transition:width .35s, background .35s}
+.bar-track b{position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--ink)}
+.sw-btns{display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 12px}
+.formula{font-family:var(--f-display); font-weight:900; font-size:clamp(30px,5vw,48px); line-height:1.1; letter-spacing:-.01em}
+.formula sub{font-size:.5em}
+.point p b{display:inline; margin:0}
+.big-card .big{white-space:nowrap; font-size:clamp(22px,2.4vw,30px)}
+table.num td:nth-child(2), table.num td:nth-child(3){white-space:nowrap}
+
+/* ---------- Практичні заняття: додаткові компоненти ---------- */
+.block[data-kind="theory"] .kind::before{content:"◆  Питання"}
+.block[data-kind="sim"] .kind::before{content:"▶  Практичне завдання"}
+.block[data-kind="data"] .kind::before{content:"▦  Таблиця"}
+.block[data-kind="extra"] .kind::before{content:"＋  Довідка · інструмент"}
+.bst{margin-left:auto; flex:none; font-family:var(--f-mono); font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:5px 10px; border-radius:999px; border:1px solid var(--line-strong); color:var(--ink-soft); background:var(--bg-soft); white-space:nowrap}
+.bst.ok{color:var(--mint-ink); background:var(--tint-mint); border-color:color-mix(in srgb,var(--mint) 45%,transparent)}
+.bst.part{color:var(--amber-ink); background:var(--tint-amber); border-color:color-mix(in srgb,var(--amber) 45%,transparent)}
+.task-q{font-size:16.5px; line-height:1.6; margin:0 0 12px; padding:14px 16px; border-radius:14px; background:var(--bg-soft); border:1px dashed var(--line-strong)}
+.task-q b{color:var(--amber)}
+.hint-box{border:1px solid color-mix(in srgb,var(--plum) 30%,var(--line)); background:linear-gradient(135deg,var(--tint-plum),transparent 80%); border-radius:14px; padding:12px 16px; margin:0 0 14px}
+.hint-box > summary{cursor:pointer; font-weight:800; color:var(--plum); list-style:none; display:flex; align-items:center; gap:8px}
+.hint-box > summary::-webkit-details-marker{display:none}
+.hint-box > summary::before{content:"▸"; transition:transform .2s} .hint-box[open] > summary::before{transform:rotate(90deg)}
+.hint-box .ul{margin-top:8px} .hint-box .ul li{font-size:15px}
+.hint-box .src{margin-top:10px; display:flex; flex-wrap:wrap; gap:8px}
+.src a, a.src-a{font-family:var(--f-mono); font-size:12px; font-weight:700; color:var(--amber); text-decoration:none; padding:5px 10px; border-radius:999px; border:1px solid color-mix(in srgb,var(--amber) 40%,transparent); background:var(--tint-amber)}
+.src a:hover, a.src-a:hover{filter:brightness(1.1)}
+.ans textarea{min-height:170px; resize:vertical; line-height:1.6; font-size:15.5px}
+.ans-bar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin-top:8px; font-family:var(--f-mono); font-size:11.5px; color:var(--ink-soft)}
+.ans-bar .meter{flex:1; min-width:120px; max-width:260px; height:6px; border-radius:6px; background:var(--line); overflow:hidden}
+.ans-bar .meter i{display:block; height:100%; width:0; background:var(--amber); transition:width .3s}
+.ans-bar .meter.ok i{background:var(--mint)}
+.tin, .tsel, .tta{width:100%; min-width:90px; font-family:var(--f-body); font-size:14px; padding:7px 9px; border:1px solid var(--line-strong); border-radius:9px; background:var(--bg-panel); color:var(--ink)}
+.tta{min-height:64px; resize:vertical; line-height:1.45}
+.tin:focus, .tsel:focus, .tta:focus{outline:none; border-color:var(--amber); box-shadow:0 0 0 3px var(--tint-amber)}
+.tin.e{max-width:96px; font-family:var(--f-mono); font-weight:700}
+.rb-table td, .rb-table th{padding:8px 8px} .rb-table td.no{font-family:var(--f-display); font-weight:700; color:var(--amber); width:36px}
+.rb-table td.fixed{font-weight:800; min-width:150px}
+.xbtn{border:1px solid var(--line-strong); background:var(--bg-soft); color:var(--ink-soft); width:30px; height:30px; border-radius:8px; cursor:pointer; font-weight:800}
+.xbtn:hover{color:var(--tomato); border-color:var(--tomato)}
+.lb-prod{border:1px solid var(--line); border-radius:16px; padding:16px; margin:0 0 16px; background:var(--bg-soft)}
+.lb-prod > .lb-h{display:flex; align-items:center; gap:10px; margin-bottom:10px}
+.lb-prod > .lb-h b{font-family:var(--f-display); font-size:15px; color:var(--amber)}
+.lb-grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.6fr); gap:12px}
+.lb-found{font-family:var(--f-mono); font-size:12px; color:var(--ink-soft); margin:6px 0 0}
+.lb-table{min-width:880px}
+.btnrow{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px}
+.stu{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin:12px 0; padding:16px; border-radius:14px; background:var(--bg-soft); border:1px solid var(--line)}
+.fname{font-family:var(--f-mono); font-weight:700; color:var(--amber); word-break:break-all}
+.dash{display:grid; gap:8px; margin-top:12px}
+.dash a{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:12px; align-items:center; padding:10px 14px; border-radius:12px; border:1px solid var(--line); background:var(--bg-soft); color:inherit; text-decoration:none; cursor:pointer}
+.dash a:hover{border-color:var(--amber)}
+.dash .dn{font-family:var(--f-display); font-weight:700; color:var(--amber); min-width:34px}
+.dash .dt{font-weight:700; font-size:14.5px}
+.big-pct{font-family:var(--f-display); font-weight:900; font-size:clamp(34px,5vw,52px); line-height:1; color:var(--amber)}
+.pbar{height:10px; border-radius:10px; background:var(--line); overflow:hidden; margin:10px 0 4px}
+.pbar i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--amber),var(--mint)); transition:width .4s}
+.rep-prev{max-height:520px; overflow:auto; background:#fff; color:#111; border-radius:12px; padding:20px 24px; font-family:'Times New Roman',serif; font-size:15px; line-height:1.5; margin-top:12px}
+.rep-prev table{border-collapse:collapse; width:100%; font-size:13px} .rep-prev td, .rep-prev th{border:1px solid #444; padding:4px 6px; background:#fff!important; color:#111; text-transform:none; letter-spacing:0; font-size:13px}
+.rep-prev h2, .rep-prev h3, .rep-prev h4{color:#111; font-family:'Times New Roman',serif}
+.rng{display:grid; grid-template-columns:minmax(0,1fr) 160px 40px; gap:10px; align-items:center; margin:6px 0}
+.rng input[type=range]{width:100%; accent-color:var(--amber)}
+.rng b{font-family:var(--f-display); text-align:center}
+.var-card{border:1px solid var(--line); border-radius:16px; padding:16px; background:var(--bg-soft)}
+.var-card h4{margin:0 0 4px; color:var(--amber); font-size:16px}
+.var-card .k{font-size:13.5px; color:var(--ink-soft); margin:0 0 10px}
+.cat-list{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:8px}
+.cat-list button{text-align:left; font:inherit; font-size:14px; padding:10px 12px; border-radius:12px; border:1px solid var(--line); background:var(--bg-soft); color:var(--ink); cursor:pointer}
+.cat-list button b{font-family:var(--f-mono); color:var(--amber); margin-right:6px}
+.cat-list button.on{border-color:var(--amber); background:var(--tint-amber)}
+.tree{margin:12px 0 0; padding:14px 16px; border-radius:14px; background:var(--bg-panel); border:1px solid var(--line); font-size:14.5px}
+.tree div{padding:3px 0} .tree .l2{padding-left:18px} .tree .l3{padding-left:36px; color:var(--ink-soft)} .tree .l4{padding-left:54px; color:var(--ink-soft)}
+.tree code{font-family:var(--f-mono); color:var(--amber); margin-right:6px}
+.esearch{width:100%; max-width:420px}
+@media (max-width:760px){ .lb-grid{grid-template-columns:minmax(0,1fr)} .rng{grid-template-columns:minmax(0,1fr) 110px 34px} .bst{display:none} }
+.var-card .rng{grid-template-columns:minmax(0,1fr) 28px; gap:4px 10px} .var-card .rng span{grid-column:1/-1; font-size:14px; font-weight:700}
+.rb-table td.fixed{width:34%}
+.stu input.need{border-color:color-mix(in srgb,var(--tomato) 70%,transparent); box-shadow:0 0 0 3px var(--tint-tomato)}
+.fname.need{color:var(--tomato)}
+.lock-note{margin:10px 0 0; font-weight:700; color:var(--tomato)}
+#repDoc:disabled{opacity:.45; cursor:not-allowed; filter:grayscale(.6)}
+</style>
+</head>
+<body>
+
+<!-- ===== Векторні символи ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="glowA" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F2A541" stop-opacity=".33"/><stop offset="1" stop-color="#F2A541" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowT" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#E8573A" stop-opacity=".28"/><stop offset="1" stop-color="#E8573A" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowM" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#6CC3A0" stop-opacity=".24"/><stop offset="1" stop-color="#6CC3A0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowP" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#A387E6" stop-opacity=".28"/><stop offset="1" stop-color="#A387E6" stop-opacity="0"/></radialGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#F5EDDF" fill-opacity=".08"/></pattern>
+    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#F5EDDF" stop-opacity=".16"/><stop offset=".5" stop-color="#F5EDDF" stop-opacity=".04"/><stop offset="1" stop-color="#F5EDDF" stop-opacity=".12"/></linearGradient>
+    <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FFE7A3"/><stop offset=".5" stop-color="#E0A93B"/><stop offset="1" stop-color="#9C6A16"/></linearGradient>
+    <linearGradient id="anto" x1="0" x2="1"><stop offset="0" stop-color="#D81B4A"/><stop offset=".5" stop-color="#8E3FA8"/><stop offset="1" stop-color="#2F5FD0"/></linearGradient>
+    <!-- Крапля (колір через currentColor) -->
+    <symbol id="drop" viewBox="0 0 60 80"><path d="M30 4C30 4 6 34 6 52a24 24 0 0 0 48 0C54 34 30 4 30 4Z" fill="currentColor"/><path d="M18 50a12 12 0 0 0 8 14" stroke="#fff" stroke-opacity=".45" stroke-width="4" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Пробірка з рідиною (currentColor) -->
+    <symbol id="tube" viewBox="0 0 70 260"><rect x="6" y="2" width="58" height="14" rx="5" fill="#8E989E"/><path d="M12 16H58V226A23 23 0 0 1 12 226Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M15 110H55V226A20 20 0 0 1 15 226Z" fill="currentColor"/><path d="M15 110Q35 102 55 110V118Q35 110 15 118Z" fill="#fff" fill-opacity=".25"/><path d="M22 40V96" stroke="#fff" stroke-opacity=".3" stroke-width="5" stroke-linecap="round"/></symbol>
+    <!-- Банка (рідина currentColor) -->
+    <symbol id="jarC" viewBox="0 0 200 240"><rect x="48" y="8" width="104" height="30" rx="7" fill="#C97F25"/><path d="M40 54Q40 40 54 40H146Q160 40 160 54V206Q160 230 136 230H64Q40 230 40 206Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path class="fillc" d="M46 96H154V204Q154 224 134 224H66Q46 224 46 204Z" fill="currentColor"/><path d="M54 60V90" stroke="#fff" stroke-opacity=".35" stroke-width="6" stroke-linecap="round"/></symbol>
+    <!-- Буряк, морква, жовток -->
+    <symbol id="beet" viewBox="0 0 100 120"><path d="M40 30Q30 8 18 6M50 28Q52 6 62 2M58 32Q74 14 86 16" stroke="#6CC3A0" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M50 30C20 30 10 60 22 82c8 14 20 22 28 36 8-14 20-22 28-36 12-22 2-52-28-52z" fill="#A61E4D"/><path d="M30 60q4-14 16-18" stroke="#fff" stroke-opacity=".35" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="carrot" viewBox="0 0 100 120"><path d="M50 26Q40 6 30 4M50 26Q56 4 70 2M50 26Q66 12 82 14" stroke="#6CC3A0" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M30 30H70L54 116Q50 122 46 116Z" fill="#F07C2B"/><path d="M38 48h10M42 70h10M44 92h8" stroke="#B4521A" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="egg" viewBox="0 0 120 100"><ellipse cx="60" cy="54" rx="56" ry="42" fill="#F5EDDF"/><circle cx="62" cy="52" r="24" fill="#F2B23A"/><circle cx="54" cy="44" r="6" fill="#fff" fill-opacity=".55"/></symbol>
+    <!-- Око -->
+    <symbol id="eyeO" viewBox="0 0 300 180"><path d="M8 90Q150 -40 292 90Q150 220 8 90Z" fill="#F5EDDF"/></symbol>
+    <!-- Ягоди -->
+    <symbol id="berries" viewBox="0 0 120 100"><path d="M60 8Q60 30 40 44M60 8Q64 30 82 42" stroke="#6CC3A0" stroke-width="5" fill="none"/><circle cx="38" cy="58" r="20" fill="#5B2A86"/><circle cx="76" cy="56" r="20" fill="#3B2F8F"/><circle cx="58" cy="78" r="18" fill="#7A1F5C"/><circle cx="32" cy="52" r="5" fill="#fff" fill-opacity=".4"/></symbol>
+    <!-- Шматок м'яса (колір currentColor) -->
+    <symbol id="steak" viewBox="0 0 160 110"><path d="M20 40C30 10 90 4 126 18c30 12 32 50 10 70-24 22-86 22-112 4C8 80 12 58 20 40Z" fill="currentColor"/><path d="M34 46c20-18 60-22 86-10" stroke="#F5EDDF" stroke-opacity=".7" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="104" cy="62" r="10" fill="#F5EDDF" fill-opacity=".85"/></symbol>
+    <!-- Щит, лупа, сонце, термометр, полум'я, годинник -->
+    <symbol id="shield" viewBox="0 0 100 110"><path d="M50 4L92 20V52C92 80 72 98 50 106 28 98 8 80 8 52V20Z" fill="currentColor"/><path d="M30 54L44 68 72 40" stroke="#14120F" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="sun" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#F2C14E"/><g stroke="#F2C14E" stroke-width="7" stroke-linecap="round"><path d="M50 8v12M50 80v12M8 50h12M80 50h12M20 20l9 9M71 71l9 9M80 20l-9 9M29 71l-9 9"/></g></symbol>
+    <symbol id="thermo" viewBox="0 0 60 120"><rect x="20" y="6" width="20" height="80" rx="10" fill="none" stroke="#F5EDDF" stroke-width="5"/><circle cx="30" cy="96" r="18" fill="#E8573A"/><rect x="26" y="40" width="8" height="56" fill="#E8573A"/></symbol>
+    <symbol id="flame" viewBox="0 0 80 100"><path d="M40 4C52 26 72 38 72 62a32 32 0 0 1-64 0C8 46 20 36 26 22c4 12 10 18 16 20C44 30 40 18 40 4Z" fill="#E8573A"/><path d="M40 52c8 10 16 14 16 26a16 16 0 0 1-32 0c0-8 6-12 8-20 2 6 6 8 8-6Z" fill="#F2C14E"/></symbol>
+    <symbol id="clock" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#F5EDDF" stroke-width="7"/><path d="M50 26V52L66 62" stroke="#F2A541" stroke-width="7" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="lens" viewBox="0 0 100 100"><circle cx="42" cy="42" r="28" fill="none" stroke="#F5EDDF" stroke-width="8"/><path d="M62 62L90 90" stroke="#F5EDDF" stroke-width="10" stroke-linecap="round"/></symbol>
+    <symbol id="ban" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="none" stroke="#E8573A" stroke-width="5"/><path d="M11 11L37 37" stroke="#E8573A" stroke-width="5"/></symbol>
+    <symbol id="leaf" viewBox="0 0 100 100"><path d="M12 88C12 44 38 14 92 8 88 62 58 88 12 88Z" fill="currentColor"/><path d="M14 86L64 36" stroke="#14120F" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="flower" viewBox="0 0 100 100"><g fill="#C2185B"><circle cx="50" cy="26" r="16"/><circle cx="74" cy="44" r="16"/><circle cx="66" cy="72" r="16"/><circle cx="34" cy="72" r="16"/><circle cx="26" cy="44" r="16"/></g><circle cx="50" cy="52" r="12" fill="#F2C14E"/></symbol>
+    <symbol id="flask" viewBox="0 0 100 120"><path d="M36 6H64M40 6V42L10 104Q6 114 18 114H82Q94 114 90 104L60 42V6" fill="none" stroke="#F5EDDF" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><path d="M22 84H78L88 104Q90 110 82 110H18Q10 110 12 104Z" fill="currentColor"/></symbol>
+    <symbol id="glassD" viewBox="0 0 80 110"><path d="M8 8H72L64 100Q63 106 56 106H24Q17 106 16 100Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path class="fillc" d="M12 40H68L63 98Q62 102 57 102H23Q18 102 17 98Z" fill="currentColor"/></symbol>
+    <symbol id="candy" viewBox="0 0 120 60"><path d="M30 30L6 12V48ZM90 30L114 12V48Z" fill="#F2A541"/><ellipse cx="60" cy="30" rx="32" ry="22" fill="#E8573A"/><path d="M44 22q16-8 32 0" stroke="#fff" stroke-opacity=".5" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="wine" viewBox="0 0 70 110"><path d="M10 6H60Q62 44 35 54Q8 44 10 6Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M14 22H56Q54 44 35 50Q16 44 14 22Z" fill="#8E1B3A"/><path d="M35 54V96M18 100H52" stroke="#BDB09B" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="soda" viewBox="0 0 60 120"><path d="M22 4H38V20Q50 30 50 48V108Q50 116 42 116H18Q10 116 10 108V48Q10 30 22 20Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M13 56H47V108Q47 112 42 112H18Q13 112 13 108Z" fill="#E8573A"/><rect x="13" y="66" width="34" height="18" fill="#F5EDDF"/></symbol>
+    <symbol id="bottleB" viewBox="0 0 60 100"><path d="M22 4H38L40 16H20Z" fill="#E8A9A0"/><rect x="14" y="16" width="32" height="8" rx="3" fill="#F2A541"/><rect x="12" y="24" width="36" height="72" rx="10" fill="#F5EDDF"/></symbol>
+    <symbol id="apple" viewBox="0 0 120 120"><path d="M60 30C42 18 14 26 14 58c0 30 22 56 36 56 6 0 7-3 10-3s4 3 10 3c14 0 36-26 36-56 0-32-28-40-46-28z" fill="#E8573A"/><path d="M60 30c0-10 2-18 8-24" stroke="#7A4B25" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M66 18c10-12 26-12 30-8-4 12-18 16-30 8z" fill="#6CC3A0"/></symbol>
+    <symbol id="hex" viewBox="0 0 100 100"><path d="M50 6L88 28V72L50 94 12 72V28Z" fill="none" stroke="currentColor" stroke-width="6"/></symbol>
+    <marker id="ah" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L11 6 1 11Z" fill="#F2A541"/></marker>
+    <!-- ===== Тема 3: смак і аромат ===== -->
+    <radialGradient id="glowS" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#62A9E0" stop-opacity=".26"/><stop offset="1" stop-color="#62A9E0" stop-opacity="0"/></radialGradient>
+    <marker id="ahM" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L11 6 1 11Z" fill="#6CC3A0"/></marker>
+    <!-- Кубик цукру -->
+    <symbol id="cube" viewBox="0 0 60 62"><path d="M30 4L56 17V45L30 58 4 45V17Z" fill="#EDE4D3"/><path d="M30 4L56 17 30 30 4 17Z" fill="#FFFFFF"/><path d="M30 30V58L4 45V17Z" fill="#D9CFBD"/><g fill="#BDB09B" opacity=".55"><circle cx="22" cy="16" r="1.6"/><circle cx="38" cy="14" r="1.6"/><circle cx="14" cy="36" r="1.6"/><circle cx="44" cy="40" r="1.6"/><circle cx="40" cy="28" r="1.4"/></g></symbol>
+    <!-- Банка меду -->
+    <symbol id="honey" viewBox="0 0 100 110"><rect x="24" y="6" width="52" height="16" rx="5" fill="#C97F25"/><path d="M18 30Q18 22 26 22H74Q82 22 82 30V92Q82 104 70 104H30Q18 104 18 92Z" fill="#E9A23B"/><path d="M18 44Q29 52 40 44T62 44T82 44" stroke="#C97F25" stroke-width="5" fill="none"/><path d="M30 60V88" stroke="#fff" stroke-opacity=".4" stroke-width="6" stroke-linecap="round"/></symbol>
+    <!-- Молекула (currentColor) -->
+    <symbol id="mol" viewBox="0 0 120 110"><g stroke="currentColor" stroke-width="5" fill="none"><path d="M50 22L76 37V67L50 82 24 67V37Z"/><path d="M76 37L100 24M50 82V104M24 37L6 26"/></g><g fill="currentColor"><circle cx="50" cy="22" r="8"/><circle cx="76" cy="37" r="8"/><circle cx="76" cy="67" r="8"/><circle cx="50" cy="82" r="8"/><circle cx="24" cy="67" r="8"/><circle cx="24" cy="37" r="8"/></g><circle cx="100" cy="24" r="9" fill="#E8573A"/><circle cx="50" cy="104" r="6" fill="#F5EDDF"/><circle cx="6" cy="26" r="6" fill="#F5EDDF"/></symbol>
+    <!-- Стручок ванілі -->
+    <symbol id="vanilla" viewBox="0 0 140 50"><path d="M6 38Q66 -6 134 12Q138 18 130 20Q70 10 12 44Q2 46 6 38Z" fill="#4A2E1C"/><path d="M20 34Q70 6 124 14" stroke="#7A5136" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M130 14q6-4 8-10" stroke="#6CC3A0" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Корінь солодки -->
+    <symbol id="root" viewBox="0 0 100 100"><g stroke="#A8743F" stroke-width="10" stroke-linecap="round"><path d="M18 78L68 18"/><path d="M34 88L84 30"/></g><g stroke="#6B4423" stroke-width="3" stroke-linecap="round"><path d="M30 64l7 5M48 42l7 5M46 74l7 5M64 52l7 5"/></g><circle cx="68" cy="18" r="5" fill="#E6C08A"/><circle cx="84" cy="30" r="5" fill="#E6C08A"/></symbol>
+    <!-- Скибка грейпфрута -->
+    <symbol id="citrus" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#F2A541"/><circle cx="50" cy="50" r="40" fill="#F5EDDF"/><circle cx="50" cy="50" r="36" fill="#F07B6B"/><g stroke="#F5EDDF" stroke-width="3"><path d="M50 14V86M14 50H86M25 25L75 75M75 25L25 75"/></g><circle cx="50" cy="50" r="5" fill="#F5EDDF"/></symbol>
+    <!-- Плід катемфе -->
+    <symbol id="katemfe" viewBox="0 0 100 100"><path d="M50 4Q46 14 50 20" stroke="#6CC3A0" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M52 14Q68 4 80 12Q66 22 52 14Z" fill="#6CC3A0"/><path d="M50 18C72 30 88 52 80 74 74 88 62 94 50 94S26 88 20 74C12 52 28 30 50 18Z" fill="#C8243B"/><path d="M50 22V92M34 30Q30 60 38 90M66 30Q70 60 62 90" stroke="#8E1B2E" stroke-width="3" fill="none"/><path d="M28 54q2-14 12-20" stroke="#fff" stroke-opacity=".4" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Кукурудзяний качан -->
+    <symbol id="cob" viewBox="0 0 60 120"><path d="M30 8C46 8 50 40 48 70 46 100 38 110 30 110S14 100 12 70C10 40 14 8 30 8Z" fill="#F2C14E"/><g stroke="#D69A2A" stroke-width="2.5"><path d="M16 30H44M13 46H47M12 62H48M13 78H47M16 94H44M24 12V104M36 12V104"/></g><path d="M12 64Q4 100 30 116Q16 90 22 60Z" fill="#6CC3A0"/><path d="M48 64Q56 100 30 116Q44 90 38 60Z" fill="#4E9E7C"/></symbol>
+    <!-- Колода деревини -->
+    <symbol id="log" viewBox="0 0 130 70"><path d="M24 8H106V62H24Z" fill="#8A5A2B"/><path d="M30 20H96M36 34H100M30 48H92" stroke="#6B4423" stroke-width="3" stroke-linecap="round"/><ellipse cx="24" cy="35" rx="18" ry="27" fill="#E6C08A"/><ellipse cx="24" cy="35" rx="11" ry="17" fill="none" stroke="#C49358" stroke-width="3"/><ellipse cx="24" cy="35" rx="4" ry="7" fill="#C49358"/></symbol>
+    <!-- Горобина -->
+    <symbol id="rowan" viewBox="0 0 110 100"><path d="M56 4Q56 26 40 40M56 4Q60 28 76 38M56 4Q50 30 58 52" stroke="#7A4B25" stroke-width="4" fill="none" stroke-linecap="round"/><g fill="#E8573A"><circle cx="34" cy="50" r="11"/><circle cx="54" cy="58" r="11"/><circle cx="76" cy="48" r="11"/><circle cx="42" cy="72" r="11"/><circle cx="64" cy="76" r="11"/><circle cx="84" cy="68" r="10"/><circle cx="24" cy="68" r="10"/><circle cx="52" cy="90" r="9"/></g><g fill="#fff" fill-opacity=".45"><circle cx="31" cy="47" r="3"/><circle cx="51" cy="55" r="3"/><circle cx="73" cy="45" r="3"/></g><g fill="#6CC3A0"><path d="M60 8Q78 0 96 8Q78 16 60 8Z"/><path d="M52 8Q34 0 16 8Q34 16 52 8Z"/></g></symbol>
+    <!-- Чашка (напій currentColor) -->
+    <symbol id="cup" viewBox="0 0 120 90"><ellipse cx="56" cy="80" rx="50" ry="8" fill="#3B342B"/><path d="M14 22H98V54Q98 78 74 78H38Q14 78 14 54Z" fill="#F5EDDF"/><path d="M98 32Q116 32 114 46Q112 60 96 58" stroke="#F5EDDF" stroke-width="7" fill="none"/><ellipse cx="56" cy="22" rx="42" ry="8" fill="currentColor"/></symbol>
+    <!-- Хліб -->
+    <symbol id="bread" viewBox="0 0 120 70"><path d="M10 56Q6 20 40 14Q60 4 80 14Q114 20 110 56Q110 64 100 64H20Q10 64 10 56Z" fill="#C98A3C"/><path d="M36 26q8 10 4 22M58 20q8 12 4 26M80 26q8 10 4 22" stroke="#F2C98A" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Пара / аромат -->
+    <symbol id="steamS" viewBox="0 0 60 80"><g stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"><path d="M14 76Q4 62 14 48T14 20"/><path d="M30 70Q20 56 30 42T30 6"/><path d="M46 76Q36 62 46 48T46 20"/></g></symbol>
+    <!-- Флакон із піпеткою (рідина currentColor) -->
+    <symbol id="dropper" viewBox="0 0 60 120"><path d="M24 4H36Q40 4 40 10V30H20V10Q20 4 24 4Z" fill="#2B2724" stroke="#4D443A" stroke-width="2"/><rect x="16" y="30" width="28" height="10" rx="2" fill="#8E989E"/><path d="M14 40H46Q52 40 52 48V108Q52 116 44 116H16Q8 116 8 108V48Q8 40 14 40Z" fill="currentColor"/><rect x="14" y="64" width="32" height="28" rx="3" fill="#F5EDDF" opacity=".9"/><path d="M14 48V58" stroke="#fff" stroke-opacity=".45" stroke-width="4" stroke-linecap="round"/></symbol>
+    <!-- Прянощі -->
+    <symbol id="cinn" viewBox="0 0 120 50"><rect x="8" y="8" width="104" height="16" rx="8" fill="#9B5A2A"/><rect x="14" y="28" width="98" height="16" rx="8" fill="#B5652E"/><ellipse cx="12" cy="16" rx="6" ry="8" fill="#6B3A1E"/><ellipse cx="18" cy="36" rx="6" ry="8" fill="#7A4422"/><path d="M12 12a4 4 0 1 1 0 8" stroke="#D9A066" stroke-width="2" fill="none"/></symbol>
+    <symbol id="clove" viewBox="0 0 50 90"><path d="M25 30L22 86" stroke="#6B3A1E" stroke-width="7" stroke-linecap="round"/><g fill="#7A4422"><path d="M10 26L25 34 40 26 36 12 25 18 14 12Z"/></g><circle cx="25" cy="14" r="9" fill="#9B5A2A"/></symbol>
+    <symbol id="pepper" viewBox="0 0 90 70"><g fill="#3A2A20"><circle cx="20" cy="46" r="13"/><circle cx="46" cy="52" r="13"/><circle cx="70" cy="42" r="13"/><circle cx="36" cy="24" r="12"/><circle cx="60" cy="18" r="11"/></g><g fill="#fff" fill-opacity=".25"><circle cx="16" cy="42" r="3"/><circle cx="42" cy="48" r="3"/><circle cx="66" cy="38" r="3"/></g></symbol>
+    <symbol id="nutmeg" viewBox="0 0 90 70"><ellipse cx="34" cy="38" rx="28" ry="24" fill="#8A5A2B"/><path d="M14 30q20 6 40-4M12 44q24 6 44-6M24 58q14-4 24-18" stroke="#5B3A1E" stroke-width="3" fill="none"/><g fill="#E6B83A"><circle cx="70" cy="26" r="6"/><circle cx="80" cy="40" r="6"/><circle cx="68" cy="52" r="6"/></g></symbol>
+    <symbol id="ginger" viewBox="0 0 100 70"><path d="M10 46Q8 30 24 30Q30 14 44 22Q56 10 66 24Q84 20 86 36Q96 44 86 54Q76 64 60 58Q48 66 36 58Q18 62 10 46Z" fill="#D9B27C"/><path d="M26 44q10-4 18 2M54 36q10 0 16 8M40 30q4-4 8 0" stroke="#A8743F" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="dill" viewBox="0 0 90 100"><path d="M45 98V40" stroke="#4E9E7C" stroke-width="5" stroke-linecap="round"/><g stroke="#6CC3A0" stroke-width="3" stroke-linecap="round"><path d="M45 40L14 18M45 40L28 10M45 40V6M45 40L62 10M45 40L76 18M45 40L84 34M45 40L6 34"/></g><g fill="#E6D36A"><circle cx="14" cy="18" r="5"/><circle cx="28" cy="10" r="5"/><circle cx="45" cy="6" r="5"/><circle cx="62" cy="10" r="5"/><circle cx="76" cy="18" r="5"/><circle cx="84" cy="34" r="5"/><circle cx="6" cy="34" r="5"/></g><path d="M45 72Q26 66 18 76M45 62Q64 56 74 64" stroke="#6CC3A0" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Сільничка (кристали) -->
+    <symbol id="shaker" viewBox="0 0 60 100"><path d="M12 30Q12 8 30 8T48 30Z" fill="#8E989E"/><g fill="#14120F"><circle cx="24" cy="20" r="2.2"/><circle cx="36" cy="20" r="2.2"/><circle cx="30" cy="14" r="2.2"/></g><path d="M10 30H50L46 90Q45 96 38 96H22Q15 96 14 90Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M14 56H46L44 88Q43 92 38 92H22Q17 92 16 88Z" fill="#F5EDDF"/></symbol>
+    <!-- Гриб, томат, сир -->
+    <symbol id="mush" viewBox="0 0 100 100"><path d="M8 50Q10 10 50 8Q90 10 92 50Q70 58 50 56Q30 58 8 50Z" fill="#B5652E"/><path d="M38 54H62L66 90Q66 96 58 96H42Q34 96 34 90Z" fill="#F5EDDF"/><g fill="#E6C08A"><circle cx="34" cy="28" r="6"/><circle cx="60" cy="22" r="5"/><circle cx="72" cy="38" r="4"/></g></symbol>
+    <symbol id="tomato" viewBox="0 0 100 100"><circle cx="50" cy="56" r="40" fill="#E8573A"/><path d="M50 22L42 10M50 22L32 22M50 22L68 22M50 22L60 10M50 22L36 32M50 22L64 32" stroke="#6CC3A0" stroke-width="6" stroke-linecap="round"/><path d="M28 50q4-14 16-18" stroke="#fff" stroke-opacity=".4" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="cheese" viewBox="0 0 120 80"><path d="M6 66L110 66 110 32 6 52Z" fill="#E6B83A"/><path d="M6 52L84 10 110 32Z" fill="#F2D06B"/><g fill="#C9962A"><circle cx="40" cy="58" r="6"/><circle cx="74" cy="50" r="8"/><circle cx="98" cy="58" r="4"/></g></symbol>
+    <!-- Пляшечка соусу -->
+    <symbol id="sauce" viewBox="0 0 50 110"><rect x="18" y="4" width="14" height="16" rx="3" fill="#E8573A"/><path d="M18 20H32L36 34Q42 40 42 50V100Q42 106 36 106H14Q8 106 8 100V50Q8 40 14 34Z" fill="#3A2318"/><rect x="12" y="56" width="26" height="26" rx="3" fill="#F5EDDF"/></symbol>
+    <!-- ===== Тема 4: консистенція ===== -->
+    <!-- Кубик желе (currentColor) -->
+    <symbol id="jelly" viewBox="0 0 120 110"><ellipse cx="60" cy="100" rx="54" ry="8" fill="#000" fill-opacity=".25"/><path d="M14 40Q14 26 28 26H92Q106 26 106 40V86Q106 98 92 98H28Q14 98 14 86Z" fill="currentColor" fill-opacity=".85"/><path d="M20 30Q60 14 100 30" stroke="#fff" stroke-opacity=".35" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M26 44V78" stroke="#fff" stroke-opacity=".45" stroke-width="6" stroke-linecap="round"/><circle cx="74" cy="58" r="5" fill="#fff" fill-opacity=".35"/><circle cx="86" cy="76" r="3.5" fill="#fff" fill-opacity=".3"/></symbol>
+    <!-- Крохмальні зерна -->
+    <symbol id="starch" viewBox="0 0 120 100"><g fill="#F5EDDF" stroke="#BDB09B" stroke-width="2"><ellipse cx="38" cy="40" rx="26" ry="20"/><ellipse cx="82" cy="56" rx="24" ry="30"/><ellipse cx="40" cy="78" rx="18" ry="14"/></g><g fill="none" stroke="#BDB09B" stroke-width="1.6"><ellipse cx="38" cy="40" rx="16" ry="12"/><ellipse cx="38" cy="40" rx="7" ry="5"/><ellipse cx="82" cy="56" rx="15" ry="19"/><ellipse cx="82" cy="56" rx="6" ry="8"/><ellipse cx="40" cy="78" rx="9" ry="7"/></g></symbol>
+    <!-- Водорость (currentColor) -->
+    <symbol id="weed" viewBox="0 0 90 130"><g fill="currentColor"><path d="M44 128C40 96 30 80 22 58 14 36 20 14 30 4 32 30 42 44 48 70 54 94 52 112 50 128Z"/><path d="M50 128C54 104 66 90 72 70 78 50 74 30 66 18 64 40 56 54 52 76 48 96 46 112 46 128Z" opacity=".75"/></g><path d="M30 10Q36 60 47 124M66 24Q56 70 49 124" stroke="#14120F" stroke-opacity=".35" stroke-width="2.5" fill="none"/></symbol>
+    <!-- Пластина желатину -->
+    <symbol id="gsheet" viewBox="0 0 120 80"><path d="M10 14L100 6 112 66 22 74Z" fill="#F2D9A8" fill-opacity=".8" stroke="#D9B27C" stroke-width="2"/><g stroke="#D9B27C" stroke-width="1.4" opacity=".8"><path d="M20 20L44 70M38 18L62 68M56 16L80 66M74 14L98 64M92 12L108 52"/><path d="M14 34L104 26M17 50L108 42"/></g></symbol>
+    <!-- Молекула ПАР: голова + хвіст -->
+    <symbol id="surf" viewBox="0 0 40 80"><path d="M20 26L14 36 26 46 14 56 26 66 18 76" stroke="#F2A541" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="15" r="12" fill="#62A9E0"/></symbol>
+    <!-- Крапля олії в оболонці емульгатора -->
+    <symbol id="emul" viewBox="0 0 120 120"><circle cx="60" cy="60" r="34" fill="#F2C14E"/><circle cx="50" cy="50" r="9" fill="#fff" fill-opacity=".45"/><g stroke="#F2A541" stroke-width="3" stroke-linecap="round"><path d="M60 26V18M60 94V102M26 60H18M94 60H102M36 36L30 30M84 84L90 90M84 36L90 30M36 84L30 90"/></g><g fill="#62A9E0"><circle cx="60" cy="12" r="6"/><circle cx="60" cy="108" r="6"/><circle cx="12" cy="60" r="6"/><circle cx="108" cy="60" r="6"/><circle cx="26" cy="26" r="6"/><circle cx="94" cy="94" r="6"/><circle cx="94" cy="26" r="6"/><circle cx="26" cy="94" r="6"/></g></symbol>
+    <!-- Стручок (ріжкове дерево / гуар) -->
+    <symbol id="pod" viewBox="0 0 130 60"><path d="M8 40Q30 4 80 10Q118 14 124 30Q110 26 82 30Q40 36 14 52Q4 50 8 40Z" fill="#6B3A1E"/><g fill="#C98A3C"><ellipse cx="38" cy="30" rx="6" ry="4"/><ellipse cx="58" cy="24" rx="6" ry="4"/><ellipse cx="80" cy="21" rx="6" ry="4"/><ellipse cx="100" cy="22" rx="5" ry="3.5"/></g></symbol>
+    <!-- Гілка з краплею камеді -->
+    <symbol id="bark" viewBox="0 0 120 100"><path d="M4 30Q60 18 116 26V48Q60 40 4 54Z" fill="#7A4B25"/><path d="M14 36L30 34M44 32L66 30M80 31L100 31M20 46L40 44M60 40L84 40" stroke="#5B3A1E" stroke-width="2.5" stroke-linecap="round"/><path d="M62 44Q62 60 56 70A10 10 0 1 0 72 70Q66 60 66 44Z" fill="#F2A541"/><circle cx="60" cy="72" r="3" fill="#fff" fill-opacity=".5"/></symbol>
+    <!-- Ланцюг полісахариду з водою -->
+    <symbol id="chain" viewBox="0 0 200 80"><path d="M10 40L40 20 70 40 100 20 130 40 160 20 190 40" stroke="#F2A541" stroke-width="5" fill="none" stroke-linejoin="round"/><g fill="#F2A541"><circle cx="10" cy="40" r="7"/><circle cx="40" cy="20" r="7"/><circle cx="70" cy="40" r="7"/><circle cx="100" cy="20" r="7"/><circle cx="130" cy="40" r="7"/><circle cx="160" cy="20" r="7"/><circle cx="190" cy="40" r="7"/></g><g fill="#62A9E0"><circle cx="40" cy="4" r="4"/><circle cx="70" cy="58" r="4"/><circle cx="100" cy="4" r="4"/><circle cx="130" cy="58" r="4"/><circle cx="160" cy="4" r="4"/><circle cx="10" cy="58" r="4"/><circle cx="190" cy="58" r="4"/></g></symbol>
+    <!-- Ріжок морозива -->
+    <symbol id="icecream" viewBox="0 0 70 120"><path d="M14 52L35 116 56 52Z" fill="#D9A066"/><path d="M20 58L46 96M30 54L52 76M50 58L26 96" stroke="#A8743F" stroke-width="2"/><circle cx="35" cy="36" r="24" fill="#F5EDDF"/><circle cx="22" cy="46" r="12" fill="#F5EDDF"/><circle cx="48" cy="46" r="12" fill="#F5EDDF"/><circle cx="28" cy="28" r="5" fill="#fff"/></symbol>
+    <!-- Плитка шоколаду -->
+    <symbol id="choc" viewBox="0 0 120 80"><rect x="6" y="6" width="108" height="68" rx="8" fill="#5B3A1E"/><g fill="#7A4B25"><rect x="14" y="14" width="26" height="22" rx="3"/><rect x="47" y="14" width="26" height="22" rx="3"/><rect x="80" y="14" width="26" height="22" rx="3"/><rect x="14" y="44" width="26" height="22" rx="3"/><rect x="47" y="44" width="26" height="22" rx="3"/><rect x="80" y="44" width="26" height="22" rx="3"/></g></symbol>
+    <!-- Купка порошку -->
+    <symbol id="powder" viewBox="0 0 120 70"><path d="M8 64Q30 20 60 14Q90 20 112 64Z" fill="#F5EDDF"/><g fill="#BDB09B"><circle cx="40" cy="48" r="2"/><circle cx="60" cy="34" r="2"/><circle cx="76" cy="52" r="2"/><circle cx="54" cy="56" r="2"/></g></symbol>
+    <!-- Мішалка -->
+    <symbol id="mixer" viewBox="0 0 100 120"><rect x="44" y="4" width="12" height="60" rx="4" fill="#8E989E"/><path d="M50 64Q22 76 26 100Q50 96 50 70Q50 96 74 100Q78 76 50 64Z" fill="#BDB09B"/><path d="M14 74Q4 96 18 112H82Q96 96 86 74" stroke="#F5EDDF" stroke-width="5" fill="none"/></symbol>
+    <!-- ===== Теми 5–9 ===== -->
+    <symbol id="microbe" viewBox="0 0 100 100"><path d="M78 28Q92 14 96 30M22 72Q8 86 4 70M70 76Q80 92 92 88" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="20" y="30" width="60" height="40" rx="20" fill="currentColor" transform="rotate(-30 50 50)"/><g fill="#14120F" opacity=".35"><circle cx="42" cy="54" r="5"/><circle cx="58" cy="44" r="4"/></g></symbol>
+    <symbol id="mold" viewBox="0 0 100 100"><g stroke="#6CC3A0" stroke-width="3"><path d="M30 92V52M50 92V38M70 92V58"/></g><g fill="#6CC3A0"><circle cx="30" cy="44" r="10"/><circle cx="50" cy="28" r="12"/><circle cx="70" cy="50" r="9"/></g><g fill="#B5EBD5" opacity=".6"><circle cx="26" cy="40" r="3"/><circle cx="46" cy="24" r="3"/></g><path d="M10 92H90" stroke="#4D443A" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="sausage" viewBox="0 0 140 60"><path d="M14 30Q14 10 40 10H100Q126 10 126 30T100 50H40Q14 50 14 30Z" fill="#B3263A"/><g fill="#F5EDDF" opacity=".8"><circle cx="50" cy="26" r="3"/><circle cx="74" cy="34" r="3"/><circle cx="96" cy="24" r="3"/><circle cx="62" cy="40" r="2.5"/></g><path d="M14 30H4M126 30H136" stroke="#C98A3C" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="onion" viewBox="0 0 100 110"><path d="M50 4Q46 20 50 30" stroke="#6CC3A0" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M50 28C78 34 92 60 84 84 78 100 64 106 50 106S22 100 16 84C8 60 22 34 50 28Z" fill="#C98A3C"/><path d="M50 30Q30 60 40 104M50 30Q70 60 60 104" stroke="#8A5A2B" stroke-width="3" fill="none"/></symbol>
+    <symbol id="oilb" viewBox="0 0 60 120"><rect x="22" y="4" width="16" height="14" rx="3" fill="#6CC3A0"/><path d="M22 18H38V32Q52 40 52 56V108Q52 116 44 116H16Q8 116 8 108V56Q8 40 22 32Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M11 60H49V108Q49 113 44 113H16Q11 113 11 108Z" fill="#F2C14E"/></symbol>
+    <symbol id="dna" viewBox="0 0 60 120"><path d="M10 4C10 34 50 34 50 60S10 86 10 116" stroke="#62A9E0" stroke-width="5" fill="none"/><path d="M50 4C50 34 10 34 10 60S50 86 50 116" stroke="#A387E6" stroke-width="5" fill="none"/><g stroke="#BDB09B" stroke-width="3"><path d="M14 18H46M22 32H38M14 46H46M14 74H46M22 88H38M14 102H46"/></g></symbol>
+    <symbol id="pill" viewBox="0 0 100 50"><rect x="4" y="6" width="92" height="38" rx="19" fill="#F5EDDF"/><path d="M50 6H77A19 19 0 0 1 77 44H50Z" fill="currentColor"/><path d="M16 16Q30 12 40 14" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/></symbol>
+    <symbol id="factory" viewBox="0 0 140 110"><path d="M10 100V50L40 66V50L70 66V50L100 66V20H120V100Z" fill="#6B5D4C"/><g fill="#F2C14E"><rect x="22" y="76" width="12" height="10"/><rect x="52" y="76" width="12" height="10"/><rect x="82" y="76" width="12" height="10"/></g><g fill="#8A7A62" opacity=".8"><circle cx="110" cy="12" r="8"/><circle cx="124" cy="4" r="6"/></g></symbol>
+    <symbol id="globe" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#62A9E0"/><path d="M28 22Q40 30 34 44Q26 52 34 62Q44 64 42 80M62 14Q56 28 68 34Q82 36 84 50Q72 58 76 76" fill="none" stroke="#6CC3A0" stroke-width="10" stroke-linecap="round"/></symbol>
+    <symbol id="recyc" viewBox="0 0 100 100"><g fill="none" stroke="#6CC3A0" stroke-width="8" stroke-linecap="round"><path d="M38 24L26 44M62 24L74 44M78 68L66 84H36M22 68L32 84"/></g><g fill="#6CC3A0"><path d="M50 8L64 26H36Z"/><path d="M88 70L74 92 66 74Z"/><path d="M12 70L32 74 22 92Z"/></g></symbol>
+    <symbol id="bin" viewBox="0 0 80 100"><rect x="8" y="14" width="64" height="10" rx="4" fill="#8E989E"/><rect x="30" y="6" width="20" height="10" rx="3" fill="#8E989E"/><path d="M14 28H66L60 94H20Z" fill="#6B5D4C"/><path d="M30 40V82M40 40V82M50 40V82" stroke="#8E989E" stroke-width="4"/></symbol>
+    <symbol id="fiber" viewBox="0 0 120 80"><g fill="none" stroke-width="5" stroke-linecap="round"><path d="M6 20Q36 4 60 20T114 20" stroke="#6CC3A0"/><path d="M6 40Q36 24 60 40T114 40" stroke="#C98A3C"/><path d="M6 60Q36 44 60 60T114 60" stroke="#6CC3A0"/></g></symbol>
+    <symbol id="enz" viewBox="0 0 100 100"><path d="M50 50L92 30A44 44 0 1 0 92 70Z" fill="currentColor"/><circle cx="46" cy="28" r="5" fill="#14120F"/><rect x="76" y="44" width="12" height="12" rx="3" fill="#F5EDDF"/></symbol>
+    <symbol id="lemon" viewBox="0 0 100 80"><path d="M6 40Q10 8 50 8T94 40Q90 72 50 72T6 40Z" fill="#F2C14E"/><circle cx="6" cy="40" r="5" fill="#E6B83A"/><circle cx="94" cy="40" r="5" fill="#E6B83A"/><path d="M28 26Q40 18 54 20" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6"/></symbol>
+    <symbol id="doc" viewBox="0 0 80 100"><path d="M8 4H54L74 24V96H8Z" fill="#F5EDDF"/><path d="M54 4V24H74" fill="#D9CFBD"/><g stroke="#8A7A62" stroke-width="4" stroke-linecap="round"><path d="M18 40H62M18 54H62M18 68H48"/></g></symbol>
+    <symbol id="tank" viewBox="0 0 100 100"><path d="M14 40Q14 14 50 14T86 40V88H14Z" fill="#6CC3A0"/><rect x="10" y="86" width="80" height="8" rx="3" fill="#6B5D4C"/><path d="M50 14V4H66" stroke="#8E989E" stroke-width="5" fill="none"/><text x="50" y="66" text-anchor="middle" font-family="Unbounded" font-weight="700" font-size="17" fill="#14120F">CH₄</text></symbol>
+    <symbol id="bubbles" viewBox="0 0 100 100"><g fill="none" stroke="#F5EDDF" stroke-width="3" opacity=".85"><circle cx="30" cy="70" r="12"/><circle cx="62" cy="58" r="16"/><circle cx="44" cy="34" r="9"/><circle cx="74" cy="24" r="7"/><circle cx="20" cy="40" r="6"/></g></symbol>
+    <symbol id="gut" viewBox="0 0 100 100"><path d="M20 20H80Q92 20 92 32V40Q92 52 80 52H24Q10 52 10 64V72Q10 84 24 84H86" fill="none" stroke="#E8A9A0" stroke-width="12" stroke-linecap="round"/></symbol>
+    <linearGradient id="gCore" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#F2A541"/><stop offset="1" stop-color="#E8573A"/></linearGradient>
+    <marker id="arM" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" class="sv-arrow"/></marker>
+  </defs>
+</svg>
+
+<div class="bg-px" aria-hidden="true"><div class="bg-glow" data-bg="0.06" data-bm="10"></div><div class="bg-dots" data-bg="0.22" data-bm="16"></div><div class="bg-dots2" data-bg="0.45" data-bm="30"></div></div>
+<div class="px-field" id="pxField" aria-hidden="true"></div>
+
+<div class="frame">
+  <div class="hud-bar">
+    <span><span class="dot"></span>SYSTEM: STEAM‑HUB / FOOD‑ADDITIVES.LAB — ОНЛАЙН · ПРАКТИЧНЕ ЗАНЯТТЯ: 06</span>
+    <button class="theme-btn" id="themeBtn" type="button">☀ Світла тема</button>
+  </div>
+
+  <header class="hero" id="hero">
+    <span class="hero-num" aria-hidden="true" data-px="-0.25">06</span>
+    <div>
+      <span class="hero-tag">// PRACTICE_06 · PROCESS.AIDS</span>
+      <h1>Практичне заняття 6. Харчові добавки, що впливають на перебіг технологічного процесу</h1>
+      <p class="sub">Робочий зошит: мінеральні солі, ферментні препарати, комплексні поліпшувачі; таблиця розпушувачів; окисники й відновники; аналіз 5 етикеток і звіт.</p>
+      <div class="hero-meta">
+        <span class="chip"><b id="cntQ">0</b> питань</span>
+        <span class="chip"><b id="cntT">0</b> практичних завдань</span>
+        <span class="chip"><b class="pct">0%</b> виконано</span>
+        <span class="chip"><b>.doc</b> звіт викладачу</span>
+      </div>
+    </div>
+    <div class="hero-scene" id="heroScene" aria-hidden="true">
+      <div class="lyr" data-depth="0.25" data-sy="0.10"><svg viewBox="0 0 460 360"><circle cx="240" cy="180" r="190" fill="url(#glowA)"/></svg></div>
+      <div class="lyr" data-depth="0.45" data-sy="0.18"><svg viewBox="0 0 460 360"><g class="spin" style="transform-origin:240px 180px;animation-duration:40s"><circle cx="240" cy="180" r="160" fill="none" stroke="#7A6A55" stroke-width="2" stroke-dasharray="4 10"/><circle cx="240" cy="20" r="8" fill="#F2A541"/><circle cx="400" cy="180" r="7" fill="#6CC3A0"/><circle cx="240" cy="340" r="8" fill="#62A9E0"/><circle cx="80" cy="180" r="7" fill="#E8573A"/></g></svg></div>
+      <div class="lyr" data-depth="0.75" data-sy="0.30"><svg viewBox="0 0 460 360"><g class="bob"><use href="#bread" x="170" y="100" width="257" height="150"/></g></svg></div>
+      <div class="lyr" data-depth="1.05" data-sy="0.42"><svg viewBox="0 0 460 360"><use href="#enz" x="40" y="235" width="90" height="90"/><g class="bob2"><use href="#mixer" x="355" y="45" width="67" height="80"/></g><use href="#powder" x="350" y="235" width="154" height="90"/><g class="bob2"><use href="#flame" x="60" y="40" width="56" height="70"/></g></svg></div>
+      <div class="lyr" data-depth="1.5" data-sy="0.6">
+        <span class="echip bob" style="left:2%;top:40%">Е500</span><span class="echip bob2" style="left:70%;top:0%">Е450</span>
+        <span class="echip bob2" style="left:30%;top:2%">Е300</span><span class="echip bob" style="left:76%;top:56%">Е920</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabsNav" aria-label="Розділи заняття">
+    <button data-t="map" class="active">🗺 Огляд</button>
+    <button data-t="t1">01 · Питання</button>
+    <button data-t="t2">02 · Розпушувачі й етикетки</button>
+    <button data-t="sub">📤 Здача</button>
+    <button data-t="ref">📚 Довідка</button>
+    <div class="nav-progress" aria-hidden="true"><i id="navProgress"></i></div>
+  </nav>
+
+  <section class="panel plain active" id="map">
+    <header class="sec-head">
+      <svg class="deco" viewBox="0 0 260 220" data-px="0.18" aria-hidden="true"><circle cx="170" cy="100" r="90" fill="url(#glowA)"/><use href="#bread" x="140" y="50" width="137" height="80" opacity=".85"/></svg>
+      <div class="sec-idx" data-px="0.12">00</div>
+      <div>
+        <span class="sec-kicker">Огляд заняття</span>
+        <h2>Що потрібно зробити</h2>
+        <p class="lede"><b>Мета:</b> поглибити знання про технологічні добавки — солі, ферменти, поліпшувачі, розпушувачі, окисники й відновники — і їх роль у виробництві.</p>
+      </div>
+    </header>
+    <div class="sec-main">
+      <article class="block" data-kind="theory" id="m-1">
+        <header class="block-head"><span class="block-no">≡</span><div><span class="kind"></span><h3>Структура заняття</h3></div></header>
+        <div class="grid3"><a class="card plan-card" data-go="t1"><span class="plan-n">01</span><h4>Завдання 1</h4><p>Мінеральні солі, ферменти, комплексні поліпшувачі.</p><span class="k">3 блоки →</span></a><a class="card plan-card" data-go="t2"><span class="plan-n">02</span><h4>Завдання 2</h4><p>Розпушувачі, окисники й відновники, 5 етикеток.</p><span class="k">4 блоки →</span></a><a class="card plan-card" data-go="sub"><span class="plan-n">✓</span><h4>Здача роботи</h4><p>Перевірка готовності й файл звіту для викладача.</p><span class="k">сформувати .doc →</span></a></div>
+      </article>
+
+      <article class="block" data-kind="theory" id="m-2">
+        <header class="block-head"><span class="block-no">→</span><div><span class="kind"></span><h3>Порядок виконання</h3></div></header>
+        <div class="steps"><div class="step">Заповніть <b>дані студента</b> нижче — з них формується назва файлу.</div><div class="step"><b>Завдання 1:</b> дайте письмові відповіді. Розгорніть підказку, щоб побачити, що варто розкрити; лічильник покаже рекомендований обсяг.</div><div class="step"><b>Завдання 2:</b> заповніть таблицю розпушувачів, опишіть окисники й відновники, проаналізуйте 5 етикеток і зробіть висновок.</div><div class="step">На вкладці <b>«Здача»</b> перевірте готовність і завантажте файл .doc — надішліть його викладачу.</div></div>
+        <div class="callout a"><b>Відповіді зберігаються автоматично</b> у цьому браузері на цьому пристрої. Щоб продовжити на іншому комп’ютері, сформуйте файл .doc і працюйте далі в ньому.</div>
+      </article>
+
+      <article class="block" data-kind="sim" id="m-3">
+        <header class="block-head"><span class="block-no">ID</span><div><span class="kind"></span><h3>Дані студента</h3></div></header>
+        <p class="lede">Викладач просить називати файл так: <b>ПІП, група, номер практичного заняття</b>. Заповніть поля — назва сформується сама.</p>
+        <div class="stu"><label class="field">Прізвище, ім’я, по батькові<input type="text" data-stu="name" placeholder="Іваненко Іван Іванович" autocomplete="name"></label><label class="field">Група<input type="text" data-stu="group" placeholder="напр. ХТ-21"></label></div>
+        <p style="margin:0">Назва файлу для викладача: <span class="fname"></span></p>
+      </article>
+
+      <article class="block" data-kind="data" id="m-4">
+        <header class="block-head"><span class="block-no">%</span><div><span class="kind"></span><h3>Прогрес виконання</h3></div></header>
+        <div class="big-pct pct">0%</div><div class="pbar"><i></i></div>
+        <div class="dash"></div>
+      </article>
+
+      <article class="block" data-kind="extra" id="m-5">
+        <header class="block-head"><span class="block-no">↗</span><div><span class="kind"></span><h3>Матеріали до заняття</h3></div></header>
+        <p>Спирайтеся на лекцію 6 (регулятори pH, розпушувачі, окисники й відновники, солі, ферменти, поліпшувачі), Codex GSFA і proe.info.</p>
+        <div class="src"><a href="lec6.html">📖 Конспект лекції 6</a><a href="pres6.html">🎞 Презентація лекції 6</a><a href="https://www.fao.org/fao-who-codexalimentarius/home/en/" target=_blank rel=noopener>Codex Alimentarius</a><a href="https://www.fao.org/gsfaonline/" target=_blank rel=noopener>Codex GSFA online</a><a href="https://proe.info/uk" target=_blank rel=noopener>proe.info</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel" id="t1" data-task="Завдання 1">
+    <header class="sec-head">
+      <svg class="deco" viewBox="0 0 260 220" data-px="0.18" aria-hidden="true"><circle cx="170" cy="100" r="90" fill="url(#glowA)"/><use href="#enz" x="140" y="40" width="90" height="90" opacity=".85"/></svg>
+      <div class="sec-idx" data-px="0.12">01</div>
+      <div>
+        <span class="sec-kicker">Завдання 1 · письмові відповіді</span>
+        <h2>Дайте відповіді на запитання у письмовій формі</h2>
+        <p class="lede">Мінеральні солі, ферментні препарати, комплексні поліпшувачі.</p>
+        <div class="sec-meta"></div>
+      </div>
+    </header>
+    <aside class="sec-toc" aria-label="Зміст завдання"><div class="toc-title">Зміст завдання</div><nav class="toc-list"></nav></aside>
+    <div class="sec-main">
+      <article class="block" data-kind="theory" id="t1-1">
+        <header class="block-head"><span class="block-no">1.1</span><div><span class="kind"></span><h3>Мінеральні солі та інші технологічні добавки</h3></div></header>
+<details class="hint-box"><summary>Підказка: що розкрити у відповіді</summary><ul class="ul"><li>емульгуючі солі (фосфати, цитрати) у плавлених сирах;</li><li>солі кальцію як ущільнювачі (Е509) і коагулянти;</li><li>регулятори кислотності, розпушувачі, піногасники (Е900), освітлювачі, носії, екстрагенти;</li><li>приклади продуктів і процесів.</li></ul><div class="src"><a href="lec6.html" target="_blank" rel="noopener">📖 Лекція 6</a><a href="pres6.html" target="_blank" rel="noopener">🎞 Презентація 6</a></div></details><label class="field ans">Ваша відповідь<textarea class="ans-ta" data-key="q1.1" data-min="100" data-req data-rp="" rows="8" placeholder="Напишіть відповідь своїми словами…"></textarea></label>
+      </article>
+
+      <article class="block" data-kind="theory" id="t1-2">
+        <header class="block-head"><span class="block-no">1.2</span><div><span class="kind"></span><h3>Ферментні препарати</h3></div></header>
+<details class="hint-box"><summary>Підказка: що розкрити у відповіді</summary><ul class="ul"><li>джерела: рослинні, тваринні, мікробні;</li><li>групи: амілолітичні, протеолітичні, ліполітичні, пектолітичні, оксидоредуктази;</li><li>застосування: хлібопечення (амілази), сироваріння (хімозин), соки (пектинази), м’ясо (протеази);</li><li>оптимальні умови (температура, pH), переваги перед хімічними методами.</li></ul><div class="src"><a href="lec6.html" target="_blank" rel="noopener">📖 Лекція 6</a><a href="pres6.html" target="_blank" rel="noopener">🎞 Презентація 6</a></div></details><label class="field ans">Ваша відповідь<textarea class="ans-ta" data-key="q1.2" data-min="120" data-req data-rp="" rows="8" placeholder="Напишіть відповідь своїми словами…"></textarea></label>
+      </article>
+
+      <article class="block" data-kind="theory" id="t1-3">
+        <header class="block-head"><span class="block-no">1.3</span><div><span class="kind"></span><h3>Комплексні поліпшувачі</h3></div></header>
+<details class="hint-box"><summary>Підказка: що розкрити у відповіді</summary><ul class="ul"><li>склад: окисники, ферменти, емульгатори, регулятори кислотності, наповнювачі;</li><li>призначення в хлібопеченні: стабілізація якості борошна, об’єм, пористість, свіжість;</li><li>дозування у відсотках до маси борошна; вибір залежно від якості борошна.</li></ul><div class="src"><a href="lec6.html" target="_blank" rel="noopener">📖 Лекція 6</a><a href="pres6.html" target="_blank" rel="noopener">🎞 Презентація 6</a></div></details><label class="field ans">Ваша відповідь<textarea class="ans-ta" data-key="q1.3" data-min="100" data-req data-rp="" rows="8" placeholder="Напишіть відповідь своїми словами…"></textarea></label>
+      </article>
+
+      <div class="takeaway" id="t1-end"><svg class="tk-deco" viewBox="0 0 200 200" data-px="0.2" aria-hidden="true"><use href="#hex" width="200" height="200" style="color:#6CC3A0"/></svg><div class="tk-icon">✓</div><div><span class="tk-label">Після завдання</span><p>Відповіді збережено. Далі — розпушувачі, окисники й етикетки.</p></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="t2" data-task="Завдання 2">
+    <header class="sec-head">
+      <svg class="deco" viewBox="0 0 260 220" data-px="0.18" aria-hidden="true"><circle cx="170" cy="100" r="90" fill="url(#glowT)"/><use href="#bread" x="140" y="40" width="154" height="90" opacity=".85"/></svg>
+      <div class="sec-idx" data-px="0.12">02</div>
+      <div>
+        <span class="sec-kicker">Завдання 2 · таблиця, характеристика, етикетки</span>
+        <h2>Розпушувачі, окисники й відновники, аналіз продуктів</h2>
+        <p class="lede">Таблиця розпушувачів, добавки окисної й відновної дії, 5 етикеток.</p>
+        <div class="sec-meta"></div>
+      </div>
+    </header>
+    <aside class="sec-toc" aria-label="Зміст завдання"><div class="toc-title">Зміст завдання</div><nav class="toc-list"></nav></aside>
+    <div class="sec-main">
+      <article class="block" data-kind="data" id="t2-1">
+        <header class="block-head"><span class="block-no">2.1</span><div><span class="kind"></span><h3>Характеристика розпушувачів</h3></div></header>
+<p class="task-q">Наведіть характеристику розпушувачів, вказуючи сфери їх використання.</p><details class="hint-box"><summary>Підказка: що розкрити у відповіді</summary><ul class="ul"><li>хімічні розпушувачі виділяють CO₂ (карбонати амонію — ще й NH₃);</li><li>кислотні компоненти визначають швидкість газоутворення;</li><li>для дріжджів Е-коду немає — поставте «—»;</li><li>сфери: печиво, пряники, бісквіти, кекси, хліб.</li></ul><div class="src"><a href="lec6.html" target="_blank" rel="noopener">📖 Лекція 6</a><a href="pres6.html" target="_blank" rel="noopener">🎞 Презентація 6</a></div></details><div class="rb" data-rb="rb2.1" data-cols="[{&quot;h&quot;: &quot;Розпушувач&quot;, &quot;fixed&quot;: true}, {&quot;h&quot;: &quot;Е-код&quot;, &quot;ph&quot;: &quot;Е…&quot;}, {&quot;h&quot;: &quot;Принцип дії, газ&quot;, &quot;type&quot;: &quot;area&quot;}, {&quot;h&quot;: &quot;Сфери використання&quot;, &quot;type&quot;: &quot;area&quot;}]" data-rows="[[&quot;Гідрокарбонат натрію (харчова сода)&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;], [&quot;Карбонати амонію&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;], [&quot;Пекарський порошок (сода + кислотний компонент)&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;], [&quot;Дифосфати&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;], [&quot;Глюконо-дельта-лактон&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;], [&quot;Дріжджі (біологічне розпушування)&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;]]" data-min="6" data-fixed="1" data-req data-rp=""></div>
+      </article>
+
+      <article class="block" data-kind="sim" id="t2-2">
+        <header class="block-head"><span class="block-no">2.2</span><div><span class="kind"></span><h3>Добавки окисної та відновної дії, прискорювачі процесу</h3></div></header>
+<p class="task-q">Охарактеризуйте харчові добавки відновної та окисної дії, наведіть приклади їх використання (можна вказувати рецептури продуктів і страв). Наведіть детальну характеристику найпоширеніших добавок, що прискорюють технологічний процес, та приклади їх використання.</p><details class="hint-box"><summary>Підказка: що розкрити у відповіді</summary><ul class="ul"><li>окисники: аскорбінова кислота (у тісті перетворюється на дегідроаскорбінову — зміцнює клейковину); бромат калію й азодикарбонамід у ЄС заборонені;</li><li>відновники: L-цистеїн (Е920), сульфіти — розслаблюють клейковину (затяжне печиво, крекер);</li><li>прискорювачі: ферментні препарати, комплексні поліпшувачі, регулятори кислотності;</li><li>рецептура-приклад: вкажіть добавку та її дозування.</li></ul><div class="src"><a href="lec6.html" target="_blank" rel="noopener">📖 Лекція 6</a><a href="pres6.html" target="_blank" rel="noopener">🎞 Презентація 6</a></div></details><label class="field ans">Ваша відповідь<textarea class="ans-ta" data-key="q2.2" data-min="150" data-req data-rp="" rows="8" placeholder="Напишіть відповідь своїми словами…"></textarea></label>
+      </article>
+
+      <article class="block" data-kind="data" id="t2-3">
+        <header class="block-head"><span class="block-no">2.3</span><div><span class="kind"></span><h3>Аналіз 5 етикеток з технологічними добавками (таблиця 1)</h3></div></header>
+<p class="task-q">Оберіть 5 етикеток харчового продукту, який містить технологічні добавки, та заповніть таблицю 1.</p><details class="hint-box"><summary>Підказка: як заповнювати таблицю</summary><ul class="ul"><li>оберіть продукти, де є технологічні добавки (розпушувачі, регулятори кислотності, солі, поліпшувачі); сфотографуйте етикетки — фото можна додати у файл звіту;</li><li>переписуйте склад повністю, у тому порядку, як на етикетці (за спаданням масової частки);</li><li>добавка може бути вказана назвою без Е-коду (напр., «лимонна кислота») — додайте рядок вручну;</li><li>максимальний рівень шукайте в Codex GSFA для відповідної категорії продукту (мг/кг або GMP);</li><li>у графі «Вплив на організм» вкажіть ДДД і відомі ризики або користь, з посиланням на джерело.</li></ul><div class="src"><a href="https://www.fao.org/fao-who-codexalimentarius/home/en/" target="_blank" rel="noopener">Codex Alimentarius</a><a href="https://www.fao.org/gsfaonline/" target="_blank" rel="noopener">Codex GSFA online</a><a href="https://proe.info/uk" target="_blank" rel="noopener">proe.info</a></div></details><div class="callout a"><b>Як працює конструктор.</b> Перепишіть склад з етикетки й натисніть «Знайти Е-коди» — рядки добавок з назвою і класом заповняться з довідника сторінки (його можна редагувати). Максимальний рівень і вплив на організм знайдіть самостійно в Codex GSFA, на proe.info чи в лекції.</div><div class="lbl" data-lbl="lbl2.3" data-n="5" data-req data-rp=""></div>
+      </article>
+
+      <article class="block" data-kind="sim" id="t2-4">
+        <header class="block-head"><span class="block-no">2.4</span><div><span class="kind"></span><h3>Висновок про безпечність споживання</h3></div></header>
+<p class="task-q">Зробіть висновок про безпечність споживання обраних продуктів.</p><details class="hint-box"><summary>Підказка: що розкрити у відповіді</summary><ul class="ul"><li>скільки добавок у кожному продукті і до яких класів вони належать;</li><li>чи є серед них технологічні добавки, щодо яких є обмеження, попереджувальне маркування або дискусії;</li><li>для кого продукти можуть бути небажані (діти, алергіки, люди з фенілкетонурією, вагітні тощо);</li><li>чи можна перевищити допустиму добову дозу (ДДД) при звичайному споживанні;</li><li>загальний висновок: які продукти обрали б для щоденного раціону і чому.</li></ul><div class="src"><a href="https://www.fao.org/fao-who-codexalimentarius/home/en/" target="_blank" rel="noopener">Codex Alimentarius</a><a href="https://www.fao.org/gsfaonline/" target="_blank" rel="noopener">Codex GSFA online</a><a href="https://proe.info/uk" target="_blank" rel="noopener">proe.info</a></div></details><label class="field ans">Ваша відповідь<textarea class="ans-ta" data-key="q2.4" data-min="70" data-req data-rp="" rows="8" placeholder="Напишіть відповідь своїми словами…"></textarea></label>
+      </article>
+
+      <div class="takeaway" id="t2-end"><svg class="tk-deco" viewBox="0 0 200 200" data-px="0.2" aria-hidden="true"><use href="#hex" width="200" height="200" style="color:#6CC3A0"/></svg><div class="tk-icon">✓</div><div><span class="tk-label">Після завдання</span><p>Готово. Сформуйте файл на вкладці «Здача».</p></div></div>
+    </div>
+  </section>
+
+  <section class="panel plain" id="sub">
+    <header class="sec-head"><div class="sec-idx" data-px="0.12">✓</div><div><span class="sec-kicker">Здача роботи</span><h2>Перевірка і файл для викладача</h2><p class="lede">Сторінка збирає всі ваші відповіді й таблиці в один документ Word (.doc), уже названий за правилом викладача.</p></div></header>
+    <div class="sec-main">
+      <article class="block" data-kind="sim" id="sb-1">
+        <header class="block-head"><span class="block-no">ID</span><div><span class="kind"></span><h3>Дані студента</h3></div></header>
+        <div class="stu"><label class="field">Прізвище, ім’я, по батькові<input type="text" data-stu="name" placeholder="Іваненко Іван Іванович" autocomplete="name"></label><label class="field">Група<input type="text" data-stu="group" placeholder="напр. ХТ-21"></label></div>
+        <p style="margin:0">Назва файлу для викладача: <span class="fname"></span></p>
+        <div class="callout" id="stuMiss" hidden><b>Не заповнено ПІП або групу.</b> Завантаження файлу недоступне, доки обидва поля не будуть заповнені.</div>
+      </article>
+      <article class="block" data-kind="data" id="sb-2">
+        <header class="block-head"><span class="block-no">%</span><div><span class="kind"></span><h3>Готовність завдань</h3></div></header>
+        <div class="big-pct pct">0%</div><div class="pbar"><i></i></div>
+        <div class="dash"></div>
+      </article>
+      <article class="block" data-kind="sim" id="sb-3">
+        <header class="block-head"><span class="block-no">⬇</span><div><span class="kind"></span><h3>Сформувати звіт</h3></div></header>
+        <div class="btnrow"><button class="btn" type="button" id="repDoc">⬇ Завантажити .doc</button><button class="btn ghost" type="button" id="repPrev">👁 Переглянути звіт</button><button class="btn warn" type="button" id="repClear">🗑 Очистити відповіді</button></div>
+        <p class="lock-note" id="repLock" hidden>🔒 Кнопка завантаження заблокована: введіть ПІП і групу у блоці «Дані студента» вище.</p>
+        <p class="muted" style="margin-top:10px">Файл відкривається у Word або LibreOffice. Перед надсиланням перечитайте текст, за потреби додайте фото етикеток і збережіть як .docx.</p>
+        <div class="rep-prev" id="repBox" hidden></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="panel plain" id="ref">
+    <header class="sec-head"><div class="sec-idx" data-px="0.12">Aa</div><div><span class="sec-kicker">Довідка</span><h2>Довідник до заняття</h2><p class="lede">Діапазони Е-кодів, короткий довідник добавок і порядок пошуку максимальних рівнів у Codex.</p></div></header>
+    <div class="sec-main">
+      <article class="block" data-kind="data" id="r-1">
+        <header class="block-head"><span class="block-no">E</span><div><span class="kind"></span><h3>Діапазони Е-кодів</h3></div></header>
+        <div class="points">
+          <div class="point"><b>Е100–199</b><p>барвники</p></div><div class="point"><b>Е200–299</b><p>консерванти</p></div><div class="point"><b>Е300–399</b><p>антиоксиданти, регулятори кислотності</p></div>
+          <div class="point"><b>Е400–499</b><p>стабілізатори, загусники, емульгатори</p></div><div class="point"><b>Е500–599</b><p>регулятори кислотності, антизлежувачі, розпушувачі</p></div><div class="point"><b>Е600–699</b><p>підсилювачі смаку й аромату</p></div>
+          <div class="point"><b>Е700–799</b><p>антибіотики (резерв)</p></div><div class="point"><b>Е900–999</b><p>глазурувачі, гази, підсолоджувачі, піногасники</p></div><div class="point"><b>Е1000+</b><p>модифіковані крохмалі, ферменти, інші</p></div>
+        </div>
+        <p class="muted">Діапазон підказує основний клас, але одна добавка може виконувати кілька функцій (наприклад, Е330 — регулятор кислотності й синергіст антиоксидантів).</p>
+      </article>
+      <article class="block" data-kind="extra" id="r-2">
+        <header class="block-head"><span class="block-no">🔍</span><div><span class="kind"></span><h3>Короткий довідник Е-кодів</h3></div></header>
+        <div class="calc" style="grid-template-columns:minmax(0,1fr) auto;align-items:end"><label class="field">Пошук за кодом, назвою або класом<input type="search" id="eQ" class="esearch" placeholder="напр. 211, сорбат, емульгатор"></label><span class="muted" id="eCnt"></span></div>
+        <div class="table-wrap"><table id="eTab"></table></div>
+        <p class="muted">Довідник навчальний і неповний; максимальні рівні тут не наведено — вони залежать від категорії продукту.</p>
+      </article>
+      <article class="block" data-kind="theory" id="r-3">
+        <header class="block-head"><span class="block-no">?</span><div><span class="kind"></span><h3>Як знайти максимальний рівень</h3></div></header>
+        <div class="steps">
+          <div class="step">Відкрийте <b>Codex GSFA online</b> → пошук за назвою добавки або номером INS (той самий номер, що й після «Е»).</div>
+          <div class="step">У таблиці добавки знайдіть <b>категорію продукту</b> (напр., 01.1.2 — напої на молочній основі; 14.1.4 — ароматизовані напої).</div>
+          <div class="step">Випишіть <b>максимальний рівень</b> (мг/кг) або позначку <b>GMP</b> — використання за належною виробничою практикою (quantum satis).</div>
+          <div class="step">Для перевірки скористайтеся <b>proe.info</b> — там є опис добавки, її функції та можливий вплив.</div>
+        </div>
+        <div class="src"><a href="https://www.fao.org/gsfaonline/" target="_blank" rel="noopener">Codex GSFA online</a><a href="https://proe.info/uk" target="_blank" rel="noopener">proe.info</a></div>
+      </article>
+    </div>
+  </section>
+
+  <footer>STEAM-HUB · ПУЕТ — інтерактивне практичне заняття 6 «Харчові добавки, що впливають на перебіг технологічного процесу» · до лекції 6</footer>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const fmt = (n, d=0) => Number(n).toLocaleString('uk-UA', {minimumFractionDigits:0, maximumFractionDigits:d});
+const STILL = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- тема (темна за замовчуванням, як у презентації) ---------- */
+const root = document.documentElement;
+function paintThemeBtn(){ $('#themeBtn').textContent = root.getAttribute('data-theme')==='light' ? '☾ Темна тема' : '☀ Світла тема'; }
+try{ const s = localStorage.getItem('food01-theme'); if(s==='light') root.setAttribute('data-theme','light'); }catch(e){}
+$('#themeBtn').addEventListener('click', ()=>{
+  if(root.getAttribute('data-theme')==='light') root.removeAttribute('data-theme'); else root.setAttribute('data-theme','light');
+  try{ localStorage.setItem('food01-theme', root.getAttribute('data-theme')||'dark'); }catch(e){}
+  paintThemeBtn();
+});
+paintThemeBtn();
+
+/* ---------- вкладки ---------- */
+function openTab(id, scroll=true){
+  if(!document.getElementById(id)) return;
+  $$('#tabsNav button').forEach(b=>b.classList.toggle('active', b.dataset.t===id));
+  $$('section.panel').forEach(p=>p.classList.toggle('active', p.id===id));
+  const tabs = $('#tabsNav'), act = tabs.querySelector('button.active');
+  if(act) tabs.scrollTo({left: Math.max(0, act.offsetLeft - 12), behavior:'auto'});
+  const toc = document.getElementById(id).querySelector('.toc-list'); if(toc){ toc.scrollLeft = 0; toc.parentElement.scrollTop = 0; }
+  if(scroll){
+    const panel = document.getElementById(id), nav = $('#tabsNav');
+    const y = panel.getBoundingClientRect().top + window.scrollY - nav.offsetHeight - 22;
+    window.scrollTo({top: Math.max(0, y), behavior:'auto'});
+  }
+  history.replaceState(null, '', '#'+id);
+  requestAnimationFrame(()=>{ buildPxField(); pxUpdate(); });
+}
+$$('#tabsNav button').forEach(b=>b.addEventListener('click', ()=>openTab(b.dataset.t)));
+$$('[data-go]').forEach(c=>c.addEventListener('click', ()=>openTab(c.dataset.go)));
+
+/* перемикач-група кнопок */
+function group(sel, fn){
+  const btns = $$(sel);
+  btns.forEach(b=>b.addEventListener('click', ()=>{
+    btns.forEach(x=>{ x.classList.remove('active'); x.classList.add('ghost'); });
+    b.classList.add('active'); b.classList.remove('ghost'); fn(b);
+  }));
+}
+
+/* =========================================================
+   ПАРАЛАКС
+   1) hero: шари [data-depth] рухаються з різною швидкістю при прокрутці (data-sy) і за мишею;
+   2) [data-px]: елементи (цифри розділів, декор) зміщуються відносно центру екрана;
+   3) фонове поле: Е-коди й молекули на різній «глибині» прокручуються повільніше за сторінку.
+   Паралакс використовує CSS-властивість translate, а поява блоків — transform, тож вони не конфліктують.
+   ========================================================= */
+const heroLayers = $$('#heroScene .lyr');
+const pxEls = $$('[data-px]');
+const pxField = $('#pxField');
+let pxItems = [];
+function buildPxField(){
+  if(STILL) return;
+  pxField.style.height = '0px';                               // спершу прибираємо шар, щоб він не «роздував» висоту сторінки
+  const h = document.documentElement.scrollHeight;
+  pxField.style.height = h + 'px';
+  if(pxItems.length && Math.abs(pxField._h - h) < 200) return;
+  pxField._h = h; pxField.innerHTML = '';
+  const codes = ['Е170','Е260','Е330','Е339','Е341','Е450','Е500','Е503','Е509','Е575','Е920','Е300'];
+  const n = Math.max(14, Math.round(h / 260));
+  let seed = 7; const rnd = ()=>{ seed = (seed*9301 + 49297) % 233280; return seed/233280; };
+  pxItems = [];
+  for(let i=0;i<n;i++){
+    const el = document.createElement('div'); el.className = 'px-item';
+    const depth = 0.15 + rnd()*0.55;                         // 0.15…0.7: що більше — то «далі», то повільніше
+    const left = rnd() < .5 ? rnd()*12 : 88 + rnd()*10;       // переважно по краях, щоб не заважати тексту
+    if(rnd() < .55){ el.textContent = codes[Math.floor(rnd()*codes.length)]; el.style.fontSize = (18 + (1-depth)*34) + 'px'; }
+    else { const s = 30 + (1-depth)*60; el.innerHTML = `<svg width="${s}" height="${s}" viewBox="0 0 100 100" style="color:var(--amber)"><use href="#hex"/></svg>`; }
+    el.style.left = left + '%'; el.style.top = (i/n*h + rnd()*120) + 'px';
+    el.style.opacity = (0.05 + (1-depth)*0.07).toFixed(3);
+    el._d = depth; pxField.appendChild(el); pxItems.push(el);
+  }
+}
+let mx = 0, my = 0;
+const bgLayers = $$('.bg-px > div');
+// фон реагує і на мишу: шари зсуваються пропорційно своїй «глибині» (data-bm)
+if(!STILL) addEventListener('pointermove', e=>{
+  const x = e.clientX/innerWidth - .5, y = e.clientY/innerHeight - .5;
+  bgLayers.forEach(l=>{ const m = +l.dataset.bm; l.style.translate = `${(-x*m).toFixed(1)}px ${(-y*m*.7).toFixed(1)}px`; });
+}, {passive:true});
+function pxUpdate(){
+  if(STILL) return;
+  const sy = scrollY, vh = innerHeight;
+  // hero-шари: прокрутка
+  heroLayers.forEach(l=>{ l.style.transform = `translate3d(0, ${(sy * +l.dataset.sy).toFixed(1)}px, 0)`; });
+  // фонові шари: зсув візерунка пропорційно прокрутці (свічення — найповільніше, великі точки — найшвидше)
+  bgLayers.forEach(l=>{ l.style.backgroundPosition = `${l.classList.contains('bg-dots2') ? '14px' : '0'} ${(-sy * +l.dataset.bg).toFixed(1)}px`; });
+  // фонові елементи: рухаються вниз відносно сторінки → здаються повільнішими (далі)
+  pxItems.forEach(el=>{ el.style.translate = `0 ${(sy * el._d).toFixed(1)}px`; });
+  // локальний паралакс відносно центру екрана
+  pxEls.forEach(el=>{
+    if(!el.offsetParent && el.tagName!=='svg') return;
+    const r = el.getBoundingClientRect(); if(r.bottom < -200 || r.top > vh + 200) return;
+    const cur = el._py || 0, center = r.top - cur + r.height/2;
+    const v = (center - vh/2) * +el.dataset.px; el._py = v;
+    el.style.translate = `0 ${v.toFixed(1)}px`;
+  });
+}
+let pxTick = false;
+addEventListener('scroll', ()=>{ if(!pxTick){ pxTick = true; requestAnimationFrame(()=>{ pxUpdate(); pxTick = false; }); } }, {passive:true});
+addEventListener('resize', ()=>{ buildPxField(); pxUpdate(); });
+// миша: шари hero зсуваються пропорційно глибині
+if(!STILL) $('#hero').addEventListener('pointermove', e=>{
+  const r = e.currentTarget.getBoundingClientRect();
+  mx = (e.clientX - r.left)/r.width - .5; my = (e.clientY - r.top)/r.height - .5;
+  $$('#heroScene [data-depth]').forEach(l=>{ const d = +l.dataset.depth; l.style.translate = `${(-mx*d*34).toFixed(1)}px ${(-my*d*22).toFixed(1)}px`; });
+});
+$('#hero').addEventListener('pointerleave', ()=>$$('#heroScene [data-depth]').forEach(l=>l.style.translate = '0 0'));
+
+/* ---------- ментальні карти: вузли відштовхуються від курсора ---------- */
+const MM = (()=>{
+  const MAX = 15, K = 0.13, DAMP = 0.74, PAD = 6;
+  const active = new Set(); let running = false;
+  function parse(svg){
+    const nodes = [...svg.querySelectorAll('.mm-node')].map(g=>{
+      const r = g.querySelector('rect');
+      const b = {x:+r.getAttribute('x'), y:+r.getAttribute('y'), w:+r.getAttribute('width'), h:+r.getAttribute('height')};
+      return {g, b, cx:b.x+b.w/2, cy:b.y+b.h/2, x:0, y:0, vx:0, vy:0, tx:0, ty:0};
+    });
+    const byId = {}; nodes.forEach(n=>byId[n.g.dataset.id] = n);
+    const links = [...svg.querySelectorAll('.mm-link')].map(p=>({p, a:byId[p.dataset.a], b:byId[p.dataset.b], c:p.dataset.p.trim().split(/[\s,]+/).map(Number)}));
+    svg._mm = {nodes, links}; render(svg);
+  }
+  function render(svg){
+    const {nodes, links} = svg._mm;
+    nodes.forEach(n=>n.g.setAttribute('transform', `translate(${n.x.toFixed(2)} ${n.y.toFixed(2)})`));
+    links.forEach(l=>{
+      const ax = l.a ? l.a.x : 0, ay = l.a ? l.a.y : 0, bx = l.b ? l.b.x : 0, by = l.b ? l.b.y : 0, [x1,y1,x2,y2] = l.c;
+      const qx = (x1+x2)/2 + (ax+bx)*0.15, qy = (y1+y2)/2 + (ay+by)*0.15;
+      l.p.setAttribute('d', `M${(x1+ax).toFixed(2)},${(y1+ay).toFixed(2)} Q${qx.toFixed(2)},${qy.toFixed(2)} ${(x2+bx).toFixed(2)},${(y2+by).toFixed(2)}`);
+    });
+  }
+  function toSvg(svg, e){ const m = svg.getScreenCTM(); return m ? new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse()) : null; }
+  function onMove(e){
+    const svg = e.currentTarget, pt = toSvg(svg, e); if(!svg._mm || !pt) return;
+    svg._mm.nodes.forEach(n=>{
+      const inside = pt.x > n.b.x-PAD && pt.x < n.b.x+n.b.w+PAD && pt.y > n.b.y-PAD && pt.y < n.b.y+n.b.h+PAD;
+      if(inside){ const nx = (n.cx-pt.x)/(n.b.w/2), ny = (n.cy-pt.y)/(n.b.h/2), len = Math.hypot(nx, ny) || 1, f = Math.min(1, len) * MAX / len; n.tx = nx*f; n.ty = ny*f; }
+      else { n.tx = 0; n.ty = 0; }
+      n.g.classList.toggle('mm-hot', inside);
+    });
+    kick(svg);
+  }
+  function onLeave(e){ const svg = e.currentTarget; if(!svg._mm) return; svg._mm.nodes.forEach(n=>{ n.tx = 0; n.ty = 0; n.g.classList.remove('mm-hot'); }); kick(svg); }
+  function kick(svg){ active.add(svg); if(!running){ running = true; requestAnimationFrame(step); } }
+  function step(){
+    active.forEach(svg=>{
+      let moving = false;
+      svg._mm.nodes.forEach(n=>{
+        n.vx = (n.vx + (n.tx-n.x)*K) * DAMP; n.vy = (n.vy + (n.ty-n.y)*K) * DAMP; n.x += n.vx; n.y += n.vy;
+        if(Math.abs(n.tx-n.x) + Math.abs(n.ty-n.y) + Math.abs(n.vx) + Math.abs(n.vy) > 0.04) moving = true; else { n.x = n.tx; n.y = n.ty; n.vx = n.vy = 0; }
+      });
+      render(svg); if(!moving) active.delete(svg);
+    });
+    if(active.size) requestAnimationFrame(step); else running = false;
+  }
+  function attach(svg){
+    if(!svg) return; parse(svg);
+    if(STILL || svg._mmBound) return; svg._mmBound = true;
+    svg.addEventListener('pointermove', onMove); svg.addEventListener('pointerleave', onLeave);
+  }
+  return {attach};
+})();
+$$('svg.mm').forEach(MM.attach);
+
+/* ---------- універсальний класифікатор ---------- */
+function classifier(boxSel, scoreSel, cats, items){
+  const box = $(boxSel); let done = 0, right = 0;
+  items.forEach(it=>{
+    const d = document.createElement('div'); d.className = 'cls-item';
+    d.innerHTML = `<div class="txt">${it.t}</div><div class="opts">${cats.map((c,ci)=>`<button class="btn ghost small" type="button" data-c="${ci}">${c}</button>`).join('')}</div><div class="fb" hidden></div>`;
+    d.querySelectorAll('button').forEach(b=>b.addEventListener('click', ()=>{
+      if(d.dataset.done) return; d.dataset.done = 1; done++;
+      const ok = +b.dataset.c === it.c; if(ok) right++;
+      d.classList.add(ok ? 'right' : 'wrong');
+      d.querySelectorAll('button').forEach(x=>{ x.disabled = true; if(+x.dataset.c===it.c) x.classList.add('active'); });
+      const fb = d.querySelector('.fb'); fb.hidden = false; fb.textContent = (ok ? '✅ ' : '❌ Правильно: «'+cats[it.c]+'». ') + it.e;
+      $(scoreSel).textContent = `Виконано ${done} / ${items.length} · правильно ${right}` + (done===items.length ? (right===items.length ? ' · Чудово, усе правильно!' : ' · Перегляньте пояснення до помилок.') : '');
+    }));
+    box.appendChild(d);
+  });
+}
+
+/* змішування двох hex-кольорів (умовна візуалізація) */
+const hx = h => [1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const mixC = (a, b, t) => '#' + hx(a).map((v,i)=>Math.round(v + (hx(b)[i]-v)*t).toString(16).padStart(2,'0')).join('');
+
+/* ---------- зміст розділів, мета, scroll-spy, прогрес ---------- */
+const plural = (n, f) => f[(n%10===1 && n%100!==11) ? 0 : (n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20)) ? 1 : 2];
+const spyLinks = new Map();
+$$('section.panel').forEach(p=>{
+  const blocks = [...p.querySelectorAll('article.block')];
+  const groups = p.querySelectorAll('.group-label').length;
+  const meta = p.querySelector('.sec-meta');
+  if(meta && blocks.length){
+    const sims = blocks.filter(b=>b.dataset.kind==='sim').length;
+    meta.innerHTML = `<span><b>${blocks.length}</b> ${plural(blocks.length,['блок','блоки','блоків'])}</span>`
+      + (groups ? `<span><b>${groups}</b> ${plural(groups,['тематична група','тематичні групи','тематичних груп'])}</span>` : '')
+      + (sims ? `<span><b>${sims}</b> ${plural(sims,['практичне завдання','практичні завдання','практичних завдань'])}</span>` : '');
+  }
+  const toc = p.querySelector('.toc-list'); if(!toc) return;
+  const link = (el, no, title, kind)=>{
+    const a = document.createElement('a'); a.href = '#'+el.id; a.dataset.kind = kind;
+    a.innerHTML = `<span class="toc-no">${no}</span><span>${title}</span>`;
+    a.addEventListener('click', e=>{ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); });
+    toc.appendChild(a); spyLinks.set(el, a);
+  };
+  p.querySelectorAll('.group-label, article.block').forEach(el=>{
+    if(el.classList.contains('group-label')){ const g = document.createElement('div'); g.className = 'toc-group'; g.innerHTML = `<i>${el.dataset.g}</i>${el.dataset.title}`; toc.appendChild(g); return; }
+    link(el, el.querySelector('.block-no').textContent, el.querySelector('h3').textContent, el.dataset.kind);
+  });
+  const tk = p.querySelector('.takeaway'); if(tk) link(tk, '✓', tk.querySelector('.tk-label').textContent, 'end');
+  const legend = document.createElement('div'); legend.className = 'toc-legend';
+  legend.innerHTML = '<span style="--k:var(--amber)">питання</span><span style="--k:var(--tomato)">завдання</span><span style="--k:var(--mint)">таблиця</span><span style="--k:var(--plum)">довідка</span>';
+  toc.parentElement.appendChild(legend);
+});
+const spy = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting) return;
+    const a = spyLinks.get(en.target); if(!a) return;
+    const list = a.parentElement;
+    list.querySelectorAll('a').forEach(x=>x.classList.toggle('on', x===a));
+    if(list.scrollWidth > list.clientWidth + 4) list.scrollTo({left: a.offsetLeft - 12, behavior:'smooth'});
+    else if(list.parentElement.scrollHeight > list.parentElement.clientHeight + 4){ const box = list.parentElement; box.scrollTo({top: a.offsetTop - box.clientHeight/2, behavior:'smooth'}); }
+  });
+}, {rootMargin:'-30% 0px -60% 0px'});
+spyLinks.forEach((a, el)=>spy.observe(el));
+const navProg = $('#navProgress');
+function updProgress(){ const max = document.documentElement.scrollHeight - innerHeight; navProg.style.width = (max > 0 ? Math.min(100, scrollY/max*100) : 0) + '%'; }
+addEventListener('scroll', updProgress, {passive:true});
+addEventListener('resize', updProgress);
+$$('#tabsNav button, [data-go]').forEach(b=>b.addEventListener('click', ()=>setTimeout(updProgress, 60)));
+
+/* ---------- статичні картки з h4 → 3D-картки-перевертні ---------- */
+$$('.sec-main .card').forEach(card=>{
+  if(card.matches('a.card') || card.closest('.kv')) return;
+  const h = card.querySelector(':scope > h4'); if(!h) return;
+  const ill = card.querySelector(':scope > .ill');
+  const idx = [...card.parentElement.children].indexOf(card) + 1;
+  const title = h.innerHTML, plain = h.textContent;
+  h.remove(); if(ill) ill.remove();
+  const f = document.createElement('div');
+  f.className = 'fcard'; f.tabIndex = 0; f.setAttribute('role', 'button'); f.setAttribute('aria-pressed', 'false');
+  f.innerHTML = `<div class="fcard-inner"><div class="fcard-face front"><span class="fnum">${String(idx).padStart(2,'0')}</span>${ill ? ill.outerHTML : ''}<h4>${title}</h4><span class="fhint">↻ натисніть, щоб перевернути</span></div>`
+    + `<div class="fcard-face back"><span class="fback-t">${plain}</span><div>${card.innerHTML.trim()}</div></div></div>`;
+  card.replaceWith(f);
+});
+function flipCard(f){ f.classList.toggle('flipped'); f.setAttribute('aria-pressed', f.classList.contains('flipped')); }
+document.addEventListener('click', e=>{ const f = e.target.closest('.fcard'); if(f) flipCard(f); });
+document.addEventListener('keydown', e=>{ if((e.key==='Enter' || e.key===' ') && e.target.classList && e.target.classList.contains('fcard')){ e.preventDefault(); flipCard(e.target); } });
+
+/* ---------- поява під час прокручування (повторюється) ---------- */
+function clearLater(el){ (el._rvT || []).forEach(clearTimeout); el._rvT = []; }
+function later(el, fn, ms){ (el._rvT = el._rvT || []).push(setTimeout(fn, ms)); }
+function resetLinks(svg){ svg.querySelectorAll('.mm-link').forEach(p=>{ p.style.strokeDasharray = ''; p.style.strokeDashoffset = ''; p.style.transition = ''; p.style.markerEnd = ''; }); }
+function mmReveal(svg){
+  clearLater(svg);
+  svg.classList.remove('mm-wait', 'mm-anim'); svg.getBoundingClientRect(); svg.classList.add('mm-anim');
+  svg.querySelectorAll('.mm-in').forEach((g,i)=>g.style.setProperty('--i', i));
+  svg.querySelectorAll('.mm-link').forEach((p,i)=>{
+    const L = p.getTotalLength();
+    p.style.transition = 'none'; p.style.markerEnd = 'none';
+    p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p.getBoundingClientRect();
+    p.style.transition = `stroke-dashoffset .9s cubic-bezier(.6,0,.2,1) ${0.3 + i*0.12}s`; p.style.strokeDashoffset = '0';
+    later(svg, ()=>{ p.style.markerEnd = ''; }, (1.15 + i*0.12) * 1000);
+  });
+  later(svg, ()=>{ svg.classList.remove('mm-anim'); resetLinks(svg); }, 2800);
+}
+function mmReset(svg){ clearLater(svg); svg.classList.remove('mm-anim'); svg.classList.add('mm-wait'); resetLinks(svg); }
+if(!STILL && 'IntersectionObserver' in window){
+  const set = new Set($$('.sec-main > *'));
+  const staggered = $$('.fcard, .points > .point, .checklist > li, .io, .steps > .step, .gloss > div, .cls-item, .plan-card, .quiz-q, .big-card, .ctile');
+  staggered.forEach(el=>set.add(el));
+  set.forEach(el=>{
+    el.classList.add('rv');
+    if(staggered.includes(el)){ const sib = [...el.parentElement.children]; el.style.setProperty('--i', Math.min(sib.indexOf(el), 8)); }
+  });
+  const rvIn = new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('in'); }), {threshold:0.06, rootMargin:'0px 0px -6% 0px'});
+  const rvOut = new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting) return; en.target.classList.remove('in'); en.target.classList.toggle('from-top', en.boundingClientRect.top < 0); }), {threshold:0});
+  set.forEach(el=>{ rvIn.observe(el); rvOut.observe(el); });
+  const maps = $$('svg.mm');
+  maps.forEach(x=>x.classList.add('mm-wait'));
+  const svgIn = new IntersectionObserver(es=>es.forEach(en=>{ const x = en.target; if(!en.isIntersecting || x._shown) return; x._shown = true; mmReveal(x); }), {threshold:0.3});
+  const svgOut = new IntersectionObserver(es=>es.forEach(en=>{ const x = en.target; if(en.isIntersecting || !x._shown) return; x._shown = false; mmReset(x); }), {threshold:0});
+  maps.forEach(x=>{ svgIn.observe(x); svgOut.observe(x); });
+}
+
+const PR = {n:6, title:"Харчові добавки, що впливають на перебіг технологічного процесу"};
+
+/* =========================================================
+   ПРАКТИЧНЕ ЗАНЯТТЯ: збереження, конструктори таблиць, звіт
+   ========================================================= */
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LS = {
+  get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+const SKEY = 'steamhub-pract-' + PR.n;
+const ST = LS.get(SKEY) || {};
+let saveT = 0;
+function save(){ clearTimeout(saveT); saveT = setTimeout(()=>LS.set(SKEY, ST), 250); refresh(); }
+const words = s => (String(s||'').trim().match(/[\p{L}\p{N}]+/gu) || []).length;
+
+/* ---------- довідник Е-кодів (назва, клас, функції) ---------- */
+const ECODES = {
+ '100':['Куркумін','барвник','жовтий колір'], '101':['Рибофлавін','барвник','жовтий колір, вітамін B₂'], '102':['Тартразин','барвник','жовтий колір (синтетичний азобарвник)'],
+ '104':['Хіноліновий жовтий','барвник','жовтий колір (синтетичний)'], '110':['Жовтий «захід сонця» FCF','барвник','оранжевий колір (азобарвник)'], '120':['Кошеніль, карміни','барвник','червоний колір (натуральний)'],
+ '122':['Азорубін (кармуазин)','барвник','червоний колір (азобарвник)'], '124':['Понсо 4R','барвник','червоний колір (азобарвник)'], '129':['Червоний чарівний AC','барвник','червоний колір (азобарвник)'],
+ '131':['Патентований синій V','барвник','синій колір'], '132':['Індигокармін','барвник','синій колір'], '133':['Діамантовий синій FCF','барвник','синій колір'],
+ '140':['Хлорофіли','барвник','зелений колір (натуральний)'], '141':['Мідні комплекси хлорофілів','барвник','стійкий зелений колір'], '150a':['Цукровий колер I (простий)','барвник','коричневий колір'],
+ '150c':['Цукровий колер III (аміачний)','барвник','коричневий колір'], '150d':['Цукровий колер IV (аміачно-сульфітний)','барвник','коричневий колір'], '153':['Рослинне вугілля','барвник','чорний колір'],
+ '160a':['Каротини','барвник','жовто-оранжевий колір, провітамін A'], '160b':['Аннато (біксин, норбіксин)','барвник','жовто-оранжевий колір'], '160c':['Екстракт паприки','барвник','червоно-оранжевий колір'],
+ '162':['Буряковий червоний (бетанін)','барвник','червоний колір (натуральний)'], '163':['Антоціани','барвник','червоно-фіолетовий колір, залежить від pH'], '170':['Карбонат кальцію','барвник, регулятор кислотності','білий колір, джерело кальцію'],
+ '171':['Діоксид титану','барвник','білий колір; ⚠ заборонений у ЄС з 2022 р.'], '172':['Оксиди заліза','барвник','жовтий, червоний, чорний колір'],
+ '200':['Сорбінова кислота','консервант','пригнічує дріжджі й плісняву'], '202':['Сорбат калію','консервант','пригнічує дріжджі й плісняву'], '210':['Бензойна кислота','консервант','антимікробна дія в кислому середовищі'],
+ '211':['Бензоат натрію','консервант','антимікробна дія в кислому середовищі'], '220':['Діоксид сірки','консервант, антиоксидант','антимікробна дія, запобігає потемнінню'], '223':['Метабісульфіт натрію','консервант, антиоксидант','запобігає потемнінню, вибілює'],
+ '234':['Нізин','консервант','антибіотик проти грампозитивних бактерій'], '235':['Натаміцин (пімарицин)','консервант','протигрибковий антибіотик (поверхня сирів, ковбас)'],
+ '250':['Нітрит натрію','консервант, фіксатор забарвлення','рожевий колір м’яса, захист від клостридій'], '252':['Нітрат калію','консервант','посолка м’яса й сирів'],
+ '260':['Оцтова кислота','регулятор кислотності, консервант','підкислення, консервування'], '270':['Молочна кислота','регулятор кислотності','підкислення'], '282':['Пропіонат кальцію','консервант','захист хліба від плісняви'],
+ '290':['Діоксид вуглецю','пакувальний газ, карбонізуючий агент','газування, модифіковане середовище'], '296':['Яблучна кислота','регулятор кислотності','кислий смак'],
+ '300':['Аскорбінова кислота','антиоксидант','запобігає окисненню, вітамін C'], '301':['Аскорбат натрію','антиоксидант','запобігає окисненню'], '306':['Токофероли','антиоксидант','захист жирів від окиснення'],
+ '307':['Альфа-токоферол','антиоксидант','захист жирів, вітамін E'], '320':['Бутилгідроксианізол (БГА)','антиоксидант','захист жирів від окиснення'], '321':['Бутилгідрокситолуол (БГТ)','антиоксидант','захист жирів від окиснення'],
+ '322':['Лецитини','емульгатор, антиоксидант','стабілізація емульсій'], '330':['Лимонна кислота','регулятор кислотності, антиоксидант','кислий смак, синергіст антиоксидантів'], '331':['Цитрати натрію','регулятор кислотності, емульгуюча сіль','стабілізація pH'],
+ '334':['Винна кислота','регулятор кислотності','кислий смак'], '338':['Ортофосфорна кислота','регулятор кислотності','кислий смак (напої)'], '339':['Фосфати натрію','регулятор кислотності, емульгуюча сіль','утримання вологи, стабілізація'],
+ '341':['Фосфати кальцію','регулятор кислотності, розпушувач, антизлежувач','розпушування, сипучість'], '392':['Екстракти розмарину','антиоксидант','захист жирів від окиснення'],
+ '400':['Альгінова кислота','загусник','загущення'], '401':['Альгінат натрію','загусник, стабілізатор','загущення, гелеутворення'], '406':['Агар','желеутворювач, загусник','утворення гелю'],
+ '407':['Карагінан','загусник, стабілізатор, желеутворювач','загущення, стабілізація молочних продуктів'], '410':['Камедь ріжкового дерева','загусник, стабілізатор','загущення'], '412':['Гуарова камедь','загусник, стабілізатор','загущення'],
+ '414':['Гуміарабік','загусник, стабілізатор, емульгатор','стабілізація емульсій'], '415':['Ксантанова камедь','загусник, стабілізатор','загущення соусів'], '420':['Сорбіт','підсолоджувач, вологоутримувач','солодкий смак, утримання вологи'],
+ '422':['Гліцерин','вологоутримувач','утримання вологи'], '440':['Пектини','желеутворювач, загусник','утворення гелю (джеми, мармелад)'], '450':['Дифосфати','розпушувач, регулятор кислотності, емульгуюча сіль','розпушування, утримання вологи'],
+ '451':['Трифосфати','стабілізатор, вологоутримувач','утримання вологи в м’ясі'], '452':['Поліфосфати','стабілізатор, вологоутримувач','утримання вологи, емульгуюча сіль'], '460':['Целюлоза','наповнювач, антизлежувач','сипучість, об’єм'],
+ '466':['Карбоксиметилцелюлоза','загусник, стабілізатор','загущення'], '471':['Моно- і дигліцериди жирних кислот','емульгатор','стабілізація емульсій'], '472e':['Ефіри діацетилвинної та жирних кислот','емульгатор','поліпшення тіста'],
+ '476':['Полігліцерин-полірицинолеат','емульгатор','зниження в’язкості шоколаду'], '481':['Стеароїл-2-лактилат натрію','емульгатор','поліпшення тіста'], '500':['Карбонати натрію (сода)','розпушувач, регулятор кислотності','розпушування тіста'],
+ '503':['Карбонати амонію','розпушувач','розпушування тіста'], '504':['Карбонати магнію','антизлежувач, регулятор кислотності','сипучість'], '508':['Хлорид калію','желеутворювач, підсилювач смаку','замінник солі'],
+ '509':['Хлорид кальцію','ущільнювач','збереження щільності овочів, сироваріння'], '516':['Сульфат кальцію','ущільнювач, поліпшувач борошна','щільність, коагуляція'], '551':['Діоксид кремнію','антизлежувач','сипучість'],
+ '552':['Силікат кальцію','антизлежувач','сипучість'], '575':['Глюконо-дельта-лактон','регулятор кислотності, розпушувач','поступове підкислення'], '621':['Глутамат натрію','підсилювач смаку','смак умамі'],
+ '627':['Гуанілат натрію','підсилювач смаку','смак умамі'], '631':['Інозинат натрію','підсилювач смаку','смак умамі'], '635':['Рибонуклеотиди натрію','підсилювач смаку','смак умамі'],
+ '901':['Бджолиний віск','глазурувач','блиск, захисна плівка'], '903':['Карнаубський віск','глазурувач','блиск драже'], '904':['Шелак','глазурувач','блиск, захисна плівка'],
+ '920':['L-цистеїн','поліпшувач борошна','відновлювач, розм’якшує клейковину'], '941':['Азот','пакувальний газ','інертне середовище в упаковці'],
+ '950':['Ацесульфам калію','підсолоджувач','≈200× солодший за цукор'], '951':['Аспартам','підсолоджувач','≈200× солодший за цукор'], '952':['Цикламати','підсолоджувач','≈30× солодший за цукор'],
+ '953':['Ізомальт','підсолоджувач, наповнювач','цукрозамінник'], '954':['Сахарин','підсолоджувач','≈300–500× солодший за цукор'], '955':['Сукралоза','підсолоджувач','≈600× солодша за цукор'],
+ '957':['Тауматин','підсолоджувач, підсилювач смаку','≈2000–3000× солодший за цукор'], '960':['Стевіолглікозиди','підсолоджувач','≈200–300× солодші за цукор'], '965':['Мальтит','підсолоджувач, вологоутримувач','цукрозамінник'],
+ '967':['Ксиліт','підсолоджувач, вологоутримувач','цукрозамінник'], '968':['Еритрит','підсолоджувач','цукрозамінник'], '1105':['Лізоцим','консервант','ферментний консервант (сири)'],
+ '1404':['Окиснений крохмаль','загусник','модифікований крохмаль'], '1412':['Дикрохмальфосфат','загусник, стабілізатор','модифікований крохмаль'], '1414':['Ацетильований дикрохмальфосфат','загусник, стабілізатор','модифікований крохмаль'],
+ '1420':['Ацетильований крохмаль','загусник, стабілізатор','модифікований крохмаль'], '1422':['Ацетильований дикрохмаладипат','загусник, стабілізатор','модифікований крохмаль'], '1442':['Гідроксипропілдикрохмальфосфат','загусник, стабілізатор','модифікований крохмаль'],
+ '1450':['Октенілсукцинат крохмалю натрію','емульгатор, загусник','модифікований крохмаль'], '1520':['Пропіленгліколь','вологоутримувач, носій','розчинник ароматизаторів']
+};
+const ERANGE = [[100,199,'барвники'],[200,299,'консерванти'],[300,399,'антиоксиданти, регулятори кислотності'],[400,499,'стабілізатори, загусники, емульгатори'],[500,599,'регулятори кислотності, антизлежувачі, розпушувачі'],[600,699,'підсилювачі смаку й аромату'],[700,799,'антибіотики (резерв)'],[900,999,'глазурувачі, гази, підсолоджувачі, піногасники'],[1000,1999,'інші: модифіковані крохмалі, ферменти, вологоутримувачі']];
+const normE = s => String(s||'').toLowerCase().replace(/[еe]\s*-?/,'').replace(/\s/g,'').replace(/а/g,'a').replace(/с/g,'c').replace(/е/g,'e').replace(/[()]/g,'');
+const eInfo = s => { const k = normE(s); if(ECODES[k]) return ECODES[k]; const b = k.replace(/[a-z]+$/,''); return ECODES[b] || null; };
+const eRange = s => { const n = parseInt(normE(s)); const r = ERANGE.find(r=>n>=r[0] && n<=r[1]); return r ? r[2] : null; };
+
+/* ---------- прості поля ---------- */
+$$('[data-key]').forEach(el=>{
+  if(!el.matches('input, textarea, select')) return;
+  const k = el.dataset.key; if(ST[k] != null) el.value = ST[k];
+  el.addEventListener('input', ()=>{ ST[k] = el.value; save(); });
+  el.addEventListener('change', ()=>{ ST[k] = el.value; save(); });
+});
+/* відповіді з лічильником слів */
+$$('textarea.ans-ta').forEach(ta=>{
+  const bar = document.createElement('div'); bar.className = 'ans-bar';
+  bar.innerHTML = '<span class="wc"></span><span class="meter"><i></i></span>';
+  ta.closest('label').after(bar);
+  ta._bar = bar;
+});
+function paintAns(){
+  $$('textarea.ans-ta').forEach(ta=>{
+    const w = words(ta.value), m = +ta.dataset.min || 1, p = Math.min(100, w/m*100);
+    ta._bar.querySelector('.wc').textContent = `${w} ${plural(w,['слово','слова','слів'])} · рекомендовано від ${m}`;
+    ta._bar.querySelector('i').style.width = p + '%'; ta._bar.querySelector('.meter').classList.toggle('ok', p >= 100);
+  });
+}
+
+/* ---------- конструктор рядків таблиці ---------- */
+$$('.rb').forEach(root=>{
+  const k = root.dataset.rb, cols = JSON.parse(root.dataset.cols), fixed = root.dataset.fixed === '1', minRows = +root.dataset.min || 1;
+  if(!ST[k]) ST[k] = JSON.parse(root.dataset.rows || '[]');
+  if(!fixed && !ST[k].length) ST[k].push(cols.map(()=>''));
+  const cell = (c, v, ri, ci)=>{
+    if(c.fixed) return `<td class="fixed">${esc(v)}</td>`;
+    if(c.type === 'select') return `<td><select class="tsel" data-r="${ri}" data-c="${ci}"><option value="">—</option>${c.opts.map(o=>`<option${o===v?' selected':''}>${esc(o)}</option>`).join('')}</select></td>`;
+    if(c.type === 'area') return `<td><textarea class="tta" data-r="${ri}" data-c="${ci}" placeholder="${esc(c.ph||'')}">${esc(v)}</textarea></td>`;
+    return `<td><input class="tin" data-r="${ri}" data-c="${ci}" value="${esc(v)}" placeholder="${esc(c.ph||'')}"></td>`;
+  };
+  function render(){
+    root.innerHTML = `<div class="table-wrap"><table class="rb-table"><thead><tr>${root.dataset.num ? '<th>№</th>' : ''}${cols.map(c=>`<th>${esc(c.h)}</th>`).join('')}${fixed ? '' : '<th></th>'}</tr></thead><tbody>`
+      + ST[k].map((row, ri)=>`<tr>${root.dataset.num ? `<td class="no">${ri+1}</td>` : ''}${cols.map((c, ci)=>cell(c, row[ci] || '', ri, ci)).join('')}${fixed ? '' : `<td><button class="xbtn" type="button" data-del="${ri}" aria-label="Видалити рядок">✕</button></td>`}</tr>`).join('')
+      + `</tbody></table></div>` + (fixed ? '' : `<div class="btnrow"><button class="btn ghost small" type="button" data-add>＋ Додати рядок</button></div>`);
+  }
+  render();
+  root.addEventListener('input', e=>{ const t = e.target; if(t.dataset.r == null) return; ST[k][+t.dataset.r][+t.dataset.c] = t.value; save(); });
+  root.addEventListener('change', e=>{ const t = e.target; if(t.dataset.r == null) return; ST[k][+t.dataset.r][+t.dataset.c] = t.value; save(); });
+  root.addEventListener('click', e=>{
+    if(e.target.closest('[data-add]')){ ST[k].push(cols.map(c=>c.fixed ? '' : '')); render(); save(); }
+    const d = e.target.closest('[data-del]'); if(d){ ST[k].splice(+d.dataset.del, 1); if(!ST[k].length) ST[k].push(cols.map(()=>'')); render(); save(); }
+  });
+  root._addRow = vals=>{ const emptyI = ST[k].findIndex(r=>r.every(v=>!v)); if(emptyI >= 0) ST[k][emptyI] = vals; else ST[k].push(vals); render(); save(); };
+  const filled = r => cols.every((c, ci)=>c.fixed || c.opt || String(r[ci]||'').trim());
+  root._done = ()=> ST[k].filter(filled).length >= minRows;
+  root._report = ()=> `<table><tr>${root.dataset.num ? '<th>№ п.п</th>' : ''}${cols.map(c=>`<th>${esc(c.h)}</th>`).join('')}</tr>${ST[k].filter(r=>r.some((v,ci)=>!cols[ci].fixed && String(v||'').trim()) || fixed).map((r, i)=>`<tr>${root.dataset.num ? `<td>${i+1}</td>` : ''}${cols.map((c, ci)=>`<td>${esc(r[ci])}</td>`).join('')}</tr>`).join('')}</table>`;
+});
+/* кнопки «додати з підказки» */
+$$('[data-addrow]').forEach(b=>b.addEventListener('click', ()=>{ const root = document.querySelector(`.rb[data-rb="${b.dataset.addrow}"]`); root._addRow(JSON.parse(b.dataset.vals)); b.disabled = true; }));
+
+/* ---------- аналіз етикеток ---------- */
+$$('.lbl').forEach(root=>{
+  const k = root.dataset.lbl, n = +root.dataset.n;
+  if(!ST[k]) ST[k] = [];
+  while(ST[k].length < n) ST[k].push({nm:'', comp:'', adds:[{nm:'',e:'',cls:'',max:'',fn:'',eff:''}]});
+  const F = [['nm','Назва харчової добавки','tin'],['e','Індекс «Е»','tin e'],['cls','Клас харчової добавки','tin'],['max','Макс. рівень','tin'],['fn','Функції','tta'],['eff','Вплив на організм людини','tta']];
+  function render(){
+    root.innerHTML = ST[k].map((p, pi)=>`<div class="lb-prod" data-p="${pi}">
+      <div class="lb-h"><b>Продукт ${pi+1}</b><span class="bst" data-pst="${pi}"></span></div>
+      <div class="lb-grid">
+        <label class="field">Назва продукту, маса, термін зберігання<textarea class="tta" data-f="nm" placeholder="Напр.: Йогурт полуничний, 250 г, 21 доба">${esc(p.nm)}</textarea></label>
+        <label class="field">Склад продукту (усі складові з етикетки)<textarea class="tta" data-f="comp" placeholder="Перепишіть склад повністю — разом з Е-кодами">${esc(p.comp)}</textarea></label>
+      </div>
+      <div class="btnrow"><button class="btn ghost small" type="button" data-scan>🔍 Знайти Е-коди у складі</button><span class="lb-found" data-found></span></div>
+      <div class="table-wrap"><table class="rb-table lb-table"><thead><tr>${F.map(f=>`<th>${f[1]}</th>`).join('')}<th></th></tr></thead><tbody>
+        ${p.adds.map((a, ai)=>`<tr data-a="${ai}">${F.map(f=>f[2]==='tta' ? `<td><textarea class="tta" data-af="${f[0]}">${esc(a[f[0]])}</textarea></td>` : `<td><input class="${f[2]}" data-af="${f[0]}" value="${esc(a[f[0]])}" ${f[0]==='e' ? 'placeholder="Е330"' : f[0]==='max' ? 'placeholder="мг/кг або QS"' : ''}></td>`).join('')}<td><button class="xbtn" type="button" data-adel="${ai}" aria-label="Видалити добавку">✕</button></td></tr>`).join('')}
+      </tbody></table></div>
+      <div class="btnrow"><button class="btn ghost small" type="button" data-aadd>＋ Додати добавку</button></div>
+    </div>`).join('');
+    paintProd();
+  }
+  const done = p => p.nm.trim() && p.comp.trim() && p.adds.some(a=>a.e.trim() && a.cls.trim() && a.eff.trim());
+  function paintProd(){ root.querySelectorAll('[data-pst]').forEach(s=>{ const p = ST[k][+s.dataset.pst], ok = done(p); s.className = 'bst ' + (ok ? 'ok' : (p.nm||p.comp) ? 'part' : ''); s.textContent = ok ? '✓ заповнено' : (p.nm||p.comp) ? 'у роботі' : 'не почато'; }); }
+  root.addEventListener('input', e=>{
+    const t = e.target, pe = t.closest('[data-p]'); if(!pe) return; const p = ST[k][+pe.dataset.p];
+    if(t.dataset.f) p[t.dataset.f] = t.value;
+    if(t.dataset.af){ const a = p.adds[+t.closest('[data-a]').dataset.a]; a[t.dataset.af] = t.value;
+      if(t.dataset.af === 'e'){ const inf = eInfo(t.value); const tr = t.closest('tr');
+        if(inf){ ['nm','cls','fn'].forEach((f, i)=>{ if(!a[f].trim()){ a[f] = inf[i]; tr.querySelector(`[data-af="${f}"]`).value = inf[i]; } }); }
+        else if(!a.cls.trim() && eRange(t.value) && t.value.length >= 4){ a.cls = eRange(t.value); tr.querySelector('[data-af="cls"]').value = a.cls; } } }
+    paintProd(); save();
+  });
+  root.addEventListener('click', e=>{
+    const pe = e.target.closest('[data-p]'); if(!pe) return; const p = ST[k][+pe.dataset.p];
+    if(e.target.closest('[data-aadd]')){ p.adds.push({nm:'',e:'',cls:'',max:'',fn:'',eff:''}); render(); save(); }
+    const d = e.target.closest('[data-adel]'); if(d){ p.adds.splice(+d.dataset.adel, 1); if(!p.adds.length) p.adds.push({nm:'',e:'',cls:'',max:'',fn:'',eff:''}); render(); save(); }
+    if(e.target.closest('[data-scan]')){
+      const found = [...new Set((p.comp.match(/[EЕeе]\s?-?\s?\d{3,4}\s?[a-zA-Zа-і()]{0,3}/g) || []).map(x=>'Е' + normE(x).replace(/[^0-9a-z]/g,'')))];
+      const have = new Set(p.adds.map(a=>normE(a.e)));
+      let added = 0;
+      found.forEach(code=>{ if(have.has(normE(code))) return; const inf = eInfo(code) || ['', eRange(code) || '', ''];
+        const blank = p.adds.findIndex(a=>!a.e.trim() && !a.nm.trim());
+        const row = {nm:inf[0], e:code, cls:inf[1], max:'', fn:inf[2], eff:''};
+        if(blank >= 0) p.adds[blank] = row; else p.adds.push(row); added++; });
+      render(); save();
+      root.querySelector(`[data-p="${ST[k].indexOf(p)}"] [data-found]`).textContent = found.length ? `Знайдено: ${found.join(', ')} · додано рядків: ${added}. Перевірте назви, впишіть макс. рівень і вплив.` : 'Е-кодів не знайдено. Добавки можуть бути записані назвами — додайте їх вручну.';
+    }
+  });
+  render();
+  root._done = ()=> ST[k].filter(done).length >= n;
+  root._report = ()=> `<table><tr><th>Назва продукту, маса, термін зберігання</th><th>Склад продукту</th><th>Назва харчової добавки</th><th>Індекс «Е»</th><th>Клас харчової добавки</th><th>Максимальний рівень</th><th>Функції</th><th>Вплив харчової добавки на організм людини</th></tr>`
+    + ST[k].filter(p=>p.nm.trim() || p.comp.trim()).map(p=>{ const ad = p.adds.filter(a=>Object.values(a).some(v=>String(v).trim())); const rs = Math.max(1, ad.length);
+      return (ad.length ? ad : [{}]).map((a, i)=>`<tr>${i===0 ? `<td rowspan="${rs}">${esc(p.nm)}</td><td rowspan="${rs}">${esc(p.comp)}</td>` : ''}<td>${esc(a.nm)}</td><td>${esc(a.e)}</td><td>${esc(a.cls)}</td><td>${esc(a.max)}</td><td>${esc(a.fn)}</td><td>${esc(a.eff)}</td></tr>`).join(''); }).join('') + `</table>`;
+});
+
+/* ---------- декодер Е-коду ---------- */
+const edIn = $('#edIn');
+if(edIn){
+  const draw = ()=>{ const v = edIn.value.trim(), inf = eInfo(v), r = eRange(v);
+    $('#edOut').innerHTML = !v ? '<p style="margin:0">Введіть код, напр. Е202 або 1442.</p>' : (r || inf) ? `<div class="mini-title" style="margin-top:0">Е${esc(normE(v))}</div>`
+      + (inf ? `<div class="big">${esc(inf[0])}</div><p style="margin:4px 0 0">Клас: <b>${esc(inf[1])}</b> · ${esc(inf[2])}</p>` : '<p style="margin:0">Цього коду немає в короткому довіднику сторінки.</p>')
+      + (r ? `<p style="margin:6px 0 0">Діапазон: <b>${r}</b>.</p>` : '') : '<div class="verdict no">✕ Такого діапазону Е-кодів немає</div>'; };
+  edIn.addEventListener('input', draw); draw();
+}
+/* ---------- довідник Е-кодів ---------- */
+const eTab = $('#eTab');
+if(eTab){
+  const rows = Object.entries(ECODES).sort((a,b)=>parseInt(a[0])-parseInt(b[0]) || a[0].localeCompare(b[0]));
+  const draw = ()=>{ const q = ($('#eQ').value || '').toLowerCase().trim();
+    const f = rows.filter(([c, v])=>!q || ('е'+c+' e'+c+' '+v.join(' ')).toLowerCase().includes(q.replace(/^e/,'е')) || ('e'+c).includes(q));
+    eTab.innerHTML = `<thead><tr><th>Код</th><th>Назва</th><th>Клас</th><th>Функції</th></tr></thead><tbody>${f.map(([c, v])=>`<tr><td><b>Е${c}</b></td><td>${v[0]}</td><td>${v[1]}</td><td>${v[2]}</td></tr>`).join('')}</tbody>`;
+    $('#eCnt').textContent = `${f.length} з ${rows.length}`; };
+  $('#eQ').addEventListener('input', draw); draw();
+}
+
+/* ---------- студент і назва файлу ---------- */
+const STU = LS.get('steamhub-student') || {name:'', group:''};
+$$('[data-stu]').forEach(el=>{ el.value = STU[el.dataset.stu] || ''; el.addEventListener('input', ()=>{ STU[el.dataset.stu] = el.value; $$(`[data-stu="${el.dataset.stu}"]`).forEach(x=>{ if(x!==el) x.value = el.value; }); LS.set('steamhub-student', STU); paintName(); refresh(); }); });
+const fileBase = ()=> [STU.name.trim() || 'ПІП', STU.group.trim() || 'група', 'ПЗ' + PR.n].map(s=>s.replace(/[\\/:*?"<>|]+/g,'').replace(/\s+/g,'_')).join('_');
+const stuOk = ()=> !!(STU.name.trim() && STU.group.trim());
+function paintName(){
+  const ok = stuOk();
+  $$('.fname').forEach(x=>{ x.textContent = ok ? fileBase() + '.doc' : '— спочатку введіть ПІП і групу —'; x.classList.toggle('need', !ok); });
+  $$('[data-stu]').forEach(el=>el.classList.toggle('need', !String(el.value || '').trim()));
+  const b = $('#repDoc'); if(b){ b.disabled = !ok; b.title = ok ? '' : 'Спочатку введіть ПІП і групу'; }
+  const lock = $('#repLock'); if(lock) lock.hidden = ok;
+  const miss = $('#stuMiss'); if(miss) miss.hidden = ok;
+}
+paintName();
+
+/* ---------- прогрес ---------- */
+function elDone(el){
+  if(el._done) return el._done();
+  if(el.matches('textarea.ans-ta')) return words(el.value) >= (+el.dataset.min || 1);
+  return String(el.value || '').trim().length > 0;
+}
+const reqBlocks = $$('article.block').filter(b=>b.querySelector('[data-req]'));
+reqBlocks.forEach(b=>{ const s = document.createElement('span'); s.className = 'bst'; b.querySelector('.block-head').appendChild(s); b._st = s; });
+function blockState(b){ const r = [...b.querySelectorAll('[data-req]')], d = r.filter(elDone).length; return d === r.length ? 2 : (d || [...b.querySelectorAll('[data-key]:not([type=range]):not(#c3M), .tin, .tta')].some(x=>String(x.value||'').trim())) ? 1 : 0; }
+function refresh(){
+  paintAns();
+  let done = 0;
+  reqBlocks.forEach(b=>{ const s = blockState(b); if(s===2) done++; b._st.className = 'bst ' + ['','part','ok'][s]; b._st.textContent = ['не почато','у роботі','✓ готово'][s]; });
+  const pct = reqBlocks.length ? Math.round(done/reqBlocks.length*100) : 0;
+  $$('.pct').forEach(x=>x.textContent = pct + '%'); $$('.pbar i').forEach(x=>x.style.width = pct + '%');
+  $$('.dash').forEach(d=>{ d.innerHTML = reqBlocks.map(b=>{ const s = blockState(b); return `<a data-jump="${b.id}"><span class="dn">${b.querySelector('.block-no').textContent}</span><span class="dt">${b.querySelector('h3').textContent}</span><span class="bst ${['','part','ok'][s]}">${['не почато','у роботі','✓ готово'][s]}</span></a>`; }).join(''); });
+  paintName();
+}
+document.addEventListener('click', e=>{ const j = e.target.closest('[data-jump]'); if(!j) return; const b = document.getElementById(j.dataset.jump); openTab(b.closest('.panel').id, false); setTimeout(()=>b.scrollIntoView({behavior:'smooth', block:'start'}), 80); });
+
+/* ---------- звіт ---------- */
+function para(t){ return esc(t).split(/\n+/).filter(Boolean).map(x=>`<p>${x}</p>`).join('') || '<p><i>— відповідь не надано —</i></p>'; }
+function buildReport(){
+  let h = `<p style="text-align:center"><b>Практичне заняття ${PR.n}. ${esc(PR.title)}</b></p><p>Студент: <b>${esc(STU.name || '__________')}</b><br>Група: <b>${esc(STU.group || '______')}</b><br>Дата: ${new Date().toLocaleDateString('uk-UA')}</p>`;
+  $$('section.panel[data-task]').forEach(p=>{
+    h += `<h2>${esc(p.dataset.task)}</h2>`;
+    p.querySelectorAll('article.block').forEach(b=>{
+      const parts = [...b.querySelectorAll('[data-rp]')]; if(!parts.length) return;
+      h += `<h3>${esc(b.querySelector('.block-no').textContent)}. ${esc(b.querySelector('h3').textContent)}</h3>`;
+      parts.forEach(el=>{
+        const lab = el.dataset.rp;
+        if(el._report){ if(lab) h += `<p><b>${esc(lab)}</b></p>`; h += el._report(); }
+        else if(el.matches('textarea')) h += (lab ? `<p><b>${esc(lab)}</b></p>` : '') + para(el.value);
+        else h += `<p><b>${esc(lab)}:</b> ${esc(el.value || '—')}</p>`;
+      });
+    });
+  });
+  return h;
+}
+const docWrap = body => `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>${esc(fileBase())}</title><style>body{font-family:'Times New Roman',serif;font-size:14pt;line-height:1.5} h2{font-size:14pt;margin-top:18pt} h3{font-size:13pt} table{border-collapse:collapse;width:100%} td,th{border:1px solid #000;padding:4pt;font-size:11pt;vertical-align:top} th{background:#eee}</style></head><body>${body}<\/body><\/html>`;
+$('#repPrev') && $('#repPrev').addEventListener('click', ()=>{ const box = $('#repBox'); box.hidden = false; box.innerHTML = buildReport(); });
+$('#repDoc') && $('#repDoc').addEventListener('click', ()=>{
+  if(!stuOk()){ paintName(); const f = $$('#sub [data-stu]').find(x=>!x.value.trim()); if(f){ f.focus(); f.scrollIntoView({behavior:'smooth', block:'center'}); } return; }
+  const blob = new Blob(['﻿', docWrap(buildReport())], {type:'application/msword'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fileBase() + '.doc'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+});
+$('#repClear') && $('#repClear').addEventListener('click', ()=>{ if(!confirm('Видалити всі відповіді цього заняття з цього браузера?')) return; try{ localStorage.removeItem(SKEY); }catch(e){} location.reload(); });
+
+/* ---------- лічильники в hero ---------- */
+$('#cntQ').textContent = $$('section.panel[data-task] article.block[data-kind="theory"]').length;
+$('#cntT').textContent = $$('section.panel[data-task] article.block:not([data-kind="theory"])').filter(b=>b.querySelector('[data-req]')).length;
+
+
+/* ---------- старт ---------- */
+if(location.hash && document.getElementById(location.hash.slice(1)) && document.getElementById(location.hash.slice(1)).classList.contains('panel')) openTab(location.hash.slice(1), false);
+buildPxField(); pxUpdate(); updProgress();
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(()=>{ buildPxField(); pxUpdate(); });
+refresh();
+</script>
+</body>
+</html>
