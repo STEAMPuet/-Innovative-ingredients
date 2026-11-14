@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Якість і безпека — Тема 8</title>
+<script>
+  // ?static — без анімацій (друк, скриншоти, перевірка)
+  if (location.search.includes('static') || matchMedia('(prefers-reduced-motion: reduce)').matches)
+    document.documentElement.classList.add('static');
+</script>
+<style>
+/* =========================================================
+   Тема 8
+   Стиль — як у презентаціях попередніх тем: «нічна лабораторія», лише векторна графіка, паралакс-шари.
+   Шрифти — локальні (папка fonts/), працює без інтернету.
+   ========================================================= */
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-cyrillic-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-cyrillic-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+
+:root{
+  --bg:#14120F; --card:#242019; --line:#3B342B;
+  --text:#F5EDDF; --muted:#BDB09B;
+  --amber:#F2A541; --tomato:#E8573A; --mint:#6CC3A0; --plum:#A387E6; --sky:#62A9E0;
+  --display:"Unbounded","Segoe UI",Arial,sans-serif;
+  --body:"Manrope","Segoe UI",Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased}
+
+/* ---------- Полотно 1280×720 ---------- */
+.stage{position:fixed;width:1280px;height:720px;overflow:hidden;background:var(--bg);transform-origin:0 0}
+.slide{position:absolute;inset:0;visibility:hidden}
+.slide.active{visibility:visible}
+.L{position:absolute;inset:0;pointer-events:none}
+.L *{pointer-events:auto}
+[data-depth]{transition:translate .9s cubic-bezier(.2,.7,.2,1)}
+.notes{display:none}
+
+/* ---------- Типографіка ---------- */
+.kicker{font-weight:800;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}
+.kicker i{font-style:normal;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.12;letter-spacing:-.01em}
+h1{font-size:44px} h2{font-size:34px} h3{font-size:21px;line-height:1.25}
+p{font-size:23px;line-height:1.4}
+.s{font-size:19px;line-height:1.35}
+.xs{font-size:16px;line-height:1.35}
+.m{color:var(--muted)}
+.a{color:var(--amber)} .t{color:var(--tomato)} .g{color:var(--mint)} .pl{color:var(--plum)} .sk{color:var(--sky)}
+b{font-weight:800}
+.head{position:absolute;left:80px;top:54px;right:80px}
+.head h2{margin-top:10px}
+
+/* ---------- Компоненти ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 24px}
+.pill{display:inline-block;font-weight:800;font-size:17px;padding:7px 14px;border-radius:999px;background:#2E2820;color:var(--text);border:1px solid var(--line)}
+.pill.a{background:rgba(242,165,65,.16);border-color:rgba(242,165,65,.45);color:#FFD39A}
+.pill.t{background:rgba(232,87,58,.16);border-color:rgba(232,87,58,.5);color:#FFB6A4}
+.pill.g{background:rgba(108,195,160,.15);border-color:rgba(108,195,160,.45);color:#B5EBD5}
+.pill.pl{background:rgba(163,135,230,.16);border-color:rgba(163,135,230,.5);color:#D8CBFA}
+.pills{display:flex;flex-wrap:wrap;gap:9px}
+.chip{position:absolute;font-family:var(--display);font-weight:700;font-size:20px;padding:10px 16px;border-radius:14px;background:rgba(245,237,223,.06);border:1px solid rgba(245,237,223,.18);color:var(--text)}
+.num{display:inline-flex;width:38px;height:38px;border-radius:50%;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:17px;background:var(--amber);color:#1B1408}
+.ico{width:64px;height:64px;display:block}
+
+/* кроки, що з'являються автоматично по черзі */
+.frag{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+.frag.on{opacity:1;transform:none}
+
+/* палітра натуральних барвників (слайд 8) */
+.sw{position:absolute;width:262px;height:140px;padding:0;overflow:hidden}
+.sw .bar{height:36px}
+.sw .in{padding:10px 16px}
+.sw .code{font-family:var(--display);font-weight:700;font-size:17px}
+.sw .nm{font-weight:800;font-size:17px;margin-left:6px}
+.sw .src{font-size:15px;color:var(--muted);margin-top:4px;line-height:1.3}
+
+/* таблиця порівняння (слайд 10) */
+.cmp{position:absolute;left:80px;top:180px;width:1120px;display:grid;grid-template-columns:270px 1fr 1fr;gap:8px 10px}
+.cmp > div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 14px;font-size:17px;line-height:1.3;display:flex;align-items:center;gap:10px}
+.cmp > .h{background:none;border:none;font-family:var(--display);font-weight:700;font-size:18px;padding:0 14px}
+.cmp > .c{font-weight:800;color:var(--muted)}
+.ok::before{content:"✓";color:var(--mint);font-weight:900}
+.no::before{content:"✕";color:var(--tomato);font-weight:900}
+
+/* навігація */
+.bar-nav{position:absolute;left:0;right:0;bottom:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;z-index:20}
+.bar-nav .ttl{font-size:14px;font-weight:700;color:var(--muted);width:340px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dots{display:flex;gap:7px}
+.dots button{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:var(--muted);opacity:.3;cursor:pointer;transition:.3s}
+.dots button.on{background:var(--amber);opacity:1;transform:scale(1.4)}
+.cnt{width:340px;text-align:right;font-family:var(--display);font-weight:600;font-size:14px;color:var(--muted)}
+.prog{position:absolute;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--amber),var(--tomato),var(--plum));z-index:20;transition:width .6s ease}
+.notes-panel{position:absolute;left:40px;right:40px;bottom:66px;max-height:300px;overflow:auto;background:rgba(20,18,15,.96);border:1px solid var(--amber);border-radius:18px;padding:18px 22px;z-index:30;display:none;white-space:pre-line;font-size:17px;line-height:1.5}
+.notes-panel.on{display:block}
+
+/* ---------- Анімації ілюстрацій (лише на активному слайді) ---------- */
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fall{0%{transform:translateY(-10px);opacity:0}15%{opacity:1}100%{transform:translateY(110px);opacity:0}}
+@keyframes grow{from{transform:scaleX(0);opacity:0}to{transform:none;opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes drain{from{transform:scaleY(1)}to{transform:scaleY(.6)}}
+@keyframes draw{from{stroke-dashoffset:var(--len,1200)}to{stroke-dashoffset:0}}
+.active .bob{animation:bob 6s ease-in-out infinite}
+.active .bob2{animation:bob 7.5s ease-in-out -2s infinite}
+.spin,.spinr,.grow{transform-box:view-box}
+.active .spin{animation:spin 40s linear infinite}
+.active .spinr{animation:spin 30s linear reverse infinite}
+.active .fall{animation:fall 2.2s ease-in infinite}
+.active .grow{animation:grow .6s cubic-bezier(.2,.8,.2,1) both}
+.active .lbl{animation:fadeIn .7s ease 1.2s both}
+.active .drain{animation:drain 2.4s cubic-bezier(.4,0,.2,1) .8s both;transform-box:fill-box;transform-origin:50% 100%}
+.active .draw{stroke-dasharray:var(--len,1200);animation:draw 1.6s cubic-bezier(.4,0,.2,1) .5s both}
+html.static *, html.static *::before{animation:none !important;transition:none !important}
+html.static .frag{opacity:1;transform:none}
+
+/* ---------- Тема 3: додаткові компоненти ---------- */
+.big{font-family:var(--display);font-weight:900;line-height:1}
+.sel{font-family:var(--body);font-weight:800;font-size:15px;padding:6px 12px;border-radius:999px;background:#2E2820;color:var(--text);border:1px solid var(--line);cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.sel:hover{border-color:var(--amber)}
+.sel.on{background:var(--amber);color:#1B1408;border-color:var(--amber)}
+.cmp.sm > div{font-size:15.5px;padding:8px 12px}
+.tile{position:absolute;width:150px;height:100px;border-radius:16px;background:var(--card);border:1px solid var(--line);padding:12px 14px}
+.tile .code{font-family:var(--display);font-weight:700;font-size:22px;color:var(--amber)}
+.tile .nm{font-size:14px;font-weight:700;color:var(--muted);margin-top:8px;line-height:1.25}
+.ul{list-style:none}
+.ul li{font-size:16px;line-height:1.35;padding-left:18px;position:relative;margin-top:6px}
+.ul li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;border-radius:50%;background:var(--amber)}
+.ul.g li::before{background:var(--mint)} .ul.t li::before{background:var(--tomato)} .ul.pl li::before{background:var(--plum)}
+@keyframes steam{0%{transform:translateY(8px);opacity:0}40%{opacity:.85}100%{transform:translateY(-18px);opacity:0}}
+.active .steam{animation:steam 3.2s ease-in-out infinite}
+.active .steam2{animation:steam 3.2s ease-in-out -1.6s infinite}
+.pill.sm{font-size:14px;padding:5px 11px}
+</style>
+</head>
+<body>
+
+<!-- ===== Векторні символи ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="glowA" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F2A541" stop-opacity=".33"/><stop offset="1" stop-color="#F2A541" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowT" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#E8573A" stop-opacity=".28"/><stop offset="1" stop-color="#E8573A" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowM" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#6CC3A0" stop-opacity=".24"/><stop offset="1" stop-color="#6CC3A0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowP" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#A387E6" stop-opacity=".28"/><stop offset="1" stop-color="#A387E6" stop-opacity="0"/></radialGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#F5EDDF" fill-opacity=".08"/></pattern>
+    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#F5EDDF" stop-opacity=".16"/><stop offset=".5" stop-color="#F5EDDF" stop-opacity=".04"/><stop offset="1" stop-color="#F5EDDF" stop-opacity=".12"/></linearGradient>
+    <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FFE7A3"/><stop offset=".5" stop-color="#E0A93B"/><stop offset="1" stop-color="#9C6A16"/></linearGradient>
+    <linearGradient id="anto" x1="0" x2="1"><stop offset="0" stop-color="#D81B4A"/><stop offset=".5" stop-color="#8E3FA8"/><stop offset="1" stop-color="#2F5FD0"/></linearGradient>
+    <!-- Крапля (колір через currentColor) -->
+    <symbol id="drop" viewBox="0 0 60 80"><path d="M30 4C30 4 6 34 6 52a24 24 0 0 0 48 0C54 34 30 4 30 4Z" fill="currentColor"/><path d="M18 50a12 12 0 0 0 8 14" stroke="#fff" stroke-opacity=".45" stroke-width="4" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Пробірка з рідиною (currentColor) -->
+    <symbol id="tube" viewBox="0 0 70 260"><rect x="6" y="2" width="58" height="14" rx="5" fill="#8E989E"/><path d="M12 16H58V226A23 23 0 0 1 12 226Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M15 110H55V226A20 20 0 0 1 15 226Z" fill="currentColor"/><path d="M15 110Q35 102 55 110V118Q35 110 15 118Z" fill="#fff" fill-opacity=".25"/><path d="M22 40V96" stroke="#fff" stroke-opacity=".3" stroke-width="5" stroke-linecap="round"/></symbol>
+    <!-- Банка (рідина currentColor) -->
+    <symbol id="jarC" viewBox="0 0 200 240"><rect x="48" y="8" width="104" height="30" rx="7" fill="#C97F25"/><path d="M40 54Q40 40 54 40H146Q160 40 160 54V206Q160 230 136 230H64Q40 230 40 206Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path class="fillc" d="M46 96H154V204Q154 224 134 224H66Q46 224 46 204Z" fill="currentColor"/><path d="M54 60V90" stroke="#fff" stroke-opacity=".35" stroke-width="6" stroke-linecap="round"/></symbol>
+    <!-- Буряк, морква, жовток -->
+    <symbol id="beet" viewBox="0 0 100 120"><path d="M40 30Q30 8 18 6M50 28Q52 6 62 2M58 32Q74 14 86 16" stroke="#6CC3A0" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M50 30C20 30 10 60 22 82c8 14 20 22 28 36 8-14 20-22 28-36 12-22 2-52-28-52z" fill="#A61E4D"/><path d="M30 60q4-14 16-18" stroke="#fff" stroke-opacity=".35" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="carrot" viewBox="0 0 100 120"><path d="M50 26Q40 6 30 4M50 26Q56 4 70 2M50 26Q66 12 82 14" stroke="#6CC3A0" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M30 30H70L54 116Q50 122 46 116Z" fill="#F07C2B"/><path d="M38 48h10M42 70h10M44 92h8" stroke="#B4521A" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="egg" viewBox="0 0 120 100"><ellipse cx="60" cy="54" rx="56" ry="42" fill="#F5EDDF"/><circle cx="62" cy="52" r="24" fill="#F2B23A"/><circle cx="54" cy="44" r="6" fill="#fff" fill-opacity=".55"/></symbol>
+    <!-- Око -->
+    <symbol id="eyeO" viewBox="0 0 300 180"><path d="M8 90Q150 -40 292 90Q150 220 8 90Z" fill="#F5EDDF"/></symbol>
+    <!-- Ягоди -->
+    <symbol id="berries" viewBox="0 0 120 100"><path d="M60 8Q60 30 40 44M60 8Q64 30 82 42" stroke="#6CC3A0" stroke-width="5" fill="none"/><circle cx="38" cy="58" r="20" fill="#5B2A86"/><circle cx="76" cy="56" r="20" fill="#3B2F8F"/><circle cx="58" cy="78" r="18" fill="#7A1F5C"/><circle cx="32" cy="52" r="5" fill="#fff" fill-opacity=".4"/></symbol>
+    <!-- Шматок м'яса (колір currentColor) -->
+    <symbol id="steak" viewBox="0 0 160 110"><path d="M20 40C30 10 90 4 126 18c30 12 32 50 10 70-24 22-86 22-112 4C8 80 12 58 20 40Z" fill="currentColor"/><path d="M34 46c20-18 60-22 86-10" stroke="#F5EDDF" stroke-opacity=".7" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="104" cy="62" r="10" fill="#F5EDDF" fill-opacity=".85"/></symbol>
+    <!-- Щит, лупа, сонце, термометр, полум'я, годинник -->
+    <symbol id="shield" viewBox="0 0 100 110"><path d="M50 4L92 20V52C92 80 72 98 50 106 28 98 8 80 8 52V20Z" fill="currentColor"/><path d="M30 54L44 68 72 40" stroke="#14120F" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="sun" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#F2C14E"/><g stroke="#F2C14E" stroke-width="7" stroke-linecap="round"><path d="M50 8v12M50 80v12M8 50h12M80 50h12M20 20l9 9M71 71l9 9M80 20l-9 9M29 71l-9 9"/></g></symbol>
+    <symbol id="thermo" viewBox="0 0 60 120"><rect x="20" y="6" width="20" height="80" rx="10" fill="none" stroke="#F5EDDF" stroke-width="5"/><circle cx="30" cy="96" r="18" fill="#E8573A"/><rect x="26" y="40" width="8" height="56" fill="#E8573A"/></symbol>
+    <symbol id="flame" viewBox="0 0 80 100"><path d="M40 4C52 26 72 38 72 62a32 32 0 0 1-64 0C8 46 20 36 26 22c4 12 10 18 16 20C44 30 40 18 40 4Z" fill="#E8573A"/><path d="M40 52c8 10 16 14 16 26a16 16 0 0 1-32 0c0-8 6-12 8-20 2 6 6 8 8-6Z" fill="#F2C14E"/></symbol>
+    <symbol id="clock" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#F5EDDF" stroke-width="7"/><path d="M50 26V52L66 62" stroke="#F2A541" stroke-width="7" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="lens" viewBox="0 0 100 100"><circle cx="42" cy="42" r="28" fill="none" stroke="#F5EDDF" stroke-width="8"/><path d="M62 62L90 90" stroke="#F5EDDF" stroke-width="10" stroke-linecap="round"/></symbol>
+    <symbol id="ban" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="none" stroke="#E8573A" stroke-width="5"/><path d="M11 11L37 37" stroke="#E8573A" stroke-width="5"/></symbol>
+    <symbol id="leaf" viewBox="0 0 100 100"><path d="M12 88C12 44 38 14 92 8 88 62 58 88 12 88Z" fill="currentColor"/><path d="M14 86L64 36" stroke="#14120F" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="flower" viewBox="0 0 100 100"><g fill="#C2185B"><circle cx="50" cy="26" r="16"/><circle cx="74" cy="44" r="16"/><circle cx="66" cy="72" r="16"/><circle cx="34" cy="72" r="16"/><circle cx="26" cy="44" r="16"/></g><circle cx="50" cy="52" r="12" fill="#F2C14E"/></symbol>
+    <symbol id="flask" viewBox="0 0 100 120"><path d="M36 6H64M40 6V42L10 104Q6 114 18 114H82Q94 114 90 104L60 42V6" fill="none" stroke="#F5EDDF" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><path d="M22 84H78L88 104Q90 110 82 110H18Q10 110 12 104Z" fill="currentColor"/></symbol>
+    <symbol id="glassD" viewBox="0 0 80 110"><path d="M8 8H72L64 100Q63 106 56 106H24Q17 106 16 100Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path class="fillc" d="M12 40H68L63 98Q62 102 57 102H23Q18 102 17 98Z" fill="currentColor"/></symbol>
+    <symbol id="candy" viewBox="0 0 120 60"><path d="M30 30L6 12V48ZM90 30L114 12V48Z" fill="#F2A541"/><ellipse cx="60" cy="30" rx="32" ry="22" fill="#E8573A"/><path d="M44 22q16-8 32 0" stroke="#fff" stroke-opacity=".5" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="wine" viewBox="0 0 70 110"><path d="M10 6H60Q62 44 35 54Q8 44 10 6Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M14 22H56Q54 44 35 50Q16 44 14 22Z" fill="#8E1B3A"/><path d="M35 54V96M18 100H52" stroke="#BDB09B" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="soda" viewBox="0 0 60 120"><path d="M22 4H38V20Q50 30 50 48V108Q50 116 42 116H18Q10 116 10 108V48Q10 30 22 20Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M13 56H47V108Q47 112 42 112H18Q13 112 13 108Z" fill="#E8573A"/><rect x="13" y="66" width="34" height="18" fill="#F5EDDF"/></symbol>
+    <symbol id="bottleB" viewBox="0 0 60 100"><path d="M22 4H38L40 16H20Z" fill="#E8A9A0"/><rect x="14" y="16" width="32" height="8" rx="3" fill="#F2A541"/><rect x="12" y="24" width="36" height="72" rx="10" fill="#F5EDDF"/></symbol>
+    <symbol id="apple" viewBox="0 0 120 120"><path d="M60 30C42 18 14 26 14 58c0 30 22 56 36 56 6 0 7-3 10-3s4 3 10 3c14 0 36-26 36-56 0-32-28-40-46-28z" fill="#E8573A"/><path d="M60 30c0-10 2-18 8-24" stroke="#7A4B25" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M66 18c10-12 26-12 30-8-4 12-18 16-30 8z" fill="#6CC3A0"/></symbol>
+    <symbol id="hex" viewBox="0 0 100 100"><path d="M50 6L88 28V72L50 94 12 72V28Z" fill="none" stroke="currentColor" stroke-width="6"/></symbol>
+    <marker id="ah" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L11 6 1 11Z" fill="#F2A541"/></marker>
+    <!-- ===== Тема 3: смак і аромат ===== -->
+    <radialGradient id="glowS" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#62A9E0" stop-opacity=".26"/><stop offset="1" stop-color="#62A9E0" stop-opacity="0"/></radialGradient>
+    <marker id="ahM" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L11 6 1 11Z" fill="#6CC3A0"/></marker>
+    <!-- Кубик цукру -->
+    <symbol id="cube" viewBox="0 0 60 62"><path d="M30 4L56 17V45L30 58 4 45V17Z" fill="#EDE4D3"/><path d="M30 4L56 17 30 30 4 17Z" fill="#FFFFFF"/><path d="M30 30V58L4 45V17Z" fill="#D9CFBD"/><g fill="#BDB09B" opacity=".55"><circle cx="22" cy="16" r="1.6"/><circle cx="38" cy="14" r="1.6"/><circle cx="14" cy="36" r="1.6"/><circle cx="44" cy="40" r="1.6"/><circle cx="40" cy="28" r="1.4"/></g></symbol>
+    <!-- Банка меду -->
+    <symbol id="honey" viewBox="0 0 100 110"><rect x="24" y="6" width="52" height="16" rx="5" fill="#C97F25"/><path d="M18 30Q18 22 26 22H74Q82 22 82 30V92Q82 104 70 104H30Q18 104 18 92Z" fill="#E9A23B"/><path d="M18 44Q29 52 40 44T62 44T82 44" stroke="#C97F25" stroke-width="5" fill="none"/><path d="M30 60V88" stroke="#fff" stroke-opacity=".4" stroke-width="6" stroke-linecap="round"/></symbol>
+    <!-- Молекула (currentColor) -->
+    <symbol id="mol" viewBox="0 0 120 110"><g stroke="currentColor" stroke-width="5" fill="none"><path d="M50 22L76 37V67L50 82 24 67V37Z"/><path d="M76 37L100 24M50 82V104M24 37L6 26"/></g><g fill="currentColor"><circle cx="50" cy="22" r="8"/><circle cx="76" cy="37" r="8"/><circle cx="76" cy="67" r="8"/><circle cx="50" cy="82" r="8"/><circle cx="24" cy="67" r="8"/><circle cx="24" cy="37" r="8"/></g><circle cx="100" cy="24" r="9" fill="#E8573A"/><circle cx="50" cy="104" r="6" fill="#F5EDDF"/><circle cx="6" cy="26" r="6" fill="#F5EDDF"/></symbol>
+    <!-- Стручок ванілі -->
+    <symbol id="vanilla" viewBox="0 0 140 50"><path d="M6 38Q66 -6 134 12Q138 18 130 20Q70 10 12 44Q2 46 6 38Z" fill="#4A2E1C"/><path d="M20 34Q70 6 124 14" stroke="#7A5136" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M130 14q6-4 8-10" stroke="#6CC3A0" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Корінь солодки -->
+    <symbol id="root" viewBox="0 0 100 100"><g stroke="#A8743F" stroke-width="10" stroke-linecap="round"><path d="M18 78L68 18"/><path d="M34 88L84 30"/></g><g stroke="#6B4423" stroke-width="3" stroke-linecap="round"><path d="M30 64l7 5M48 42l7 5M46 74l7 5M64 52l7 5"/></g><circle cx="68" cy="18" r="5" fill="#E6C08A"/><circle cx="84" cy="30" r="5" fill="#E6C08A"/></symbol>
+    <!-- Скибка грейпфрута -->
+    <symbol id="citrus" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#F2A541"/><circle cx="50" cy="50" r="40" fill="#F5EDDF"/><circle cx="50" cy="50" r="36" fill="#F07B6B"/><g stroke="#F5EDDF" stroke-width="3"><path d="M50 14V86M14 50H86M25 25L75 75M75 25L25 75"/></g><circle cx="50" cy="50" r="5" fill="#F5EDDF"/></symbol>
+    <!-- Плід катемфе -->
+    <symbol id="katemfe" viewBox="0 0 100 100"><path d="M50 4Q46 14 50 20" stroke="#6CC3A0" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M52 14Q68 4 80 12Q66 22 52 14Z" fill="#6CC3A0"/><path d="M50 18C72 30 88 52 80 74 74 88 62 94 50 94S26 88 20 74C12 52 28 30 50 18Z" fill="#C8243B"/><path d="M50 22V92M34 30Q30 60 38 90M66 30Q70 60 62 90" stroke="#8E1B2E" stroke-width="3" fill="none"/><path d="M28 54q2-14 12-20" stroke="#fff" stroke-opacity=".4" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Кукурудзяний качан -->
+    <symbol id="cob" viewBox="0 0 60 120"><path d="M30 8C46 8 50 40 48 70 46 100 38 110 30 110S14 100 12 70C10 40 14 8 30 8Z" fill="#F2C14E"/><g stroke="#D69A2A" stroke-width="2.5"><path d="M16 30H44M13 46H47M12 62H48M13 78H47M16 94H44M24 12V104M36 12V104"/></g><path d="M12 64Q4 100 30 116Q16 90 22 60Z" fill="#6CC3A0"/><path d="M48 64Q56 100 30 116Q44 90 38 60Z" fill="#4E9E7C"/></symbol>
+    <!-- Колода деревини -->
+    <symbol id="log" viewBox="0 0 130 70"><path d="M24 8H106V62H24Z" fill="#8A5A2B"/><path d="M30 20H96M36 34H100M30 48H92" stroke="#6B4423" stroke-width="3" stroke-linecap="round"/><ellipse cx="24" cy="35" rx="18" ry="27" fill="#E6C08A"/><ellipse cx="24" cy="35" rx="11" ry="17" fill="none" stroke="#C49358" stroke-width="3"/><ellipse cx="24" cy="35" rx="4" ry="7" fill="#C49358"/></symbol>
+    <!-- Горобина -->
+    <symbol id="rowan" viewBox="0 0 110 100"><path d="M56 4Q56 26 40 40M56 4Q60 28 76 38M56 4Q50 30 58 52" stroke="#7A4B25" stroke-width="4" fill="none" stroke-linecap="round"/><g fill="#E8573A"><circle cx="34" cy="50" r="11"/><circle cx="54" cy="58" r="11"/><circle cx="76" cy="48" r="11"/><circle cx="42" cy="72" r="11"/><circle cx="64" cy="76" r="11"/><circle cx="84" cy="68" r="10"/><circle cx="24" cy="68" r="10"/><circle cx="52" cy="90" r="9"/></g><g fill="#fff" fill-opacity=".45"><circle cx="31" cy="47" r="3"/><circle cx="51" cy="55" r="3"/><circle cx="73" cy="45" r="3"/></g><g fill="#6CC3A0"><path d="M60 8Q78 0 96 8Q78 16 60 8Z"/><path d="M52 8Q34 0 16 8Q34 16 52 8Z"/></g></symbol>
+    <!-- Чашка (напій currentColor) -->
+    <symbol id="cup" viewBox="0 0 120 90"><ellipse cx="56" cy="80" rx="50" ry="8" fill="#3B342B"/><path d="M14 22H98V54Q98 78 74 78H38Q14 78 14 54Z" fill="#F5EDDF"/><path d="M98 32Q116 32 114 46Q112 60 96 58" stroke="#F5EDDF" stroke-width="7" fill="none"/><ellipse cx="56" cy="22" rx="42" ry="8" fill="currentColor"/></symbol>
+    <!-- Хліб -->
+    <symbol id="bread" viewBox="0 0 120 70"><path d="M10 56Q6 20 40 14Q60 4 80 14Q114 20 110 56Q110 64 100 64H20Q10 64 10 56Z" fill="#C98A3C"/><path d="M36 26q8 10 4 22M58 20q8 12 4 26M80 26q8 10 4 22" stroke="#F2C98A" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Пара / аромат -->
+    <symbol id="steamS" viewBox="0 0 60 80"><g stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"><path d="M14 76Q4 62 14 48T14 20"/><path d="M30 70Q20 56 30 42T30 6"/><path d="M46 76Q36 62 46 48T46 20"/></g></symbol>
+    <!-- Флакон із піпеткою (рідина currentColor) -->
+    <symbol id="dropper" viewBox="0 0 60 120"><path d="M24 4H36Q40 4 40 10V30H20V10Q20 4 24 4Z" fill="#2B2724" stroke="#4D443A" stroke-width="2"/><rect x="16" y="30" width="28" height="10" rx="2" fill="#8E989E"/><path d="M14 40H46Q52 40 52 48V108Q52 116 44 116H16Q8 116 8 108V48Q8 40 14 40Z" fill="currentColor"/><rect x="14" y="64" width="32" height="28" rx="3" fill="#F5EDDF" opacity=".9"/><path d="M14 48V58" stroke="#fff" stroke-opacity=".45" stroke-width="4" stroke-linecap="round"/></symbol>
+    <!-- Прянощі -->
+    <symbol id="cinn" viewBox="0 0 120 50"><rect x="8" y="8" width="104" height="16" rx="8" fill="#9B5A2A"/><rect x="14" y="28" width="98" height="16" rx="8" fill="#B5652E"/><ellipse cx="12" cy="16" rx="6" ry="8" fill="#6B3A1E"/><ellipse cx="18" cy="36" rx="6" ry="8" fill="#7A4422"/><path d="M12 12a4 4 0 1 1 0 8" stroke="#D9A066" stroke-width="2" fill="none"/></symbol>
+    <symbol id="clove" viewBox="0 0 50 90"><path d="M25 30L22 86" stroke="#6B3A1E" stroke-width="7" stroke-linecap="round"/><g fill="#7A4422"><path d="M10 26L25 34 40 26 36 12 25 18 14 12Z"/></g><circle cx="25" cy="14" r="9" fill="#9B5A2A"/></symbol>
+    <symbol id="pepper" viewBox="0 0 90 70"><g fill="#3A2A20"><circle cx="20" cy="46" r="13"/><circle cx="46" cy="52" r="13"/><circle cx="70" cy="42" r="13"/><circle cx="36" cy="24" r="12"/><circle cx="60" cy="18" r="11"/></g><g fill="#fff" fill-opacity=".25"><circle cx="16" cy="42" r="3"/><circle cx="42" cy="48" r="3"/><circle cx="66" cy="38" r="3"/></g></symbol>
+    <symbol id="nutmeg" viewBox="0 0 90 70"><ellipse cx="34" cy="38" rx="28" ry="24" fill="#8A5A2B"/><path d="M14 30q20 6 40-4M12 44q24 6 44-6M24 58q14-4 24-18" stroke="#5B3A1E" stroke-width="3" fill="none"/><g fill="#E6B83A"><circle cx="70" cy="26" r="6"/><circle cx="80" cy="40" r="6"/><circle cx="68" cy="52" r="6"/></g></symbol>
+    <symbol id="ginger" viewBox="0 0 100 70"><path d="M10 46Q8 30 24 30Q30 14 44 22Q56 10 66 24Q84 20 86 36Q96 44 86 54Q76 64 60 58Q48 66 36 58Q18 62 10 46Z" fill="#D9B27C"/><path d="M26 44q10-4 18 2M54 36q10 0 16 8M40 30q4-4 8 0" stroke="#A8743F" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="dill" viewBox="0 0 90 100"><path d="M45 98V40" stroke="#4E9E7C" stroke-width="5" stroke-linecap="round"/><g stroke="#6CC3A0" stroke-width="3" stroke-linecap="round"><path d="M45 40L14 18M45 40L28 10M45 40V6M45 40L62 10M45 40L76 18M45 40L84 34M45 40L6 34"/></g><g fill="#E6D36A"><circle cx="14" cy="18" r="5"/><circle cx="28" cy="10" r="5"/><circle cx="45" cy="6" r="5"/><circle cx="62" cy="10" r="5"/><circle cx="76" cy="18" r="5"/><circle cx="84" cy="34" r="5"/><circle cx="6" cy="34" r="5"/></g><path d="M45 72Q26 66 18 76M45 62Q64 56 74 64" stroke="#6CC3A0" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Сільничка (кристали) -->
+    <symbol id="shaker" viewBox="0 0 60 100"><path d="M12 30Q12 8 30 8T48 30Z" fill="#8E989E"/><g fill="#14120F"><circle cx="24" cy="20" r="2.2"/><circle cx="36" cy="20" r="2.2"/><circle cx="30" cy="14" r="2.2"/></g><path d="M10 30H50L46 90Q45 96 38 96H22Q15 96 14 90Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M14 56H46L44 88Q43 92 38 92H22Q17 92 16 88Z" fill="#F5EDDF"/></symbol>
+    <!-- Гриб, томат, сир -->
+    <symbol id="mush" viewBox="0 0 100 100"><path d="M8 50Q10 10 50 8Q90 10 92 50Q70 58 50 56Q30 58 8 50Z" fill="#B5652E"/><path d="M38 54H62L66 90Q66 96 58 96H42Q34 96 34 90Z" fill="#F5EDDF"/><g fill="#E6C08A"><circle cx="34" cy="28" r="6"/><circle cx="60" cy="22" r="5"/><circle cx="72" cy="38" r="4"/></g></symbol>
+    <symbol id="tomato" viewBox="0 0 100 100"><circle cx="50" cy="56" r="40" fill="#E8573A"/><path d="M50 22L42 10M50 22L32 22M50 22L68 22M50 22L60 10M50 22L36 32M50 22L64 32" stroke="#6CC3A0" stroke-width="6" stroke-linecap="round"/><path d="M28 50q4-14 16-18" stroke="#fff" stroke-opacity=".4" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="cheese" viewBox="0 0 120 80"><path d="M6 66L110 66 110 32 6 52Z" fill="#E6B83A"/><path d="M6 52L84 10 110 32Z" fill="#F2D06B"/><g fill="#C9962A"><circle cx="40" cy="58" r="6"/><circle cx="74" cy="50" r="8"/><circle cx="98" cy="58" r="4"/></g></symbol>
+    <!-- Пляшечка соусу -->
+    <symbol id="sauce" viewBox="0 0 50 110"><rect x="18" y="4" width="14" height="16" rx="3" fill="#E8573A"/><path d="M18 20H32L36 34Q42 40 42 50V100Q42 106 36 106H14Q8 106 8 100V50Q8 40 14 34Z" fill="#3A2318"/><rect x="12" y="56" width="26" height="26" rx="3" fill="#F5EDDF"/></symbol>
+    <!-- ===== Тема 4: консистенція ===== -->
+    <!-- Кубик желе (currentColor) -->
+    <symbol id="jelly" viewBox="0 0 120 110"><ellipse cx="60" cy="100" rx="54" ry="8" fill="#000" fill-opacity=".25"/><path d="M14 40Q14 26 28 26H92Q106 26 106 40V86Q106 98 92 98H28Q14 98 14 86Z" fill="currentColor" fill-opacity=".85"/><path d="M20 30Q60 14 100 30" stroke="#fff" stroke-opacity=".35" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M26 44V78" stroke="#fff" stroke-opacity=".45" stroke-width="6" stroke-linecap="round"/><circle cx="74" cy="58" r="5" fill="#fff" fill-opacity=".35"/><circle cx="86" cy="76" r="3.5" fill="#fff" fill-opacity=".3"/></symbol>
+    <!-- Крохмальні зерна -->
+    <symbol id="starch" viewBox="0 0 120 100"><g fill="#F5EDDF" stroke="#BDB09B" stroke-width="2"><ellipse cx="38" cy="40" rx="26" ry="20"/><ellipse cx="82" cy="56" rx="24" ry="30"/><ellipse cx="40" cy="78" rx="18" ry="14"/></g><g fill="none" stroke="#BDB09B" stroke-width="1.6"><ellipse cx="38" cy="40" rx="16" ry="12"/><ellipse cx="38" cy="40" rx="7" ry="5"/><ellipse cx="82" cy="56" rx="15" ry="19"/><ellipse cx="82" cy="56" rx="6" ry="8"/><ellipse cx="40" cy="78" rx="9" ry="7"/></g></symbol>
+    <!-- Водорость (currentColor) -->
+    <symbol id="weed" viewBox="0 0 90 130"><g fill="currentColor"><path d="M44 128C40 96 30 80 22 58 14 36 20 14 30 4 32 30 42 44 48 70 54 94 52 112 50 128Z"/><path d="M50 128C54 104 66 90 72 70 78 50 74 30 66 18 64 40 56 54 52 76 48 96 46 112 46 128Z" opacity=".75"/></g><path d="M30 10Q36 60 47 124M66 24Q56 70 49 124" stroke="#14120F" stroke-opacity=".35" stroke-width="2.5" fill="none"/></symbol>
+    <!-- Пластина желатину -->
+    <symbol id="gsheet" viewBox="0 0 120 80"><path d="M10 14L100 6 112 66 22 74Z" fill="#F2D9A8" fill-opacity=".8" stroke="#D9B27C" stroke-width="2"/><g stroke="#D9B27C" stroke-width="1.4" opacity=".8"><path d="M20 20L44 70M38 18L62 68M56 16L80 66M74 14L98 64M92 12L108 52"/><path d="M14 34L104 26M17 50L108 42"/></g></symbol>
+    <!-- Молекула ПАР: голова + хвіст -->
+    <symbol id="surf" viewBox="0 0 40 80"><path d="M20 26L14 36 26 46 14 56 26 66 18 76" stroke="#F2A541" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="15" r="12" fill="#62A9E0"/></symbol>
+    <!-- Крапля олії в оболонці емульгатора -->
+    <symbol id="emul" viewBox="0 0 120 120"><circle cx="60" cy="60" r="34" fill="#F2C14E"/><circle cx="50" cy="50" r="9" fill="#fff" fill-opacity=".45"/><g stroke="#F2A541" stroke-width="3" stroke-linecap="round"><path d="M60 26V18M60 94V102M26 60H18M94 60H102M36 36L30 30M84 84L90 90M84 36L90 30M36 84L30 90"/></g><g fill="#62A9E0"><circle cx="60" cy="12" r="6"/><circle cx="60" cy="108" r="6"/><circle cx="12" cy="60" r="6"/><circle cx="108" cy="60" r="6"/><circle cx="26" cy="26" r="6"/><circle cx="94" cy="94" r="6"/><circle cx="94" cy="26" r="6"/><circle cx="26" cy="94" r="6"/></g></symbol>
+    <!-- Стручок (ріжкове дерево / гуар) -->
+    <symbol id="pod" viewBox="0 0 130 60"><path d="M8 40Q30 4 80 10Q118 14 124 30Q110 26 82 30Q40 36 14 52Q4 50 8 40Z" fill="#6B3A1E"/><g fill="#C98A3C"><ellipse cx="38" cy="30" rx="6" ry="4"/><ellipse cx="58" cy="24" rx="6" ry="4"/><ellipse cx="80" cy="21" rx="6" ry="4"/><ellipse cx="100" cy="22" rx="5" ry="3.5"/></g></symbol>
+    <!-- Гілка з краплею камеді -->
+    <symbol id="bark" viewBox="0 0 120 100"><path d="M4 30Q60 18 116 26V48Q60 40 4 54Z" fill="#7A4B25"/><path d="M14 36L30 34M44 32L66 30M80 31L100 31M20 46L40 44M60 40L84 40" stroke="#5B3A1E" stroke-width="2.5" stroke-linecap="round"/><path d="M62 44Q62 60 56 70A10 10 0 1 0 72 70Q66 60 66 44Z" fill="#F2A541"/><circle cx="60" cy="72" r="3" fill="#fff" fill-opacity=".5"/></symbol>
+    <!-- Ланцюг полісахариду з водою -->
+    <symbol id="chain" viewBox="0 0 200 80"><path d="M10 40L40 20 70 40 100 20 130 40 160 20 190 40" stroke="#F2A541" stroke-width="5" fill="none" stroke-linejoin="round"/><g fill="#F2A541"><circle cx="10" cy="40" r="7"/><circle cx="40" cy="20" r="7"/><circle cx="70" cy="40" r="7"/><circle cx="100" cy="20" r="7"/><circle cx="130" cy="40" r="7"/><circle cx="160" cy="20" r="7"/><circle cx="190" cy="40" r="7"/></g><g fill="#62A9E0"><circle cx="40" cy="4" r="4"/><circle cx="70" cy="58" r="4"/><circle cx="100" cy="4" r="4"/><circle cx="130" cy="58" r="4"/><circle cx="160" cy="4" r="4"/><circle cx="10" cy="58" r="4"/><circle cx="190" cy="58" r="4"/></g></symbol>
+    <!-- Ріжок морозива -->
+    <symbol id="icecream" viewBox="0 0 70 120"><path d="M14 52L35 116 56 52Z" fill="#D9A066"/><path d="M20 58L46 96M30 54L52 76M50 58L26 96" stroke="#A8743F" stroke-width="2"/><circle cx="35" cy="36" r="24" fill="#F5EDDF"/><circle cx="22" cy="46" r="12" fill="#F5EDDF"/><circle cx="48" cy="46" r="12" fill="#F5EDDF"/><circle cx="28" cy="28" r="5" fill="#fff"/></symbol>
+    <!-- Плитка шоколаду -->
+    <symbol id="choc" viewBox="0 0 120 80"><rect x="6" y="6" width="108" height="68" rx="8" fill="#5B3A1E"/><g fill="#7A4B25"><rect x="14" y="14" width="26" height="22" rx="3"/><rect x="47" y="14" width="26" height="22" rx="3"/><rect x="80" y="14" width="26" height="22" rx="3"/><rect x="14" y="44" width="26" height="22" rx="3"/><rect x="47" y="44" width="26" height="22" rx="3"/><rect x="80" y="44" width="26" height="22" rx="3"/></g></symbol>
+    <!-- Купка порошку -->
+    <symbol id="powder" viewBox="0 0 120 70"><path d="M8 64Q30 20 60 14Q90 20 112 64Z" fill="#F5EDDF"/><g fill="#BDB09B"><circle cx="40" cy="48" r="2"/><circle cx="60" cy="34" r="2"/><circle cx="76" cy="52" r="2"/><circle cx="54" cy="56" r="2"/></g></symbol>
+    <!-- Мішалка -->
+    <symbol id="mixer" viewBox="0 0 100 120"><rect x="44" y="4" width="12" height="60" rx="4" fill="#8E989E"/><path d="M50 64Q22 76 26 100Q50 96 50 70Q50 96 74 100Q78 76 50 64Z" fill="#BDB09B"/><path d="M14 74Q4 96 18 112H82Q96 96 86 74" stroke="#F5EDDF" stroke-width="5" fill="none"/></symbol>
+    <!-- ===== Теми 5–9 ===== -->
+    <symbol id="microbe" viewBox="0 0 100 100"><path d="M78 28Q92 14 96 30M22 72Q8 86 4 70M70 76Q80 92 92 88" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="20" y="30" width="60" height="40" rx="20" fill="currentColor" transform="rotate(-30 50 50)"/><g fill="#14120F" opacity=".35"><circle cx="42" cy="54" r="5"/><circle cx="58" cy="44" r="4"/></g></symbol>
+    <symbol id="mold" viewBox="0 0 100 100"><g stroke="#6CC3A0" stroke-width="3"><path d="M30 92V52M50 92V38M70 92V58"/></g><g fill="#6CC3A0"><circle cx="30" cy="44" r="10"/><circle cx="50" cy="28" r="12"/><circle cx="70" cy="50" r="9"/></g><g fill="#B5EBD5" opacity=".6"><circle cx="26" cy="40" r="3"/><circle cx="46" cy="24" r="3"/></g><path d="M10 92H90" stroke="#4D443A" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="sausage" viewBox="0 0 140 60"><path d="M14 30Q14 10 40 10H100Q126 10 126 30T100 50H40Q14 50 14 30Z" fill="#B3263A"/><g fill="#F5EDDF" opacity=".8"><circle cx="50" cy="26" r="3"/><circle cx="74" cy="34" r="3"/><circle cx="96" cy="24" r="3"/><circle cx="62" cy="40" r="2.5"/></g><path d="M14 30H4M126 30H136" stroke="#C98A3C" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="onion" viewBox="0 0 100 110"><path d="M50 4Q46 20 50 30" stroke="#6CC3A0" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M50 28C78 34 92 60 84 84 78 100 64 106 50 106S22 100 16 84C8 60 22 34 50 28Z" fill="#C98A3C"/><path d="M50 30Q30 60 40 104M50 30Q70 60 60 104" stroke="#8A5A2B" stroke-width="3" fill="none"/></symbol>
+    <symbol id="oilb" viewBox="0 0 60 120"><rect x="22" y="4" width="16" height="14" rx="3" fill="#6CC3A0"/><path d="M22 18H38V32Q52 40 52 56V108Q52 116 44 116H16Q8 116 8 108V56Q8 40 22 32Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M11 60H49V108Q49 113 44 113H16Q11 113 11 108Z" fill="#F2C14E"/></symbol>
+    <symbol id="dna" viewBox="0 0 60 120"><path d="M10 4C10 34 50 34 50 60S10 86 10 116" stroke="#62A9E0" stroke-width="5" fill="none"/><path d="M50 4C50 34 10 34 10 60S50 86 50 116" stroke="#A387E6" stroke-width="5" fill="none"/><g stroke="#BDB09B" stroke-width="3"><path d="M14 18H46M22 32H38M14 46H46M14 74H46M22 88H38M14 102H46"/></g></symbol>
+    <symbol id="pill" viewBox="0 0 100 50"><rect x="4" y="6" width="92" height="38" rx="19" fill="#F5EDDF"/><path d="M50 6H77A19 19 0 0 1 77 44H50Z" fill="currentColor"/><path d="M16 16Q30 12 40 14" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/></symbol>
+    <symbol id="factory" viewBox="0 0 140 110"><path d="M10 100V50L40 66V50L70 66V50L100 66V20H120V100Z" fill="#6B5D4C"/><g fill="#F2C14E"><rect x="22" y="76" width="12" height="10"/><rect x="52" y="76" width="12" height="10"/><rect x="82" y="76" width="12" height="10"/></g><g fill="#8A7A62" opacity=".8"><circle cx="110" cy="12" r="8"/><circle cx="124" cy="4" r="6"/></g></symbol>
+    <symbol id="globe" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#62A9E0"/><path d="M28 22Q40 30 34 44Q26 52 34 62Q44 64 42 80M62 14Q56 28 68 34Q82 36 84 50Q72 58 76 76" fill="none" stroke="#6CC3A0" stroke-width="10" stroke-linecap="round"/></symbol>
+    <symbol id="recyc" viewBox="0 0 100 100"><g fill="none" stroke="#6CC3A0" stroke-width="8" stroke-linecap="round"><path d="M38 24L26 44M62 24L74 44M78 68L66 84H36M22 68L32 84"/></g><g fill="#6CC3A0"><path d="M50 8L64 26H36Z"/><path d="M88 70L74 92 66 74Z"/><path d="M12 70L32 74 22 92Z"/></g></symbol>
+    <symbol id="bin" viewBox="0 0 80 100"><rect x="8" y="14" width="64" height="10" rx="4" fill="#8E989E"/><rect x="30" y="6" width="20" height="10" rx="3" fill="#8E989E"/><path d="M14 28H66L60 94H20Z" fill="#6B5D4C"/><path d="M30 40V82M40 40V82M50 40V82" stroke="#8E989E" stroke-width="4"/></symbol>
+    <symbol id="fiber" viewBox="0 0 120 80"><g fill="none" stroke-width="5" stroke-linecap="round"><path d="M6 20Q36 4 60 20T114 20" stroke="#6CC3A0"/><path d="M6 40Q36 24 60 40T114 40" stroke="#C98A3C"/><path d="M6 60Q36 44 60 60T114 60" stroke="#6CC3A0"/></g></symbol>
+    <symbol id="enz" viewBox="0 0 100 100"><path d="M50 50L92 30A44 44 0 1 0 92 70Z" fill="currentColor"/><circle cx="46" cy="28" r="5" fill="#14120F"/><rect x="76" y="44" width="12" height="12" rx="3" fill="#F5EDDF"/></symbol>
+    <symbol id="lemon" viewBox="0 0 100 80"><path d="M6 40Q10 8 50 8T94 40Q90 72 50 72T6 40Z" fill="#F2C14E"/><circle cx="6" cy="40" r="5" fill="#E6B83A"/><circle cx="94" cy="40" r="5" fill="#E6B83A"/><path d="M28 26Q40 18 54 20" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6"/></symbol>
+    <symbol id="doc" viewBox="0 0 80 100"><path d="M8 4H54L74 24V96H8Z" fill="#F5EDDF"/><path d="M54 4V24H74" fill="#D9CFBD"/><g stroke="#8A7A62" stroke-width="4" stroke-linecap="round"><path d="M18 40H62M18 54H62M18 68H48"/></g></symbol>
+    <symbol id="tank" viewBox="0 0 100 100"><path d="M14 40Q14 14 50 14T86 40V88H14Z" fill="#6CC3A0"/><rect x="10" y="86" width="80" height="8" rx="3" fill="#6B5D4C"/><path d="M50 14V4H66" stroke="#8E989E" stroke-width="5" fill="none"/><text x="50" y="66" text-anchor="middle" font-family="Unbounded" font-weight="700" font-size="17" fill="#14120F">CH₄</text></symbol>
+    <symbol id="bubbles" viewBox="0 0 100 100"><g fill="none" stroke="#F5EDDF" stroke-width="3" opacity=".85"><circle cx="30" cy="70" r="12"/><circle cx="62" cy="58" r="16"/><circle cx="44" cy="34" r="9"/><circle cx="74" cy="24" r="7"/><circle cx="20" cy="40" r="6"/></g></symbol>
+    <symbol id="gut" viewBox="0 0 100 100"><path d="M20 20H80Q92 20 92 32V40Q92 52 80 52H24Q10 52 10 64V72Q10 84 24 84H86" fill="none" stroke="#E8A9A0" stroke-width="12" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="stage" id="stage">
+  <div class="prog" id="prog"></div>
+
+  <!-- ================= 1. Титул ================= -->
+  <section class="slide" data-title="Тема 8 · Якість і безпека">
+    <div class="L" data-depth="0.15"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="980" cy="370" r="420" fill="url(#glowS)"/><circle cx="150" cy="700" r="320" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.35"><svg width="1280" height="720" aria-hidden="true"><g class="spin" style="transform-origin:980px 380px"><circle cx="980" cy="380" r="226" fill="none" stroke="#3B342B" stroke-width="2" stroke-dasharray="4 10"/><circle cx="980" cy="154" r="9" fill="#62A9E0"/><circle cx="1206" cy="380" r="7" fill="#6CC3A0"/><circle cx="980" cy="606" r="9" fill="#F2A541"/><circle cx="754" cy="380" r="7" fill="#E8573A"/></g></svg></div>
+    <div class="L" data-depth="0.6">
+      <svg width="1280" height="720" aria-label="Щит безпеки, документ стандарту, ДНК, лупа">
+        <g class="bob" style="color:#6CC3A0"><use href="#shield" x="900" y="250" width="160" height="176"/></g>
+        <g class="bob2"><use href="#doc" x="800" y="430" width="100" height="125"/></g>
+        <g class="bob"><use href="#dna" x="1110" y="200" width="60" height="120"/></g>
+        <g class="bob2"><use href="#lens" x="1080" y="450" width="100" height="100"/></g>
+        <g class="bob2"><use href="#globe" x="790" y="200" width="80" height="80"/></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.85">
+      <div style="position:absolute;left:80px;top:150px;width:660px;">
+        <p class="kicker rv">Лекція 8 · <i>Тема 8</i></p>
+        <h1 class="rv" style="margin-top:18px;">Формування <span class="g">якості й безпеки</span> харчових продуктів</h1>
+        <div class="pills rv" style="margin-top:30px;max-width:620px;"><span class="pill">1 Безпечне харчування і забруднення</span><span class="pill">2 Генетично модифіковані продукти</span><span class="pill">3 Державне регулювання</span></div>
+      </div>
+    </div>
+    <div class="L" data-depth="1.5">
+      <div class="chip bob" style="left:1120px;top:80px;">0,9% ГМО</div><div class="chip bob2" style="left:760px;top:100px;">ДСТУ</div>
+      <div class="chip bob2" style="left:690px;top:610px;">Codex</div><div class="chip bob" style="left:1110px;top:610px;">371 ХД</div>
+    </div>
+    <aside class="notes">План: 1. Сутність безпечного харчування, шляхи забруднення харчових продуктів. 2. Генетично модифіковані харчові продукти. 3. Державне регулювання належної якості та безпеки харчових продуктів.
+Лекція спирається на статтю Ж.К. Сіднєвої, Т.В. Рибачук-Ярової «Проблеми якості і безпечності харчових продуктів в контексті забезпечення продовольчої безпеки» (НІХТ).</aside>
+  </section>
+
+  <!-- ================= 2. Продовольча безпека ================= -->
+  <section class="slide" data-title="1 · Продовольча безпека">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="340" cy="380" r="380" fill="url(#glowS)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Продовольча безпека</i></p><h2 class="rv">Частина економічної безпеки країни</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Віхи продовольчої безпеки">
+        <path d="M90 300H600" stroke="#4D443A" stroke-width="3"/>
+        <g fill="#62A9E0"><circle cx="150" cy="300" r="10"/><circle cx="350" cy="300" r="10"/><circle cx="540" cy="300" r="10"/></g>
+        <g font-family="Unbounded" font-weight="700" font-size="20" fill="#F5EDDF" text-anchor="middle"><text x="150" y="276">1974</text><text x="350" y="276">1996</text><text x="540" y="276">закон</text></g>
+        <g font-family="Manrope" font-weight="700" font-size="13" fill="#BDB09B" text-anchor="middle"><text x="150" y="330">ООН схвалює</text><text x="150" y="348">зобов’язання ФАО</text><text x="350" y="330">Римська декларація</text><text x="350" y="348">про продовольчу безпеку</text><text x="540" y="330">Закон України «Про</text><text x="540" y="348">продовольчу безпеку»</text></g>
+        <g class="bob"><use href="#globe" x="250" y="400" width="200" height="200"/></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:660px;top:180px;width:540px;padding:18px 22px;border-color:rgba(98,169,224,.55);">
+        <p class="xs">«…захищеність життєво важливих інтересів людини, суспільства і держави, за якої держава гарантує <b>фізичну й економічну доступність та якість</b> життєво важливих продуктів, підтримує стабільність забезпечення і продовольчу незалежність».</p>
+      </div>
+      <div class="rv" style="position:absolute;left:660px;top:380px;width:540px;">
+        <p class="xs m">Принципи системи продовольчої безпеки:</p>
+        <div class="pills" style="margin-top:8px;gap:7px;"><span class="pill sk">самозабезпеченість</span><span class="pill sk">незалежність</span><span class="pill sk">стабільність</span><span class="pill sk">фізична доступність</span><span class="pill sk">економічна доступність</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:510px;width:540px;padding:14px 22px;border-color:rgba(232,87,58,.55);">
+        <p class="xs"><b class="t">Проблема:</b> якості й безпечності продуктів приділяють менше уваги, ніж кількісному забезпеченню.</p>
+      </div>
+    </div>
+    <aside class="notes">Інтеграція України у світовий економічний простір вимагає врахування сучасних тенденцій світових ринків. Нові форми господарювання за недосконалої правової бази, без науково обґрунтованої концепції реформ, зі зниженням рівня життя спровокували загрози економіці й національній безпеці.
+Проблему продовольчої безпеки активно досліджують з середини 1970-х. У 1974 р. Генасамблея ООН схвалила розроблені ФАО «Міжнародні зобов’язання із забезпечення продовольчої безпеки у світі». У 1996 р. на Всесвітньому форумі прийнято «Римську декларацію щодо всесвітньої продовольчої безпеки»: продовольчу безпеку визнано найважливішою частиною економічної безпеки країни. Єдиної думки щодо сутності немає (дослідження І.І. Лукінова, П.П. Борщевського, П.Т. Саблука та ін.).
+Закон України «Про продовольчу безпеку України»: захищеність життєво важливих інтересів людини і громадянина, суспільства і держави, за якої держава гарантує фізичну й економічну доступність та якість життєво важливих продуктів згідно з науково обґрунтованими наборами, підтримує стабільність забезпечення і продовольчу незалежність.
+Принципи: самозабезпеченість, незалежність, стабільність, доступність (фізична та економічна). Водночас якості й безпечності продуктів не приділяють належної уваги.</aside>
+  </section>
+
+  <!-- ================= 3. Якість і безпечність ================= -->
+  <section class="slide" data-title="1 · Якість і безпечність">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="420" r="500" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Закон «Про безпечність та якість харчових продуктів»</i></p><h2 class="rv">Якісний ≠ безпечний — потрібні обидва</h2></div></div>
+    <div class="card rv" data-depth="0.6" style="position:absolute;left:80px;top:180px;width:360px;height:320px;padding:20px 22px;border-color:rgba(242,165,65,.55);">
+      <svg width="56" height="56" viewBox="0 0 100 100"><path d="M50 8l12 26 28 3-21 19 6 28-25-14-25 14 6-28-21-19 28-3z" fill="#F2A541"/></svg>
+      <h3 class="a" style="font-size:19px;margin-top:6px;">Якість</h3>
+      <p class="xs" style="margin-top:8px;">Ступінь досконалості властивостей і характерних рис продукту, здатних задовольнити потреби й побажання споживача.</p>
+    </div>
+    <div class="card rv" data-depth="0.8" style="position:absolute;left:460px;top:180px;width:360px;height:320px;padding:20px 22px;border-color:rgba(108,195,160,.55);">
+      <svg width="56" height="62" viewBox="0 0 100 110" style="color:#6CC3A0"><use href="#shield"/></svg>
+      <h3 class="g" style="font-size:19px;margin-top:6px;">Безпечний продукт</h3>
+      <p class="xs" style="margin-top:8px;">Не створює шкідливого впливу на здоров’я — прямо чи опосередковано — за дотримання санітарних вимог і споживання за призначенням.</p>
+    </div>
+    <div class="card rv" data-depth="1.0" style="position:absolute;left:840px;top:180px;width:360px;height:320px;padding:20px 22px;border-color:rgba(232,87,58,.55);">
+      <svg width="56" height="56" viewBox="0 0 48 48"><use href="#ban"/></svg>
+      <h3 class="t" style="font-size:19px;margin-top:6px;">Небезпечний продукт</h3>
+      <p class="xs" style="margin-top:8px;">Не відповідає нормативним документам і/або містить <b>хімічний, фізичний чи біологічний</b> небезпечний фактор.</p>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:530px;width:1120px;padding:16px 24px;display:flex;gap:24px;align-items:center;">
+        <p class="big t" style="font-size:44px;flex-shrink:0;">до 80%</p>
+        <p class="xs">шкідливих речовин надходить в організм з <b>їжею та напоями</b>. Експерти Всесвітнього банку відносять продовольство і воду до найважливіших загроз національній безпеці.</p>
+      </div>
+    </div>
+    <aside class="notes">Вирішення продовольчої проблеми залежить не лише від кількості продуктів, а великою мірою від їх якості — це питання життя і здоров’я людей.
+Закон «Про безпечність та якість харчових продуктів»: якість — ступінь досконалості властивостей та характерних рис продукту, які здатні задовольнити потреби (вимоги) та побажання споживачів. Безпечний харчовий продукт — не створює шкідливого впливу на здоров’я людини безпосередньо чи опосередковано за умов виробництва та обігу з дотриманням санітарних заходів і споживання за призначенням. Небезпечний — показники якості й споживчі властивості не відповідають нормативним документам і/або містить небезпечний фактор (хімічний, фізичний, біологічний).
+Ідентифікація показників часто свідчить про зниження поживної цінності і перевищення вмісту забруднювачів. До 80% шкідливих речовин надходить до організму з їжею та напоями; експерти Всесвітнього банку відносять продовольство і воду до найважливіших загроз національній безпеці.</aside>
+  </section>
+
+  <!-- ================= 4. Сільське господарство ================= -->
+  <section class="slide" data-title="1 · Якість починається в полі">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="900" cy="400" r="420" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Фактори якості в АПК</i></p><h2 class="rv">Якість починається в полі</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:180px;width:540px;height:456px;padding:18px 22px;border-color:rgba(232,87,58,.55);">
+        <h3 class="t" style="font-size:18px;">Що погіршує сировину</h3>
+        <ul class="ul t" style="margin-top:6px;"><li>інтенсифікація аграрного виробництва</li><li>антропогенне й техногенне навантаження на довкілля</li><li>порушення технологій вирощування</li><li>застаріла матеріально-технічна база — гірша якість і більші втрати</li><li>антибіотики й гормони у тваринництві</li><li>трансгенні культури й корми</li><li>природні умови: засухи, повені, сезонність</li><li>розрив зв’язків між господарствами і переробниками</li></ul>
+        <p class="xs m" style="margin-top:10px;">Нижча цукристість буряка, олійність соняшнику, крохмаль картоплі, білок і жир молока → гірша готова продукція.</p>
+      </div>
+    </div>
+    <div class="L" data-depth="0.55"><svg width="1280" height="720" id="hhSvg" aria-label="Частка особистих селянських господарств у виробництві"></svg></div>
+    <aside class="notes">Якість харчового продукту формують галузі АПК — виробництво сільськогосподарської продукції, переробка, зберігання, реалізація; визначається переважно хімічними, фізичними, біохімічними показниками.
+У сільському господарстві на якість і безпечність негативно впливають: інтенсифікація аграрного виробництва; зростання антропогенного і техногенного навантаження (некондиційна сировина, забруднення); порушення технологій вирощування; недостатня й застаріла матеріально-технічна база (гірша якість, більші втрати); антибіотики й гормони у тваринництві; трансгенні культури і корми; природні умови (засухи, повені, сезонність).
+Загроза — забезпечення підприємств екологічно чистою сировиною (особливо для дитячого харчування) і контроль її якості. Спостерігається зниження якості сировини: розрив сталих зв’язків між сільгосп- і переробними підприємствами; зниження цукристості буряків, олійності соняшнику, крохмалю картоплі, білка й жиру молока, сухих речовин овочів.
+За даними академіка О. Шпичака, в особистих селянських господарствах виробляють ≈ 80% молока, 95% картоплі, 80% овочів, 50% м’яса і фруктів. Показники якості визначають лабораторії заготівельника — точність залежить від кваліфікації й сумлінності працівників.</aside>
+  </section>
+
+  <!-- ================= 5. Шляхи забруднення ================= -->
+  <section class="slide" data-title="1 · Шляхи забруднення">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="440" r="500" fill="url(#glowT)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Шляхи надходження шкідливих речовин</i></p><h2 class="rv">Звідки в їжі шкідливі речовини</h2></div></div>
+    <div class="L" data-depth="0.45">
+      <svg width="1280" height="720" aria-hidden="true"><g stroke="#4D443A" stroke-width="3" fill="none">
+        <path class="draw" style="--len:300" d="M640 250C640 290 260 280 240 330"/><path class="draw" style="--len:120" d="M640 250V330"/><path class="draw" style="--len:300" d="M640 250C640 290 1020 280 1040 330"/>
+        <path d="M240 420C240 450 160 450 160 480M240 420C240 450 330 450 330 480"/></g></svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:470px;top:180px;width:340px;padding:14px 18px;background:linear-gradient(135deg,#E8573A,#F2A541);border:none;text-align:center;"><h3 style="color:#1B1408;font-size:18px;">Шкідливі речовини в продуктах</h3></div>
+      <div class="card frag" style="position:absolute;left:80px;top:330px;width:320px;padding:14px 18px;border-color:#6CC3A0;"><h3 class="g" style="font-size:16px;">Із середовища та в сировині</h3></div>
+      <div class="card frag" style="position:absolute;left:480px;top:330px;width:320px;padding:14px 18px;border-color:#F2A541;"><h3 class="a" style="font-size:16px;">У процесі виробництва</h3><p class="xs m" style="margin-top:4px;">технологічна обробка</p></div>
+      <div class="card frag" style="position:absolute;left:880px;top:330px;width:320px;padding:14px 18px;border-color:#A387E6;"><h3 class="pl" style="font-size:16px;">Як харчові добавки</h3><p class="xs m" style="margin-top:4px;">свідомо внесені речовини</p></div>
+      <div class="card frag" style="position:absolute;left:80px;top:480px;width:200px;padding:12px 16px;"><p class="xs"><b class="g">Екзогенні</b><br><span class="m">із навколишнього середовища</span></p></div>
+      <div class="card frag" style="position:absolute;left:290px;top:480px;width:200px;padding:12px 16px;"><p class="xs"><b class="g">Ендогенні</b><br><span class="m">утворюються під дією фізичних і хімічних факторів</span></p></div>
+      <div class="pills frag" style="position:absolute;left:520px;top:480px;width:680px;gap:7px;"><span class="pill t">нітрати</span><span class="pill t">пестициди</span><span class="pill t">важкі й рідкісні метали</span><span class="pill t">антибактеріальні препарати</span><span class="pill t">радіонукліди</span><span class="pill t">діоксини, транс-ізомери</span></div>
+    </div>
+    <aside class="notes">Інтенсифікація сільського господарства часто забруднює довкілля — головне джерело шкідливих речовин у сировині й готовій продукції: нітрати, пестициди, важкі й рідкісні метали, антибактеріальні препарати, радіонукліди тощо.
+Шляхи надходження шкідливих речовин до продуктів: 1) надходять із зовнішнього середовища та утворюються в сільськогосподарській сировині; 2) утворюються в процесі виробництва (технологічної обробки); 3) додаються як харчові добавки. За походженням: екзогенні — надходять із навколишнього середовища; ендогенні — утворюються в сировині або готовій продукції під дією фізичних і хімічних факторів.
+Діоксини й транс-ізомери ненасичених жирних кислот згадуються в лекції пізніше — як ненормовані в Україні забруднювачі.
+Вузли з’являються автоматично.</aside>
+  </section>
+
+  <!-- ================= 6. Харчові добавки ================= -->
+  <section class="slide" data-title="1 · Харчові добавки і безпека">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="340" cy="400" r="380" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Харчові добавки в Україні</i></p><h2 class="rv">371 з 480 досліджених — дозволено</h2></div></div>
+    <div class="L" data-depth="0.55"><svg width="1280" height="720" id="addSvg" aria-label="Статус харчових добавок в Україні"></svg></div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:660px;top:180px;width:540px;padding:16px 22px;">
+        <p class="xs" style="margin-bottom:8px;"><b>П’ять призначень добавок:</b></p>
+        <ul class="ul"><li>поліпшують вигляд — барвники, освітлювачі, загусники</li><li>подовжують зберігання — консерванти, інгібітори, антиоксиданти</li><li>змінюють фізичні властивості — ПАР</li><li>поліпшують смак і аромат — ароматизатори, підсилювачі, підсолоджувачі</li><li>підвищують харчову цінність — вітаміни, мікроелементи, БАР</li></ul>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:430px;width:540px;padding:16px 22px;border-color:rgba(232,87,58,.55);">
+        <p class="xs">Використання — лише з дозволу <b>МОЗ України</b> (постанова КМУ про перелік дозволених добавок). Добавки не повинні <b class="t">приховувати низьку якість</b> продукції і створювати загрозу здоров’ю.</p>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:660px;top:570px;width:540px;">Загроза — дешеві, але екологічно небезпечні продукти з добавками, ГМО і гормонами.</p>
+    </div>
+    <aside class="notes">Загрозою продовольчій безпеці може бути дешева, але екологічно небезпечна продукція з харчовими добавками, ГМ-компонентами і гормонами. Світова харчова промисловість широко використовує добавки, зокрема синтетичні.
+Харчові добавки: 1) поліпшують зовнішній вигляд (барвники, освітлювачі, загусники); 2) подовжують термін зберігання (консерванти, інгібітори, антиоксиданти); 3) змінюють фізичні властивості (ПАР); 4) поліпшують смак і аромат (ароматичні речовини, підсилювачі, підсолоджувачі); 5) підвищують харчову цінність (вітаміни, мікроелементи, БАР).
+В Україні використання регулює постанова КМУ «Про затвердження переліку харчових добавок, дозволених для використання у харчових продуктах» та санітарні правила; добавки використовують лише з дозволу МОЗ. Із 480 добавок, які досліджуються в Україні, дозволено 371, 105 не отримали дозволу, 4 заборонені. Добавки мають забезпечувати безпечність при збереженні якості і не повинні приховувати низьку якість продукції.</aside>
+  </section>
+
+  <!-- ================= 7. ГМО ================= -->
+  <section class="slide" data-title="2 · Генетично модифіковані продукти">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="340" cy="400" r="380" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">2 · <i>ГМО</i></p><h2 class="rv">Ген з одного організму — в інший</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Генна інженерія та поріг маркування 0,9%">
+        <g class="bob"><use href="#dna" x="110" y="190" width="90" height="180"/></g>
+        <path class="draw" style="--len:140" d="M220 280H330" stroke="#A387E6" stroke-width="4" marker-end="url(#ah)"/>
+        <g class="bob2"><use href="#cob" x="360" y="200" width="80" height="160"/></g>
+        <g transform="translate(330 220)"><circle r="22" fill="#A387E6"/><text y="6" text-anchor="middle" font-family="Unbounded" font-weight="700" font-size="13" fill="#14120F">ГМ</text></g>
+        <text x="90" y="430" font-family="Manrope" font-weight="800" font-size="16" fill="#F5EDDF">Маркування обов’язкове, якщо ГМО &gt; 0,9%</text>
+        <rect x="90" y="448" width="500" height="26" rx="13" fill="#3B342B"/><rect x="90" y="448" width="45" height="26" rx="13" fill="#A387E6"/>
+        <path d="M135 440V482" stroke="#F5EDDF" stroke-width="3"/>
+        <g font-family="Unbounded" font-weight="600" font-size="13" fill="#BDB09B"><text x="90" y="500">0%</text><text x="122" y="500">0,9%</text><text x="560" y="500">10%</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:660px;top:180px;width:540px;padding:16px 22px;">
+        <p class="xs"><b class="pl">ГМО</b> — результат генної інженерії: гени й сегменти ДНК одного організму вбудовують в інший для бажаних властивостей.</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:300px;width:540px;padding:16px 22px;border-color:rgba(232,87,58,.55);">
+        <p class="xs"><b class="t">За лекцією, можливі ризики:</b> алергічні реакції, зниження імунітету, порушення обміну речовин. Дія ГМ-продуктів на людину ще не до кінця досліджена.</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:420px;width:540px;padding:16px 22px;">
+        <p class="xs"><b>Закон «Про державну систему біобезпеки…» (2007)</b> і постанова КМУ про обіг продуктів з ГМО: ввезення й реалізація продуктів із ГМО <b>понад 0,9%</b> — лише з маркуванням.</p>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:660px;top:560px;width:540px;">Проблеми: норми часто декларативні; технічної бази для експертизи на ГМО недостатньо.</p>
+    </div>
+    <aside class="notes">На ринку з’явилася продукція з генетично модифікованими організмами (GMO). ГМО — результат генної інженерії, що дозволяє вбудовувати гени й сегменти ДНК з одного організму в інший для бажаних властивостей. Дискусія — щодо обов’язкового інформування споживачів.
+За лекцією, дія ГМ-продуктів на людину ще не до кінця досліджена; вчені застерігають, що вони можуть спричиняти алергічні реакції, зниження імунітету, порушення обміну речовин. За наслідки регулювання відповідають уряди.
+В Україні — Закон «Про державну систему біобезпеки при створенні, випробуванні, транспортуванні та використанні ГМО» (2007) і постанова КМУ «Питання обігу харчових продуктів, що містять ГМО». Ввезення й реалізація продуктів з ГМО понад 0,9% — лише з маркуванням і визначенням якісного складу. Проте норми виконуються не повною мірою, а технічна база для експертизи на ГМО недостатня.
+⚠ Оцінка ризиків ГМО — за лекцією; міжнародні організації (ВООЗ, EFSA) вважають дозволені ГМ-продукти, що пройшли оцінку, такими ж безпечними, як традиційні аналоги.</aside>
+  </section>
+
+  <!-- ================= 8. Стандарти ================= -->
+  <section class="slide" data-title="3 · Стандарти і ТУ">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="900" cy="400" r="420" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">3 · <i>Державне регулювання</i></p><h2 class="rv">ДСТУ, ГОСТ — і тисячі ТУ</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:180px;width:540px;padding:16px 22px;">
+        <p class="xs"><b class="a">Національна комісія з Кодексу Аліментаріус</b> аналізує законодавство і пропонує гармонізацію з міжнародним.</p>
+      </div>
+      <div class="rv" style="position:absolute;left:80px;top:290px;width:540px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="card" style="padding:14px 18px;"><p class="big a" style="font-size:36px;">&gt; 30%</p><p class="xs m">стандартів харчової промисловості гармонізовано</p></div>
+        <div class="card" style="padding:14px 18px;"><p class="big a" style="font-size:36px;">≈ 50%</p><p class="xs m">— сільського господарства</p></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:440px;width:540px;padding:16px 22px;border-color:rgba(232,87,58,.55);">
+        <p class="xs"><b class="t">Ризик ТУ:</b> технічні умови нерідко дозволяють замінювати інгредієнти й подовжувати термін зберігання — якість падає. Особливо: рослинні жири замість молочного, білкові замінники замість м’яса.</p>
+      </div>
+    </div>
+    <div class="L" data-depth="0.55"><svg width="1280" height="720" id="tuSvg" aria-label="Кількість технічних умов за продуктами"></svg></div>
+    <aside class="notes">Для гармонізації законодавства створено Національну комісію України з Кодексу Аліментаріус: аналізує міжнародне і вітчизняне законодавство, розробляє пропозиції щодо безпечності та якості. Продукція виробляється за ДСТУ, ГОСТ і ТУУ. Гармонізовано понад 30% стандартів харчової промисловості і майже половину — сільського господарства.
+Поряд зі стандартами діє багато ТУ: ковбаси й ковбасні вироби — близько 1000, м’ясні консерви — 200, м’ясні напівфабрикати — понад 300, пельмені — 160, тверді сири — понад 350, кефіри, йогурти, вершкове масло, сметана — по 40–60, молоко — понад 120. ТУ нерідко дозволяють заміну інгредієнтів і подовження строку зберігання — це погіршує якість. Особливі проблеми — заміна молочного жиру рослинними жирами в молочній продукції і м’яса білковими замінниками в м’ясній.</aside>
+  </section>
+
+  <!-- ================= 9. Проти фальсифікації ================= -->
+  <section class="slide" data-title="3 · Проти фальсифікації">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="420" r="500" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">3 · <i>Норми проти фальсифікації</i></p><h2 class="rv">Чесна назва — чесний склад</h2></div></div>
+    <div class="card rv" data-depth="0.6" style="position:absolute;left:80px;top:180px;width:360px;height:300px;padding:20px 22px;">
+      <svg width="90" height="40" viewBox="0 0 140 60"><use href="#sausage"/></svg>
+      <h3 style="font-size:18px;margin-top:8px;">ДСТУ 4436:2005</h3>
+      <p class="xs m" style="margin-top:6px;">Ковбаси варені: новим видам <b style="color:var(--text)">не можна давати традиційних назв</b>; традиційний асортимент — за рецептурами ГОСТ без заміни інгредієнтів.</p>
+    </div>
+    <div class="card rv" data-depth="0.8" style="position:absolute;left:460px;top:180px;width:360px;height:300px;padding:20px 22px;">
+      <svg width="70" height="44" viewBox="0 0 120 70"><rect x="10" y="20" width="100" height="44" rx="8" fill="#F2C14E"/><rect x="10" y="20" width="100" height="14" rx="6" fill="#E6B83A"/></svg>
+      <h3 style="font-size:18px;margin-top:8px;">ДСТУ 4445:2005</h3>
+      <p class="xs m" style="margin-top:6px;">Спреди й жирові суміші <b style="color:var(--text)">не можна називати маслом</b>.</p>
+    </div>
+    <div class="card rv" data-depth="1.0" style="position:absolute;left:840px;top:180px;width:360px;height:300px;padding:20px 22px;">
+      <svg width="40" height="66" viewBox="0 0 60 100"><use href="#bottleB"/></svg>
+      <h3 style="font-size:18px;margin-top:8px;">Закон «Про молоко…» (2010)</h3>
+      <p class="xs m" style="margin-top:6px;">Допустима частка рослинних жирів зменшена <b style="color:var(--text)">з 75% до 50%</b>; маркування обов’язкове.</p>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:510px;width:1120px;padding:16px 24px;display:flex;gap:20px;align-items:center;border-color:rgba(108,195,160,.55);">
+        <svg width="50" height="50" viewBox="0 0 100 100" style="flex-shrink:0"><use href="#lens"/></svg>
+        <p class="xs"><b class="g">Незалежний аудит м’яса (2011, Інститут споживчих експертиз):</b> 5 відомих підприємств погодилися на добровільну перевірку всього ланцюга — в Україні є виробники якісної конкурентоспроможної продукції.</p>
+      </div>
+    </div>
+    <aside class="notes">ДСТУ 4436:2005 «Ковбаси варені. Загальні технічні умови» забороняє присвоювати новим видам ковбас традиційні назви; ДСТУ 4445:2005 «Спреди та суміші жирові» — називати спреди і жирові суміші маслом. Нові стандарти на ковбаси передбачають і виробництво традиційного асортименту за рецептурами ГОСТ без заміни інгредієнтів. За лекцією, вміст білку в ковбасних виробах не повинен перевищувати 13%.
+Закон «Про молоко і молочні продукти» (ред. 2010) зменшив допустиму норму рослинних жирів з 75% до 50%; виробники зобов’язані маркувати продукцію. Це зменшує фальсифікацію.
+«Незалежний аудит м’яса та м’ясопродуктів» (2011, Інститут споживчих експертиз): 5 відомих підприємств погодилися на добровільний аудит; перевірка всього ланцюга засвідчила, що в Україні є виробники якісної продукції сучасного рівня. Мета — показати безпечні й потенційно небезпечні вироби і спонукати виробників поліпшити контроль.
+⚠ Твердження про «білок не більше 13%» наведено за лекцією; ймовірно, йдеться про обмеження додаваного рослинного білка.</aside>
+  </section>
+
+  <!-- ================= 10. Контроль ================= -->
+  <section class="slide" data-title="3 · Державний контроль">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="340" cy="400" r="380" fill="url(#glowS)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">3 · <i>Контроль і індикатори</i></p><h2 class="rv">Один орган — за моделлю ЄС</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Від чотирьох міністерств до одного органу контролю">
+        <g fill="#242019" stroke="#3B342B"><rect x="90" y="200" width="110" height="60" rx="12"/><rect x="90" y="280" width="110" height="60" rx="12"/><rect x="90" y="360" width="110" height="60" rx="12"/><rect x="90" y="440" width="110" height="60" rx="12"/></g>
+        <g font-family="Manrope" font-weight="700" font-size="13" fill="#BDB09B" text-anchor="middle"><text x="145" y="235">міністерство</text><text x="145" y="315">міністерство</text><text x="145" y="395">міністерство</text><text x="145" y="475">міністерство</text></g>
+        <g stroke="#62A9E0" stroke-width="3" fill="none"><path d="M200 230C260 230 260 350 320 350"/><path d="M200 310C260 310 260 350 320 350"/><path d="M200 390C260 390 260 350 320 350"/><path d="M200 470C260 470 260 350 320 350"/></g>
+        <g class="bob" style="color:#62A9E0"><use href="#shield" x="330" y="290" width="110" height="121"/></g>
+        <text x="385" y="440" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="15" fill="#9CCBF0">єдиний орган</text>
+        <text x="90" y="560" font-family="Unbounded" font-weight="700" font-size="30" fill="#F2A541">1500+</text><text x="260" y="560" font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B">лабораторій оцінюють</text><text x="260" y="580" font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B">безпечність і якість</text>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:660px;top:180px;width:540px;padding:16px 22px;">
+        <p class="xs">Раніше контроль здійснювали <b>4 міністерства</b>; за зразком ЄС створено єдиний компетентний орган — Державну ветеринарну та фітосанітарну службу. Після скасування обов’язкової сертифікації (2012) її роль зросла.</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:340px;width:540px;padding:16px 22px;">
+        <p class="xs" style="margin-bottom:8px;"><b>Три групи критеріїв продовольчої безпеки:</b></p>
+        <div class="pills" style="gap:7px;"><span class="pill sk">фізична доступність</span><span class="pill sk">економічна доступність</span><span class="pill sk">безпека продовольства</span></div>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:660px;top:480px;width:540px;">⚠ Нині ці функції виконує Держпродспоживслужба (з 2015 р.).</p>
+    </div>
+    <aside class="notes">Через зростання споживання гострою проблемою залишається надходження неякісних, фальсифікованих і небезпечних продуктів. Створюється сучасна система контролю й ринкового нагляду, адаптована до вимог СОТ і ЄС. Раніше офіційний контроль здійснювали чотири міністерства; за указом Президента за зразком ЄС створено єдиний компетентний орган — Державну ветеринарну та фітосанітарну службу. Після скасування Верховною Радою обов’язкової сертифікації продуктів (2012) важливість служби зросла. В Україні понад 1500 лабораторій мають право оцінювати безпечність і якість.
+Стан продовольчої безпеки оцінюють за Методикою визначення основних індикаторів; узагальнено — три групи критеріїв: фізична доступність, економічна доступність, безпека продовольчих товарів.
+⚠ Дані лекції станом на 2011–2014 рр.; з 2015 р. функції контролю виконує Державна служба з питань безпечності харчових продуктів та захисту споживачів (Держпродспоживслужба).</aside>
+  </section>
+
+  <!-- ================= 11. Споживання ================= -->
+  <section class="slide" data-title="3 · Структура харчування">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="420" r="500" fill="url(#glowT)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">3 · <i>Індикатори (за лекцією, 2011–2014)</i></p><h2 class="rv">Багато хліба й картоплі, мало молока й м’яса</h2></div></div>
+    <div class="L" data-depth="0.55"><svg width="1280" height="720" id="consSvg" aria-label="Фактичне споживання порівняно з раціональною нормою"></svg></div>
+    <div class="L" data-depth="0.95">
+      <div class="rv" style="position:absolute;left:720px;top:180px;width:480px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="card" style="padding:14px 16px;"><p class="big a" style="font-size:30px;">2951</p><p class="xs m">ккал на добу (2014) — на 18,1% вище порогу</p></div>
+        <div class="card" style="padding:14px 16px;"><p class="big t" style="font-size:30px;">27,3%</p><p class="xs m">калорій тваринного походження (2011) — удвічі нижче порогу</p></div>
+        <div class="card" style="padding:14px 16px;"><p class="big" style="font-size:30px;">53,1%</p><p class="xs m">витрат домогосподарств — на їжу (2014)</p></div>
+        <div class="card" style="padding:14px 16px;"><p class="big" style="font-size:30px;">67,9%</p><p class="xs m">— у 2000 р.</p></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:720px;top:470px;width:480px;padding:16px 20px;border-color:rgba(232,87,58,.55);">
+        <p class="xs"><b class="t">Не нормуються в Україні</b> (за лекцією): діоксини, транс-ізомери ненасичених жирних кислот — ризик онкологічних і серцево-судинних хвороб.</p>
+      </div>
+    </div>
+    <aside class="notes">Індикатор достатності споживання: фактичне споживання більшості продуктів нижче раціональних норм. У 2011 р. найбільше відставання — молоко і молокопродукти (на 46%), м’ясо і м’ясопродукти (на 36%), плоди, ягоди й виноград (на 41,5%). Лише за чотирма позиціями — хліб і хлібопродукти, картопля, олія, цукор — споживання перевищило норму; це свідчить про незбалансоване харчування за рахунок економічно доступніших продуктів.
+Середньодобова енергетична цінність раціону у 2014 р. — 2951 ккал (на 18,1% вище граничного критерію, +0,7% до 2010 р.). У 2011 р. лише 27,3% калорій — тваринного походження, що вдвічі нижче порогового критерію. Зростання калорійності — на тлі зниження вмісту мікро- і макроелементів. Частка витрат домогосподарств на продукти — 53,1% у 2014 р. (67,9% у 2000 р.).
+В Україні не нормуються і не контролюються особливо небезпечні забруднювачі — діоксини, транс-ізомери ненасичених жирних кислот, регламентовані Кодексом Аліментаріус і в ЄС; рослинні жири з транс-ізомерами використовують у морозиві, цукерках, печиві, вафлях, плавлених сирках, чипсах. Надлишок транс-ізомерів пов’язують з онкологічними й серцево-судинними захворюваннями.
+Рекомендації: вдосконалення нормативно-правової бази; гармонізація стандартів, особливо методів контролю; відповідність ТУ законодавству; врахування показників якості й безпечності в індикаторах продовольчої безпеки.
+⚠ Дані — за лекцією (2011–2014); з того часу нормативна база змінювалася (зокрема, вимоги щодо транс-жирів).</aside>
+  </section>
+
+  <!-- ================= 12. Підсумок ================= -->
+  <section class="slide" data-title="Підсумок">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="400" r="420" fill="url(#glowS)"/></svg></div>
+    <div class="L" data-depth="0.4"><svg width="1280" height="720" aria-hidden="true"><g class="spin" style="transform-origin:640px 410px"><circle cx="640" cy="410" r="214" fill="none" stroke="#3B342B" stroke-width="2" stroke-dasharray="4 10"/><circle cx="640" cy="196" r="9" fill="#62A9E0"/><circle cx="854" cy="410" r="8" fill="#6CC3A0"/><circle cx="640" cy="624" r="9" fill="#F2A541"/><circle cx="426" cy="410" r="8" fill="#E8573A"/></g><circle cx="640" cy="410" r="140" fill="#242019" stroke="#3B342B" stroke-width="2"/></svg></div>
+    <div class="L" data-depth="0.8">
+      <div class="head"><p class="kicker rv">Підсумок</p><h2 class="rv">П’ять думок про якість і безпеку</h2></div>
+      <p class="rv" style="position:absolute;left:520px;top:368px;width:240px;text-align:center;font-family:var(--display);font-weight:700;font-size:20px;line-height:1.35;"><span class="sk">безпечно</span> і<br><span class="a">якісно</span></p>
+    </div>
+    <div class="L" data-depth="1.15">
+      <div class="frag card" style="position:absolute;left:500px;top:150px;width:280px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">1</b> Продовольча безпека — не лише кількість, а й якість</p></div>
+      <div class="frag card" style="position:absolute;left:840px;top:290px;width:270px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">2</b> До 80% шкідливих речовин надходить з їжею й напоями</p></div>
+      <div class="frag card" style="position:absolute;left:770px;top:520px;width:280px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">3</b> Продукти з ГМО понад 0,9% — лише з маркуванням</p></div>
+      <div class="frag card" style="position:absolute;left:230px;top:520px;width:280px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">4</b> Стандарти й закони обмежують заміну інгредієнтів і фальсифікацію</p></div>
+      <div class="frag card" style="position:absolute;left:170px;top:290px;width:270px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">5</b> Потрібні єдиний контроль, гармонізація та нові норми</p></div>
+    </div>
+    <aside class="notes">Підсумок:
+1. Продовольча безпека — частина економічної; включає фізичну й економічну доступність і якість продуктів.
+2. Якість формується по всьому ланцюгу АПК; шкідливі речовини надходять із середовища, утворюються при переробці або вносяться як добавки; до 80% — з їжею і напоями.
+3. ГМО: можливі ризики (за лекцією), маркування понад 0,9%, недостатня база для експертизи.
+4. Регулювання: Кодекс Аліментаріус, ДСТУ/ГОСТ/ТУ, норми проти фальсифікації (ковбаси, спреди, молоко).
+5. Контроль — єдиний орган за моделлю ЄС; індикатори показують незбалансоване харчування; потрібні норми на діоксини й транс-жири.</aside>
+  </section>
+
+  <!-- ===== Нижня панель ===== -->
+  <div class="bar-nav">
+    <div class="ttl" id="ttl"></div>
+    <nav class="dots" id="dots" aria-label="Навігація по слайдах"></nav>
+    <div class="cnt" id="cnt"></div>
+  </div>
+  <div class="notes-panel" id="notesPanel"></div>
+</div>
+
+<script>
+/* ---------- масштабування полотна 1280×720 ---------- */
+const W = 1280, H = 720, stage = document.getElementById('stage');
+function fit(){ const s = Math.min(innerWidth / W, innerHeight / H); stage.style.transform = `scale(${s})`; stage.style.left = (innerWidth - W*s)/2 + 'px'; stage.style.top = (innerHeight - H*s)/2 + 'px'; }
+addEventListener('resize', fit); document.addEventListener('fullscreenchange', fit); fit();
+const STATIC = document.documentElement.classList.contains('static');
+const NS = 'http://www.w3.org/2000/svg';
+
+/* ---------- кольорові кола: [data-wheel="cx,cy,R,r,n"] → n кольорових секторів ---------- */
+document.querySelectorAll('[data-wheel]').forEach(g=>{
+  const [cx, cy, R, r, n] = g.dataset.wheel.split(',').map(Number);
+  let s = '';
+  for(let i=0;i<n;i++){
+    const a0 = i/n*Math.PI*2 - Math.PI/2, a1 = (i+1)/n*Math.PI*2 - Math.PI/2, la = 0;
+    const p = (rad, a)=>`${(cx + rad*Math.cos(a)).toFixed(2)} ${(cy + rad*Math.sin(a)).toFixed(2)}`;
+    const d = r > 0 ? `M${p(R,a0)} A${R} ${R} 0 ${la} 1 ${p(R,a1)} L${p(r,a1)} A${r} ${r} 0 ${la} 0 ${p(r,a0)}Z` : `M${cx} ${cy} L${p(R,a0)} A${R} ${R} 0 ${la} 1 ${p(R,a1)}Z`;
+    s += `<path d="${d}" fill="hsl(${Math.round(i/n*360)} 72% 56%)"/>`;
+  }
+  g.innerHTML = s;
+});
+
+
+function hbars(id, title, D, x0, y0, labW, barW, max, unit, color){
+  let s = `<text x="${x0}" y="${y0-14}" font-family="Manrope" font-weight="800" font-size="15" fill="#F5EDDF">${title}</text>`;
+  D.forEach(([n, v, c], i) => { const y = y0 + i*44, w = v/max*barW;
+    s += `<text x="${x0+labW-12}" y="${y+18}" text-anchor="end" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">${n}</text><rect x="${x0+labW}" y="${y+4}" width="${barW}" height="20" rx="10" fill="#3B342B"/>`;
+    s += `<rect class="grow" x="${x0+labW}" y="${y+4}" width="${w}" height="20" rx="10" fill="${c || color}" style="transform-origin:${x0+labW}px ${y+14}px;animation-delay:${(0.2+i*0.06).toFixed(2)}s"/><text class="lbl" x="${x0+labW+w+10}" y="${y+19}" font-family="Manrope" font-weight="800" font-size="14" fill="#F5EDDF">${String(v).replace('.',',')}${unit}</text>`; });
+  document.getElementById(id).innerHTML = s;
+}
+hbars('hhSvg', 'Частка особистих селянських господарств, %', [['картопля',95],['молоко',80],['овочі',80],['м’ясо',50],['фрукти',50]], 660, 220, 120, 320, 100, '%', '#F2A541');
+hbars('tuSvg', 'Технічних умов (ТУ) на продукти', [['ковбаси',1000],['тверді сири',350],['напівфабрикати',300],['м’ясні консерви',200],['пельмені',160],['молоко',120],['кефір, масло…',60]], 660, 210, 140, 300, 1000, '', '#E8573A');
+(function(){
+  const D = [[371,'#6CC3A0','дозволено'],[105,'#F2A541','не отримали дозволу'],[4,'#E8573A','заборонено']], tot = 480, cx = 330, cy = 390, R = 165, r = 98;
+  let a0 = -Math.PI/2, s = '';
+  const pt = (rad, a) => `${(cx + rad*Math.cos(a)).toFixed(1)} ${(cy + rad*Math.sin(a)).toFixed(1)}`;
+  D.forEach(([v, c, n], i) => { const a1 = a0 + v/tot*Math.PI*2, big = a1 - a0 > Math.PI ? 1 : 0;
+    s += `<path d="M${pt(R,a0)} A${R} ${R} 0 ${big} 1 ${pt(R,a1)} L${pt(r,a1)} A${r} ${r} 0 ${big} 0 ${pt(r,a0)}Z" fill="${c}" stroke="#14120F" stroke-width="3"/>`;
+    s += `<rect x="90" y="${600 + i*0}" width="0" height="0"/>`; a0 = a1; });
+  s += `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="Unbounded" font-weight="700" font-size="30" fill="#F5EDDF">480</text><text x="${cx}" y="${cy+20}" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">досліджено</text>`;
+  D.forEach(([v, c, n], i) => { s += `<circle cx="${[90,230,480][i]}" cy="612" r="8" fill="${c}"/><text x="${[106,246,496][i]}" y="618" font-family="Manrope" font-weight="800" font-size="15" fill="#F5EDDF">${v}</text><text x="${[142,282,516][i]}" y="618" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">${n}</text>`; });
+  document.getElementById('addSvg').innerHTML = s;
+})();
+(function(){
+  const D = [['молоко',-46],['плоди, ягоди',-41.5],['м’ясо',-36],['хліб',1],['картопля',1],['олія',1],['цукор',1]];
+  const X0 = 520, Y0 = 210, K = 6; let s = `<text x="80" y="${Y0-26}" font-family="Manrope" font-weight="800" font-size="15" fill="#F5EDDF">Фактичне споживання відносно норми, 2011, %</text><path d="M${X0} ${Y0-10}V${Y0 + D.length*48}" stroke="#F5EDDF" stroke-width="2"/>`;
+  D.forEach(([n, v], i) => { const y = Y0 + i*48, w = Math.abs(v)*K, neg = v < 0;
+    s += `<text x="200" y="${y+18}" text-anchor="end" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">${n}</text>`;
+    s += neg ? `<rect x="${X0-w}" y="${y+4}" width="${w}" height="22" rx="8" fill="#E8573A"/><text x="${X0+10}" y="${y+20}" font-family="Manrope" font-weight="800" font-size="14" fill="#FFB6A4">${String(v).replace('.',',')}%</text>`
+      : `<rect x="${X0}" y="${y+4}" width="60" height="22" rx="8" fill="#F2A541"/><text x="${X0+70}" y="${y+20}" font-family="Manrope" font-weight="800" font-size="14" fill="#FFD39A">вище норми</text>`; });
+  document.getElementById('consSvg').innerHTML = s;
+})();
+
+
+/* =========================================================
+   ДВИЖОК СЛАЙДІВ З ПАРАЛАКСОМ (як у Темі 1)
+   ========================================================= */
+const slides = [...document.querySelectorAll('.slide')];
+const SHIFT = 520, DUR = 1050, EASE = 'cubic-bezier(.22,.8,.18,1)';
+let cur = -1, busy = false;
+const layers = s => [...s.querySelectorAll('[data-depth]')];
+const frags = s => [...s.querySelectorAll('.frag')];
+const dotsNav = document.getElementById('dots');
+slides.forEach((_, i) => { const b = document.createElement('button'); b.setAttribute('aria-label', 'Слайд ' + (i + 1));
+  b.onclick = e => { e.stopPropagation(); go(i, i > cur ? 1 : -1); }; dotsNav.appendChild(b); });
+function ui(){
+  document.querySelectorAll('#dots button').forEach((d, i) => d.classList.toggle('on', i === cur));
+  document.getElementById('cnt').textContent = `${cur + 1} / ${slides.length}`;
+  document.getElementById('ttl').textContent = slides[cur].dataset.title || '';
+  document.getElementById('prog').style.width = ((cur + 1) / slides.length * 100) + '%';
+  const n = slides[cur].querySelector('.notes'); document.getElementById('notesPanel').textContent = n ? n.textContent.trim() : '';
+  history.replaceState(null, '', '#' + (cur + 1));
+}
+function go(i, dir = 1){
+  if (i < 0 || i >= slides.length || i === cur || busy) return;
+  const from = slides[cur], to = slides[i];
+  to.classList.add('active');
+  const fs = frags(to);
+  fs.forEach(f => { f.style.transitionDelay = '0s'; f.classList.remove('on'); });
+  void to.offsetWidth;
+  fs.forEach((f, k) => { f.style.transitionDelay = STATIC ? '0s' : (0.75 + k * 0.35) + 's'; f.classList.add('on'); });
+  cur = i; ui();
+  if (STATIC || !from) { if (from) from.classList.remove('active'); return; }
+  busy = true;
+  layers(from).forEach(el => { const d = +el.dataset.depth;
+    el.animate([{ transform: 'translateX(0)', opacity: 1 }, { transform: `translateX(${-dir * SHIFT * d}px)`, opacity: 0 }], { duration: DUR * .8, easing: EASE, fill: 'forwards' }); });
+  layers(to).forEach(el => { const d = +el.dataset.depth;
+    el.animate([{ transform: `translateX(${dir * SHIFT * d}px)`, opacity: 0 }, { transform: 'translateX(0)', opacity: 1 }], { duration: DUR, easing: EASE }); });
+  to.querySelectorAll('.rv').forEach((el, k) => el.animate([{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 650, delay: 250 + Math.min(k, 14) * 60, easing: 'ease-out', fill: 'backwards' }));
+  setTimeout(() => { from.classList.remove('active'); layers(from).forEach(el => el.getAnimations().forEach(a => a.cancel())); busy = false; }, DUR * .8);
+}
+function next(){ go(cur + 1, 1); }
+function prev(){ go(cur - 1, -1); }
+if (!STATIC) stage.addEventListener('mousemove', e => {
+  const mx = e.clientX / innerWidth - .5, my = e.clientY / innerHeight - .5;
+  layers(slides[cur]).forEach(el => { const d = +el.dataset.depth; el.style.translate = `${-mx * d * 30}px ${-my * d * 18}px`; });
+});
+addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') go(0, -1);
+  else if (e.key === 'End') go(slides.length - 1, 1);
+  else if (/^[fFаА]$/.test(e.key)) { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
+  else if (/^[nNтТ]$/.test(e.key)) document.getElementById('notesPanel').classList.toggle('on');
+});
+addEventListener('click', e => { if (e.target.closest('button,a,[data-no-nav]')) return; e.clientX > innerWidth / 2 ? next() : prev(); });
+let wheelLock = false;
+addEventListener('wheel', e => { if (wheelLock || Math.abs(e.deltaY) < 12) return; wheelLock = true; setTimeout(() => wheelLock = false, 900); e.deltaY > 0 ? next() : prev(); }, { passive: true });
+let tx = 0; addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+addEventListener('touchend', e => { const d = tx - e.changedTouches[0].clientX; if (Math.abs(d) > 50) d > 0 ? next() : prev(); }, { passive: true });
+
+const start = parseInt(location.hash.slice(1), 10);
+go(start >= 1 && start <= slides.length ? start - 1 : 0, 1);
+addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1), 10) - 1; if (n >= 0 && n < slides.length && n !== cur) go(n, n > cur ? 1 : -1); });
+
+/* перевірка: текст за межами полотна або під нижньою панеллю (дивіться консоль) */
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+  const bad = [];
+  slides.forEach((s, i) => { const was = s.classList.contains('active'); s.classList.add('active');
+    s.querySelectorAll('p,h1,h2,h3,.pill,.chip').forEach(el => { const r = el.getBoundingClientRect(), sr = stage.getBoundingClientRect(), k = sr.width / W;
+      if (r.width && (r.left < sr.left - 1 || r.right > sr.right + 1 || r.top < sr.top - 1 || (r.bottom - sr.top) / k > H - 56)) bad.push(i + 1); });
+    if (!was) s.classList.remove('active'); });
+  document.body.dataset.overflow = [...new Set(bad)].join(',');
+  if (bad.length) console.warn('Елементи за межами / під панеллю на слайдах:', [...new Set(bad)]);
+});
+</script>
+</body>
+</html>

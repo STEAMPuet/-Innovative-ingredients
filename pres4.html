@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Консистенція — Тема 4</title>
+<script>
+  // ?static — без анімацій (друк, скриншоти, перевірка)
+  if (location.search.includes('static') || matchMedia('(prefers-reduced-motion: reduce)').matches)
+    document.documentElement.classList.add('static');
+</script>
+<style>
+/* =========================================================
+   Тема 4. Харчові добавки, що регулюють консистенцію харчових продуктів
+   Стиль — як у презентаціях Тем 1–3: «нічна лабораторія», лише векторна графіка, паралакс-шари.
+   Шрифти — локальні (папка fonts/), працює без інтернету.
+   ========================================================= */
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-cyrillic-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-cyrillic-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+
+:root{
+  --bg:#14120F; --card:#242019; --line:#3B342B;
+  --text:#F5EDDF; --muted:#BDB09B;
+  --amber:#F2A541; --tomato:#E8573A; --mint:#6CC3A0; --plum:#A387E6; --sky:#62A9E0;
+  --display:"Unbounded","Segoe UI",Arial,sans-serif;
+  --body:"Manrope","Segoe UI",Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased}
+
+/* ---------- Полотно 1280×720 ---------- */
+.stage{position:fixed;width:1280px;height:720px;overflow:hidden;background:var(--bg);transform-origin:0 0}
+.slide{position:absolute;inset:0;visibility:hidden}
+.slide.active{visibility:visible}
+.L{position:absolute;inset:0;pointer-events:none}
+.L *{pointer-events:auto}
+[data-depth]{transition:translate .9s cubic-bezier(.2,.7,.2,1)}
+.notes{display:none}
+
+/* ---------- Типографіка ---------- */
+.kicker{font-weight:800;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}
+.kicker i{font-style:normal;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.12;letter-spacing:-.01em}
+h1{font-size:44px} h2{font-size:34px} h3{font-size:21px;line-height:1.25}
+p{font-size:23px;line-height:1.4}
+.s{font-size:19px;line-height:1.35}
+.xs{font-size:16px;line-height:1.35}
+.m{color:var(--muted)}
+.a{color:var(--amber)} .t{color:var(--tomato)} .g{color:var(--mint)} .pl{color:var(--plum)} .sk{color:var(--sky)}
+b{font-weight:800}
+.head{position:absolute;left:80px;top:54px;right:80px}
+.head h2{margin-top:10px}
+
+/* ---------- Компоненти ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 24px}
+.pill{display:inline-block;font-weight:800;font-size:17px;padding:7px 14px;border-radius:999px;background:#2E2820;color:var(--text);border:1px solid var(--line)}
+.pill.a{background:rgba(242,165,65,.16);border-color:rgba(242,165,65,.45);color:#FFD39A}
+.pill.t{background:rgba(232,87,58,.16);border-color:rgba(232,87,58,.5);color:#FFB6A4}
+.pill.g{background:rgba(108,195,160,.15);border-color:rgba(108,195,160,.45);color:#B5EBD5}
+.pill.pl{background:rgba(163,135,230,.16);border-color:rgba(163,135,230,.5);color:#D8CBFA}
+.pills{display:flex;flex-wrap:wrap;gap:9px}
+.chip{position:absolute;font-family:var(--display);font-weight:700;font-size:20px;padding:10px 16px;border-radius:14px;background:rgba(245,237,223,.06);border:1px solid rgba(245,237,223,.18);color:var(--text)}
+.num{display:inline-flex;width:38px;height:38px;border-radius:50%;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:17px;background:var(--amber);color:#1B1408}
+.ico{width:64px;height:64px;display:block}
+
+/* кроки, що з'являються автоматично по черзі */
+.frag{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+.frag.on{opacity:1;transform:none}
+
+/* палітра натуральних барвників (слайд 8) */
+.sw{position:absolute;width:262px;height:140px;padding:0;overflow:hidden}
+.sw .bar{height:36px}
+.sw .in{padding:10px 16px}
+.sw .code{font-family:var(--display);font-weight:700;font-size:17px}
+.sw .nm{font-weight:800;font-size:17px;margin-left:6px}
+.sw .src{font-size:15px;color:var(--muted);margin-top:4px;line-height:1.3}
+
+/* таблиця порівняння (слайд 10) */
+.cmp{position:absolute;left:80px;top:180px;width:1120px;display:grid;grid-template-columns:270px 1fr 1fr;gap:8px 10px}
+.cmp > div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 14px;font-size:17px;line-height:1.3;display:flex;align-items:center;gap:10px}
+.cmp > .h{background:none;border:none;font-family:var(--display);font-weight:700;font-size:18px;padding:0 14px}
+.cmp > .c{font-weight:800;color:var(--muted)}
+.ok::before{content:"✓";color:var(--mint);font-weight:900}
+.no::before{content:"✕";color:var(--tomato);font-weight:900}
+
+/* навігація */
+.bar-nav{position:absolute;left:0;right:0;bottom:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;z-index:20}
+.bar-nav .ttl{font-size:14px;font-weight:700;color:var(--muted);width:340px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dots{display:flex;gap:7px}
+.dots button{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:var(--muted);opacity:.3;cursor:pointer;transition:.3s}
+.dots button.on{background:var(--amber);opacity:1;transform:scale(1.4)}
+.cnt{width:340px;text-align:right;font-family:var(--display);font-weight:600;font-size:14px;color:var(--muted)}
+.prog{position:absolute;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--amber),var(--tomato),var(--plum));z-index:20;transition:width .6s ease}
+.notes-panel{position:absolute;left:40px;right:40px;bottom:66px;max-height:300px;overflow:auto;background:rgba(20,18,15,.96);border:1px solid var(--amber);border-radius:18px;padding:18px 22px;z-index:30;display:none;white-space:pre-line;font-size:17px;line-height:1.5}
+.notes-panel.on{display:block}
+
+/* ---------- Анімації ілюстрацій (лише на активному слайді) ---------- */
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fall{0%{transform:translateY(-10px);opacity:0}15%{opacity:1}100%{transform:translateY(110px);opacity:0}}
+@keyframes grow{from{transform:scaleX(0);opacity:0}to{transform:none;opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes drain{from{transform:scaleY(1)}to{transform:scaleY(.6)}}
+@keyframes draw{from{stroke-dashoffset:var(--len,1200)}to{stroke-dashoffset:0}}
+.active .bob{animation:bob 6s ease-in-out infinite}
+.active .bob2{animation:bob 7.5s ease-in-out -2s infinite}
+.spin,.spinr,.grow{transform-box:view-box}
+.active .spin{animation:spin 40s linear infinite}
+.active .spinr{animation:spin 30s linear reverse infinite}
+.active .fall{animation:fall 2.2s ease-in infinite}
+.active .grow{animation:grow .6s cubic-bezier(.2,.8,.2,1) both}
+.active .lbl{animation:fadeIn .7s ease 1.2s both}
+.active .drain{animation:drain 2.4s cubic-bezier(.4,0,.2,1) .8s both;transform-box:fill-box;transform-origin:50% 100%}
+.active .draw{stroke-dasharray:var(--len,1200);animation:draw 1.6s cubic-bezier(.4,0,.2,1) .5s both}
+html.static *, html.static *::before{animation:none !important;transition:none !important}
+html.static .frag{opacity:1;transform:none}
+
+/* ---------- Тема 3: додаткові компоненти ---------- */
+.big{font-family:var(--display);font-weight:900;line-height:1}
+.sel{font-family:var(--body);font-weight:800;font-size:15px;padding:6px 12px;border-radius:999px;background:#2E2820;color:var(--text);border:1px solid var(--line);cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.sel:hover{border-color:var(--amber)}
+.sel.on{background:var(--amber);color:#1B1408;border-color:var(--amber)}
+.cmp.sm > div{font-size:15.5px;padding:8px 12px}
+.tile{position:absolute;width:150px;height:100px;border-radius:16px;background:var(--card);border:1px solid var(--line);padding:12px 14px}
+.tile .code{font-family:var(--display);font-weight:700;font-size:22px;color:var(--amber)}
+.tile .nm{font-size:14px;font-weight:700;color:var(--muted);margin-top:8px;line-height:1.25}
+.ul{list-style:none}
+.ul li{font-size:16px;line-height:1.35;padding-left:18px;position:relative;margin-top:6px}
+.ul li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;border-radius:50%;background:var(--amber)}
+.ul.g li::before{background:var(--mint)} .ul.t li::before{background:var(--tomato)} .ul.pl li::before{background:var(--plum)}
+@keyframes steam{0%{transform:translateY(8px);opacity:0}40%{opacity:.85}100%{transform:translateY(-18px);opacity:0}}
+.active .steam{animation:steam 3.2s ease-in-out infinite}
+.active .steam2{animation:steam 3.2s ease-in-out -1.6s infinite}
+.pill.sm{font-size:14px;padding:5px 11px}
+</style>
+</head>
+<body>
+
+<!-- ===== Векторні символи ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="glowA" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F2A541" stop-opacity=".33"/><stop offset="1" stop-color="#F2A541" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowT" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#E8573A" stop-opacity=".28"/><stop offset="1" stop-color="#E8573A" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowM" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#6CC3A0" stop-opacity=".24"/><stop offset="1" stop-color="#6CC3A0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowP" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#A387E6" stop-opacity=".28"/><stop offset="1" stop-color="#A387E6" stop-opacity="0"/></radialGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#F5EDDF" fill-opacity=".08"/></pattern>
+    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#F5EDDF" stop-opacity=".16"/><stop offset=".5" stop-color="#F5EDDF" stop-opacity=".04"/><stop offset="1" stop-color="#F5EDDF" stop-opacity=".12"/></linearGradient>
+    <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FFE7A3"/><stop offset=".5" stop-color="#E0A93B"/><stop offset="1" stop-color="#9C6A16"/></linearGradient>
+    <linearGradient id="anto" x1="0" x2="1"><stop offset="0" stop-color="#D81B4A"/><stop offset=".5" stop-color="#8E3FA8"/><stop offset="1" stop-color="#2F5FD0"/></linearGradient>
+    <!-- Крапля (колір через currentColor) -->
+    <symbol id="drop" viewBox="0 0 60 80"><path d="M30 4C30 4 6 34 6 52a24 24 0 0 0 48 0C54 34 30 4 30 4Z" fill="currentColor"/><path d="M18 50a12 12 0 0 0 8 14" stroke="#fff" stroke-opacity=".45" stroke-width="4" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Пробірка з рідиною (currentColor) -->
+    <symbol id="tube" viewBox="0 0 70 260"><rect x="6" y="2" width="58" height="14" rx="5" fill="#8E989E"/><path d="M12 16H58V226A23 23 0 0 1 12 226Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M15 110H55V226A20 20 0 0 1 15 226Z" fill="currentColor"/><path d="M15 110Q35 102 55 110V118Q35 110 15 118Z" fill="#fff" fill-opacity=".25"/><path d="M22 40V96" stroke="#fff" stroke-opacity=".3" stroke-width="5" stroke-linecap="round"/></symbol>
+    <!-- Банка (рідина currentColor) -->
+    <symbol id="jarC" viewBox="0 0 200 240"><rect x="48" y="8" width="104" height="30" rx="7" fill="#C97F25"/><path d="M40 54Q40 40 54 40H146Q160 40 160 54V206Q160 230 136 230H64Q40 230 40 206Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path class="fillc" d="M46 96H154V204Q154 224 134 224H66Q46 224 46 204Z" fill="currentColor"/><path d="M54 60V90" stroke="#fff" stroke-opacity=".35" stroke-width="6" stroke-linecap="round"/></symbol>
+    <!-- Буряк, морква, жовток -->
+    <symbol id="beet" viewBox="0 0 100 120"><path d="M40 30Q30 8 18 6M50 28Q52 6 62 2M58 32Q74 14 86 16" stroke="#6CC3A0" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M50 30C20 30 10 60 22 82c8 14 20 22 28 36 8-14 20-22 28-36 12-22 2-52-28-52z" fill="#A61E4D"/><path d="M30 60q4-14 16-18" stroke="#fff" stroke-opacity=".35" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="carrot" viewBox="0 0 100 120"><path d="M50 26Q40 6 30 4M50 26Q56 4 70 2M50 26Q66 12 82 14" stroke="#6CC3A0" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M30 30H70L54 116Q50 122 46 116Z" fill="#F07C2B"/><path d="M38 48h10M42 70h10M44 92h8" stroke="#B4521A" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="egg" viewBox="0 0 120 100"><ellipse cx="60" cy="54" rx="56" ry="42" fill="#F5EDDF"/><circle cx="62" cy="52" r="24" fill="#F2B23A"/><circle cx="54" cy="44" r="6" fill="#fff" fill-opacity=".55"/></symbol>
+    <!-- Око -->
+    <symbol id="eyeO" viewBox="0 0 300 180"><path d="M8 90Q150 -40 292 90Q150 220 8 90Z" fill="#F5EDDF"/></symbol>
+    <!-- Ягоди -->
+    <symbol id="berries" viewBox="0 0 120 100"><path d="M60 8Q60 30 40 44M60 8Q64 30 82 42" stroke="#6CC3A0" stroke-width="5" fill="none"/><circle cx="38" cy="58" r="20" fill="#5B2A86"/><circle cx="76" cy="56" r="20" fill="#3B2F8F"/><circle cx="58" cy="78" r="18" fill="#7A1F5C"/><circle cx="32" cy="52" r="5" fill="#fff" fill-opacity=".4"/></symbol>
+    <!-- Шматок м'яса (колір currentColor) -->
+    <symbol id="steak" viewBox="0 0 160 110"><path d="M20 40C30 10 90 4 126 18c30 12 32 50 10 70-24 22-86 22-112 4C8 80 12 58 20 40Z" fill="currentColor"/><path d="M34 46c20-18 60-22 86-10" stroke="#F5EDDF" stroke-opacity=".7" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="104" cy="62" r="10" fill="#F5EDDF" fill-opacity=".85"/></symbol>
+    <!-- Щит, лупа, сонце, термометр, полум'я, годинник -->
+    <symbol id="shield" viewBox="0 0 100 110"><path d="M50 4L92 20V52C92 80 72 98 50 106 28 98 8 80 8 52V20Z" fill="currentColor"/><path d="M30 54L44 68 72 40" stroke="#14120F" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="sun" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#F2C14E"/><g stroke="#F2C14E" stroke-width="7" stroke-linecap="round"><path d="M50 8v12M50 80v12M8 50h12M80 50h12M20 20l9 9M71 71l9 9M80 20l-9 9M29 71l-9 9"/></g></symbol>
+    <symbol id="thermo" viewBox="0 0 60 120"><rect x="20" y="6" width="20" height="80" rx="10" fill="none" stroke="#F5EDDF" stroke-width="5"/><circle cx="30" cy="96" r="18" fill="#E8573A"/><rect x="26" y="40" width="8" height="56" fill="#E8573A"/></symbol>
+    <symbol id="flame" viewBox="0 0 80 100"><path d="M40 4C52 26 72 38 72 62a32 32 0 0 1-64 0C8 46 20 36 26 22c4 12 10 18 16 20C44 30 40 18 40 4Z" fill="#E8573A"/><path d="M40 52c8 10 16 14 16 26a16 16 0 0 1-32 0c0-8 6-12 8-20 2 6 6 8 8-6Z" fill="#F2C14E"/></symbol>
+    <symbol id="clock" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#F5EDDF" stroke-width="7"/><path d="M50 26V52L66 62" stroke="#F2A541" stroke-width="7" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="lens" viewBox="0 0 100 100"><circle cx="42" cy="42" r="28" fill="none" stroke="#F5EDDF" stroke-width="8"/><path d="M62 62L90 90" stroke="#F5EDDF" stroke-width="10" stroke-linecap="round"/></symbol>
+    <symbol id="ban" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="none" stroke="#E8573A" stroke-width="5"/><path d="M11 11L37 37" stroke="#E8573A" stroke-width="5"/></symbol>
+    <symbol id="leaf" viewBox="0 0 100 100"><path d="M12 88C12 44 38 14 92 8 88 62 58 88 12 88Z" fill="currentColor"/><path d="M14 86L64 36" stroke="#14120F" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="flower" viewBox="0 0 100 100"><g fill="#C2185B"><circle cx="50" cy="26" r="16"/><circle cx="74" cy="44" r="16"/><circle cx="66" cy="72" r="16"/><circle cx="34" cy="72" r="16"/><circle cx="26" cy="44" r="16"/></g><circle cx="50" cy="52" r="12" fill="#F2C14E"/></symbol>
+    <symbol id="flask" viewBox="0 0 100 120"><path d="M36 6H64M40 6V42L10 104Q6 114 18 114H82Q94 114 90 104L60 42V6" fill="none" stroke="#F5EDDF" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><path d="M22 84H78L88 104Q90 110 82 110H18Q10 110 12 104Z" fill="currentColor"/></symbol>
+    <symbol id="glassD" viewBox="0 0 80 110"><path d="M8 8H72L64 100Q63 106 56 106H24Q17 106 16 100Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path class="fillc" d="M12 40H68L63 98Q62 102 57 102H23Q18 102 17 98Z" fill="currentColor"/></symbol>
+    <symbol id="candy" viewBox="0 0 120 60"><path d="M30 30L6 12V48ZM90 30L114 12V48Z" fill="#F2A541"/><ellipse cx="60" cy="30" rx="32" ry="22" fill="#E8573A"/><path d="M44 22q16-8 32 0" stroke="#fff" stroke-opacity=".5" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="wine" viewBox="0 0 70 110"><path d="M10 6H60Q62 44 35 54Q8 44 10 6Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M14 22H56Q54 44 35 50Q16 44 14 22Z" fill="#8E1B3A"/><path d="M35 54V96M18 100H52" stroke="#BDB09B" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="soda" viewBox="0 0 60 120"><path d="M22 4H38V20Q50 30 50 48V108Q50 116 42 116H18Q10 116 10 108V48Q10 30 22 20Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M13 56H47V108Q47 112 42 112H18Q13 112 13 108Z" fill="#E8573A"/><rect x="13" y="66" width="34" height="18" fill="#F5EDDF"/></symbol>
+    <symbol id="bottleB" viewBox="0 0 60 100"><path d="M22 4H38L40 16H20Z" fill="#E8A9A0"/><rect x="14" y="16" width="32" height="8" rx="3" fill="#F2A541"/><rect x="12" y="24" width="36" height="72" rx="10" fill="#F5EDDF"/></symbol>
+    <symbol id="apple" viewBox="0 0 120 120"><path d="M60 30C42 18 14 26 14 58c0 30 22 56 36 56 6 0 7-3 10-3s4 3 10 3c14 0 36-26 36-56 0-32-28-40-46-28z" fill="#E8573A"/><path d="M60 30c0-10 2-18 8-24" stroke="#7A4B25" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M66 18c10-12 26-12 30-8-4 12-18 16-30 8z" fill="#6CC3A0"/></symbol>
+    <symbol id="hex" viewBox="0 0 100 100"><path d="M50 6L88 28V72L50 94 12 72V28Z" fill="none" stroke="currentColor" stroke-width="6"/></symbol>
+    <marker id="ah" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L11 6 1 11Z" fill="#F2A541"/></marker>
+    <!-- ===== Тема 3: смак і аромат ===== -->
+    <radialGradient id="glowS" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#62A9E0" stop-opacity=".26"/><stop offset="1" stop-color="#62A9E0" stop-opacity="0"/></radialGradient>
+    <marker id="ahM" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L11 6 1 11Z" fill="#6CC3A0"/></marker>
+    <!-- Кубик цукру -->
+    <symbol id="cube" viewBox="0 0 60 62"><path d="M30 4L56 17V45L30 58 4 45V17Z" fill="#EDE4D3"/><path d="M30 4L56 17 30 30 4 17Z" fill="#FFFFFF"/><path d="M30 30V58L4 45V17Z" fill="#D9CFBD"/><g fill="#BDB09B" opacity=".55"><circle cx="22" cy="16" r="1.6"/><circle cx="38" cy="14" r="1.6"/><circle cx="14" cy="36" r="1.6"/><circle cx="44" cy="40" r="1.6"/><circle cx="40" cy="28" r="1.4"/></g></symbol>
+    <!-- Банка меду -->
+    <symbol id="honey" viewBox="0 0 100 110"><rect x="24" y="6" width="52" height="16" rx="5" fill="#C97F25"/><path d="M18 30Q18 22 26 22H74Q82 22 82 30V92Q82 104 70 104H30Q18 104 18 92Z" fill="#E9A23B"/><path d="M18 44Q29 52 40 44T62 44T82 44" stroke="#C97F25" stroke-width="5" fill="none"/><path d="M30 60V88" stroke="#fff" stroke-opacity=".4" stroke-width="6" stroke-linecap="round"/></symbol>
+    <!-- Молекула (currentColor) -->
+    <symbol id="mol" viewBox="0 0 120 110"><g stroke="currentColor" stroke-width="5" fill="none"><path d="M50 22L76 37V67L50 82 24 67V37Z"/><path d="M76 37L100 24M50 82V104M24 37L6 26"/></g><g fill="currentColor"><circle cx="50" cy="22" r="8"/><circle cx="76" cy="37" r="8"/><circle cx="76" cy="67" r="8"/><circle cx="50" cy="82" r="8"/><circle cx="24" cy="67" r="8"/><circle cx="24" cy="37" r="8"/></g><circle cx="100" cy="24" r="9" fill="#E8573A"/><circle cx="50" cy="104" r="6" fill="#F5EDDF"/><circle cx="6" cy="26" r="6" fill="#F5EDDF"/></symbol>
+    <!-- Стручок ванілі -->
+    <symbol id="vanilla" viewBox="0 0 140 50"><path d="M6 38Q66 -6 134 12Q138 18 130 20Q70 10 12 44Q2 46 6 38Z" fill="#4A2E1C"/><path d="M20 34Q70 6 124 14" stroke="#7A5136" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M130 14q6-4 8-10" stroke="#6CC3A0" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Корінь солодки -->
+    <symbol id="root" viewBox="0 0 100 100"><g stroke="#A8743F" stroke-width="10" stroke-linecap="round"><path d="M18 78L68 18"/><path d="M34 88L84 30"/></g><g stroke="#6B4423" stroke-width="3" stroke-linecap="round"><path d="M30 64l7 5M48 42l7 5M46 74l7 5M64 52l7 5"/></g><circle cx="68" cy="18" r="5" fill="#E6C08A"/><circle cx="84" cy="30" r="5" fill="#E6C08A"/></symbol>
+    <!-- Скибка грейпфрута -->
+    <symbol id="citrus" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#F2A541"/><circle cx="50" cy="50" r="40" fill="#F5EDDF"/><circle cx="50" cy="50" r="36" fill="#F07B6B"/><g stroke="#F5EDDF" stroke-width="3"><path d="M50 14V86M14 50H86M25 25L75 75M75 25L25 75"/></g><circle cx="50" cy="50" r="5" fill="#F5EDDF"/></symbol>
+    <!-- Плід катемфе -->
+    <symbol id="katemfe" viewBox="0 0 100 100"><path d="M50 4Q46 14 50 20" stroke="#6CC3A0" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M52 14Q68 4 80 12Q66 22 52 14Z" fill="#6CC3A0"/><path d="M50 18C72 30 88 52 80 74 74 88 62 94 50 94S26 88 20 74C12 52 28 30 50 18Z" fill="#C8243B"/><path d="M50 22V92M34 30Q30 60 38 90M66 30Q70 60 62 90" stroke="#8E1B2E" stroke-width="3" fill="none"/><path d="M28 54q2-14 12-20" stroke="#fff" stroke-opacity=".4" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Кукурудзяний качан -->
+    <symbol id="cob" viewBox="0 0 60 120"><path d="M30 8C46 8 50 40 48 70 46 100 38 110 30 110S14 100 12 70C10 40 14 8 30 8Z" fill="#F2C14E"/><g stroke="#D69A2A" stroke-width="2.5"><path d="M16 30H44M13 46H47M12 62H48M13 78H47M16 94H44M24 12V104M36 12V104"/></g><path d="M12 64Q4 100 30 116Q16 90 22 60Z" fill="#6CC3A0"/><path d="M48 64Q56 100 30 116Q44 90 38 60Z" fill="#4E9E7C"/></symbol>
+    <!-- Колода деревини -->
+    <symbol id="log" viewBox="0 0 130 70"><path d="M24 8H106V62H24Z" fill="#8A5A2B"/><path d="M30 20H96M36 34H100M30 48H92" stroke="#6B4423" stroke-width="3" stroke-linecap="round"/><ellipse cx="24" cy="35" rx="18" ry="27" fill="#E6C08A"/><ellipse cx="24" cy="35" rx="11" ry="17" fill="none" stroke="#C49358" stroke-width="3"/><ellipse cx="24" cy="35" rx="4" ry="7" fill="#C49358"/></symbol>
+    <!-- Горобина -->
+    <symbol id="rowan" viewBox="0 0 110 100"><path d="M56 4Q56 26 40 40M56 4Q60 28 76 38M56 4Q50 30 58 52" stroke="#7A4B25" stroke-width="4" fill="none" stroke-linecap="round"/><g fill="#E8573A"><circle cx="34" cy="50" r="11"/><circle cx="54" cy="58" r="11"/><circle cx="76" cy="48" r="11"/><circle cx="42" cy="72" r="11"/><circle cx="64" cy="76" r="11"/><circle cx="84" cy="68" r="10"/><circle cx="24" cy="68" r="10"/><circle cx="52" cy="90" r="9"/></g><g fill="#fff" fill-opacity=".45"><circle cx="31" cy="47" r="3"/><circle cx="51" cy="55" r="3"/><circle cx="73" cy="45" r="3"/></g><g fill="#6CC3A0"><path d="M60 8Q78 0 96 8Q78 16 60 8Z"/><path d="M52 8Q34 0 16 8Q34 16 52 8Z"/></g></symbol>
+    <!-- Чашка (напій currentColor) -->
+    <symbol id="cup" viewBox="0 0 120 90"><ellipse cx="56" cy="80" rx="50" ry="8" fill="#3B342B"/><path d="M14 22H98V54Q98 78 74 78H38Q14 78 14 54Z" fill="#F5EDDF"/><path d="M98 32Q116 32 114 46Q112 60 96 58" stroke="#F5EDDF" stroke-width="7" fill="none"/><ellipse cx="56" cy="22" rx="42" ry="8" fill="currentColor"/></symbol>
+    <!-- Хліб -->
+    <symbol id="bread" viewBox="0 0 120 70"><path d="M10 56Q6 20 40 14Q60 4 80 14Q114 20 110 56Q110 64 100 64H20Q10 64 10 56Z" fill="#C98A3C"/><path d="M36 26q8 10 4 22M58 20q8 12 4 26M80 26q8 10 4 22" stroke="#F2C98A" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Пара / аромат -->
+    <symbol id="steamS" viewBox="0 0 60 80"><g stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"><path d="M14 76Q4 62 14 48T14 20"/><path d="M30 70Q20 56 30 42T30 6"/><path d="M46 76Q36 62 46 48T46 20"/></g></symbol>
+    <!-- Флакон із піпеткою (рідина currentColor) -->
+    <symbol id="dropper" viewBox="0 0 60 120"><path d="M24 4H36Q40 4 40 10V30H20V10Q20 4 24 4Z" fill="#2B2724" stroke="#4D443A" stroke-width="2"/><rect x="16" y="30" width="28" height="10" rx="2" fill="#8E989E"/><path d="M14 40H46Q52 40 52 48V108Q52 116 44 116H16Q8 116 8 108V48Q8 40 14 40Z" fill="currentColor"/><rect x="14" y="64" width="32" height="28" rx="3" fill="#F5EDDF" opacity=".9"/><path d="M14 48V58" stroke="#fff" stroke-opacity=".45" stroke-width="4" stroke-linecap="round"/></symbol>
+    <!-- Прянощі -->
+    <symbol id="cinn" viewBox="0 0 120 50"><rect x="8" y="8" width="104" height="16" rx="8" fill="#9B5A2A"/><rect x="14" y="28" width="98" height="16" rx="8" fill="#B5652E"/><ellipse cx="12" cy="16" rx="6" ry="8" fill="#6B3A1E"/><ellipse cx="18" cy="36" rx="6" ry="8" fill="#7A4422"/><path d="M12 12a4 4 0 1 1 0 8" stroke="#D9A066" stroke-width="2" fill="none"/></symbol>
+    <symbol id="clove" viewBox="0 0 50 90"><path d="M25 30L22 86" stroke="#6B3A1E" stroke-width="7" stroke-linecap="round"/><g fill="#7A4422"><path d="M10 26L25 34 40 26 36 12 25 18 14 12Z"/></g><circle cx="25" cy="14" r="9" fill="#9B5A2A"/></symbol>
+    <symbol id="pepper" viewBox="0 0 90 70"><g fill="#3A2A20"><circle cx="20" cy="46" r="13"/><circle cx="46" cy="52" r="13"/><circle cx="70" cy="42" r="13"/><circle cx="36" cy="24" r="12"/><circle cx="60" cy="18" r="11"/></g><g fill="#fff" fill-opacity=".25"><circle cx="16" cy="42" r="3"/><circle cx="42" cy="48" r="3"/><circle cx="66" cy="38" r="3"/></g></symbol>
+    <symbol id="nutmeg" viewBox="0 0 90 70"><ellipse cx="34" cy="38" rx="28" ry="24" fill="#8A5A2B"/><path d="M14 30q20 6 40-4M12 44q24 6 44-6M24 58q14-4 24-18" stroke="#5B3A1E" stroke-width="3" fill="none"/><g fill="#E6B83A"><circle cx="70" cy="26" r="6"/><circle cx="80" cy="40" r="6"/><circle cx="68" cy="52" r="6"/></g></symbol>
+    <symbol id="ginger" viewBox="0 0 100 70"><path d="M10 46Q8 30 24 30Q30 14 44 22Q56 10 66 24Q84 20 86 36Q96 44 86 54Q76 64 60 58Q48 66 36 58Q18 62 10 46Z" fill="#D9B27C"/><path d="M26 44q10-4 18 2M54 36q10 0 16 8M40 30q4-4 8 0" stroke="#A8743F" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="dill" viewBox="0 0 90 100"><path d="M45 98V40" stroke="#4E9E7C" stroke-width="5" stroke-linecap="round"/><g stroke="#6CC3A0" stroke-width="3" stroke-linecap="round"><path d="M45 40L14 18M45 40L28 10M45 40V6M45 40L62 10M45 40L76 18M45 40L84 34M45 40L6 34"/></g><g fill="#E6D36A"><circle cx="14" cy="18" r="5"/><circle cx="28" cy="10" r="5"/><circle cx="45" cy="6" r="5"/><circle cx="62" cy="10" r="5"/><circle cx="76" cy="18" r="5"/><circle cx="84" cy="34" r="5"/><circle cx="6" cy="34" r="5"/></g><path d="M45 72Q26 66 18 76M45 62Q64 56 74 64" stroke="#6CC3A0" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Сільничка (кристали) -->
+    <symbol id="shaker" viewBox="0 0 60 100"><path d="M12 30Q12 8 30 8T48 30Z" fill="#8E989E"/><g fill="#14120F"><circle cx="24" cy="20" r="2.2"/><circle cx="36" cy="20" r="2.2"/><circle cx="30" cy="14" r="2.2"/></g><path d="M10 30H50L46 90Q45 96 38 96H22Q15 96 14 90Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M14 56H46L44 88Q43 92 38 92H22Q17 92 16 88Z" fill="#F5EDDF"/></symbol>
+    <!-- Гриб, томат, сир -->
+    <symbol id="mush" viewBox="0 0 100 100"><path d="M8 50Q10 10 50 8Q90 10 92 50Q70 58 50 56Q30 58 8 50Z" fill="#B5652E"/><path d="M38 54H62L66 90Q66 96 58 96H42Q34 96 34 90Z" fill="#F5EDDF"/><g fill="#E6C08A"><circle cx="34" cy="28" r="6"/><circle cx="60" cy="22" r="5"/><circle cx="72" cy="38" r="4"/></g></symbol>
+    <symbol id="tomato" viewBox="0 0 100 100"><circle cx="50" cy="56" r="40" fill="#E8573A"/><path d="M50 22L42 10M50 22L32 22M50 22L68 22M50 22L60 10M50 22L36 32M50 22L64 32" stroke="#6CC3A0" stroke-width="6" stroke-linecap="round"/><path d="M28 50q4-14 16-18" stroke="#fff" stroke-opacity=".4" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="cheese" viewBox="0 0 120 80"><path d="M6 66L110 66 110 32 6 52Z" fill="#E6B83A"/><path d="M6 52L84 10 110 32Z" fill="#F2D06B"/><g fill="#C9962A"><circle cx="40" cy="58" r="6"/><circle cx="74" cy="50" r="8"/><circle cx="98" cy="58" r="4"/></g></symbol>
+    <!-- Пляшечка соусу -->
+    <symbol id="sauce" viewBox="0 0 50 110"><rect x="18" y="4" width="14" height="16" rx="3" fill="#E8573A"/><path d="M18 20H32L36 34Q42 40 42 50V100Q42 106 36 106H14Q8 106 8 100V50Q8 40 14 34Z" fill="#3A2318"/><rect x="12" y="56" width="26" height="26" rx="3" fill="#F5EDDF"/></symbol>
+    <!-- ===== Тема 4: консистенція ===== -->
+    <!-- Кубик желе (currentColor) -->
+    <symbol id="jelly" viewBox="0 0 120 110"><ellipse cx="60" cy="100" rx="54" ry="8" fill="#000" fill-opacity=".25"/><path d="M14 40Q14 26 28 26H92Q106 26 106 40V86Q106 98 92 98H28Q14 98 14 86Z" fill="currentColor" fill-opacity=".85"/><path d="M20 30Q60 14 100 30" stroke="#fff" stroke-opacity=".35" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M26 44V78" stroke="#fff" stroke-opacity=".45" stroke-width="6" stroke-linecap="round"/><circle cx="74" cy="58" r="5" fill="#fff" fill-opacity=".35"/><circle cx="86" cy="76" r="3.5" fill="#fff" fill-opacity=".3"/></symbol>
+    <!-- Крохмальні зерна -->
+    <symbol id="starch" viewBox="0 0 120 100"><g fill="#F5EDDF" stroke="#BDB09B" stroke-width="2"><ellipse cx="38" cy="40" rx="26" ry="20"/><ellipse cx="82" cy="56" rx="24" ry="30"/><ellipse cx="40" cy="78" rx="18" ry="14"/></g><g fill="none" stroke="#BDB09B" stroke-width="1.6"><ellipse cx="38" cy="40" rx="16" ry="12"/><ellipse cx="38" cy="40" rx="7" ry="5"/><ellipse cx="82" cy="56" rx="15" ry="19"/><ellipse cx="82" cy="56" rx="6" ry="8"/><ellipse cx="40" cy="78" rx="9" ry="7"/></g></symbol>
+    <!-- Водорость (currentColor) -->
+    <symbol id="weed" viewBox="0 0 90 130"><g fill="currentColor"><path d="M44 128C40 96 30 80 22 58 14 36 20 14 30 4 32 30 42 44 48 70 54 94 52 112 50 128Z"/><path d="M50 128C54 104 66 90 72 70 78 50 74 30 66 18 64 40 56 54 52 76 48 96 46 112 46 128Z" opacity=".75"/></g><path d="M30 10Q36 60 47 124M66 24Q56 70 49 124" stroke="#14120F" stroke-opacity=".35" stroke-width="2.5" fill="none"/></symbol>
+    <!-- Пластина желатину -->
+    <symbol id="gsheet" viewBox="0 0 120 80"><path d="M10 14L100 6 112 66 22 74Z" fill="#F2D9A8" fill-opacity=".8" stroke="#D9B27C" stroke-width="2"/><g stroke="#D9B27C" stroke-width="1.4" opacity=".8"><path d="M20 20L44 70M38 18L62 68M56 16L80 66M74 14L98 64M92 12L108 52"/><path d="M14 34L104 26M17 50L108 42"/></g></symbol>
+    <!-- Молекула ПАР: голова + хвіст -->
+    <symbol id="surf" viewBox="0 0 40 80"><path d="M20 26L14 36 26 46 14 56 26 66 18 76" stroke="#F2A541" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="20" cy="15" r="12" fill="#62A9E0"/></symbol>
+    <!-- Крапля олії в оболонці емульгатора -->
+    <symbol id="emul" viewBox="0 0 120 120"><circle cx="60" cy="60" r="34" fill="#F2C14E"/><circle cx="50" cy="50" r="9" fill="#fff" fill-opacity=".45"/><g stroke="#F2A541" stroke-width="3" stroke-linecap="round"><path d="M60 26V18M60 94V102M26 60H18M94 60H102M36 36L30 30M84 84L90 90M84 36L90 30M36 84L30 90"/></g><g fill="#62A9E0"><circle cx="60" cy="12" r="6"/><circle cx="60" cy="108" r="6"/><circle cx="12" cy="60" r="6"/><circle cx="108" cy="60" r="6"/><circle cx="26" cy="26" r="6"/><circle cx="94" cy="94" r="6"/><circle cx="94" cy="26" r="6"/><circle cx="26" cy="94" r="6"/></g></symbol>
+    <!-- Стручок (ріжкове дерево / гуар) -->
+    <symbol id="pod" viewBox="0 0 130 60"><path d="M8 40Q30 4 80 10Q118 14 124 30Q110 26 82 30Q40 36 14 52Q4 50 8 40Z" fill="#6B3A1E"/><g fill="#C98A3C"><ellipse cx="38" cy="30" rx="6" ry="4"/><ellipse cx="58" cy="24" rx="6" ry="4"/><ellipse cx="80" cy="21" rx="6" ry="4"/><ellipse cx="100" cy="22" rx="5" ry="3.5"/></g></symbol>
+    <!-- Гілка з краплею камеді -->
+    <symbol id="bark" viewBox="0 0 120 100"><path d="M4 30Q60 18 116 26V48Q60 40 4 54Z" fill="#7A4B25"/><path d="M14 36L30 34M44 32L66 30M80 31L100 31M20 46L40 44M60 40L84 40" stroke="#5B3A1E" stroke-width="2.5" stroke-linecap="round"/><path d="M62 44Q62 60 56 70A10 10 0 1 0 72 70Q66 60 66 44Z" fill="#F2A541"/><circle cx="60" cy="72" r="3" fill="#fff" fill-opacity=".5"/></symbol>
+    <!-- Ланцюг полісахариду з водою -->
+    <symbol id="chain" viewBox="0 0 200 80"><path d="M10 40L40 20 70 40 100 20 130 40 160 20 190 40" stroke="#F2A541" stroke-width="5" fill="none" stroke-linejoin="round"/><g fill="#F2A541"><circle cx="10" cy="40" r="7"/><circle cx="40" cy="20" r="7"/><circle cx="70" cy="40" r="7"/><circle cx="100" cy="20" r="7"/><circle cx="130" cy="40" r="7"/><circle cx="160" cy="20" r="7"/><circle cx="190" cy="40" r="7"/></g><g fill="#62A9E0"><circle cx="40" cy="4" r="4"/><circle cx="70" cy="58" r="4"/><circle cx="100" cy="4" r="4"/><circle cx="130" cy="58" r="4"/><circle cx="160" cy="4" r="4"/><circle cx="10" cy="58" r="4"/><circle cx="190" cy="58" r="4"/></g></symbol>
+    <!-- Ріжок морозива -->
+    <symbol id="icecream" viewBox="0 0 70 120"><path d="M14 52L35 116 56 52Z" fill="#D9A066"/><path d="M20 58L46 96M30 54L52 76M50 58L26 96" stroke="#A8743F" stroke-width="2"/><circle cx="35" cy="36" r="24" fill="#F5EDDF"/><circle cx="22" cy="46" r="12" fill="#F5EDDF"/><circle cx="48" cy="46" r="12" fill="#F5EDDF"/><circle cx="28" cy="28" r="5" fill="#fff"/></symbol>
+    <!-- Плитка шоколаду -->
+    <symbol id="choc" viewBox="0 0 120 80"><rect x="6" y="6" width="108" height="68" rx="8" fill="#5B3A1E"/><g fill="#7A4B25"><rect x="14" y="14" width="26" height="22" rx="3"/><rect x="47" y="14" width="26" height="22" rx="3"/><rect x="80" y="14" width="26" height="22" rx="3"/><rect x="14" y="44" width="26" height="22" rx="3"/><rect x="47" y="44" width="26" height="22" rx="3"/><rect x="80" y="44" width="26" height="22" rx="3"/></g></symbol>
+    <!-- Купка порошку -->
+    <symbol id="powder" viewBox="0 0 120 70"><path d="M8 64Q30 20 60 14Q90 20 112 64Z" fill="#F5EDDF"/><g fill="#BDB09B"><circle cx="40" cy="48" r="2"/><circle cx="60" cy="34" r="2"/><circle cx="76" cy="52" r="2"/><circle cx="54" cy="56" r="2"/></g></symbol>
+    <!-- Мішалка -->
+    <symbol id="mixer" viewBox="0 0 100 120"><rect x="44" y="4" width="12" height="60" rx="4" fill="#8E989E"/><path d="M50 64Q22 76 26 100Q50 96 50 70Q50 96 74 100Q78 76 50 64Z" fill="#BDB09B"/><path d="M14 74Q4 96 18 112H82Q96 96 86 74" stroke="#F5EDDF" stroke-width="5" fill="none"/></symbol>
+  </defs>
+</svg>
+
+<div class="stage" id="stage">
+  <div class="prog" id="prog"></div>
+
+  <!-- ================= 1. Титул ================= -->
+  <section class="slide" data-title="Тема 4 · Консистенція">
+    <div class="L" data-depth="0.15"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="980" cy="370" r="420" fill="url(#glowM)"/><circle cx="150" cy="700" r="320" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.35">
+      <svg width="1280" height="720" aria-hidden="true">
+        <g class="spin" style="transform-origin:980px 380px"><circle cx="980" cy="380" r="226" fill="none" stroke="#3B342B" stroke-width="2" stroke-dasharray="4 10"/><circle cx="980" cy="154" r="9" fill="#6CC3A0"/><circle cx="1206" cy="380" r="7" fill="#F2A541"/><circle cx="980" cy="606" r="9" fill="#62A9E0"/><circle cx="754" cy="380" r="7" fill="#E8573A"/></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.6">
+      <svg width="1280" height="720" aria-label="Желе, водорості, крапля емульсії та крохмальні зерна">
+        <g class="bob" style="color:#E8573A"><use href="#jelly" x="880" y="300" width="190" height="174"/></g>
+        <g class="bob2" style="color:#6CC3A0"><use href="#weed" x="790" y="200" width="80" height="116"/></g>
+        <g class="bob2"><use href="#emul" x="1090" y="200" width="104" height="104"/></g>
+        <g class="bob"><use href="#starch" x="1080" y="470" width="110" height="92"/></g>
+        <g class="bob2"><use href="#gsheet" x="800" y="520" width="140" height="94"/></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.85">
+      <div style="position:absolute;left:80px;top:140px;width:660px;">
+        <p class="kicker rv">Лекція 4 · <i>Тема 4</i></p>
+        <h1 class="rv" style="margin-top:18px;">Харчові добавки, що регулюють <span class="g">консистенцію</span> (структуру та текстуру) продуктів</h1>
+        <div class="pills rv" style="margin-top:30px;max-width:620px;"><span class="pill">4.1 Стабілізатори</span><span class="pill">4.1.1 Загущувачі</span><span class="pill">4.2 Емульгатори</span><span class="pill">4.3 Застосування</span></div>
+      </div>
+    </div>
+    <div class="L" data-depth="1.5">
+      <div class="chip bob" style="left:1120px;top:80px;">Е440</div>
+      <div class="chip bob2" style="left:760px;top:110px;">Е407</div>
+      <div class="chip bob2" style="left:690px;top:600px;">Е1422</div>
+      <div class="chip bob" style="left:1110px;top:600px;">Е322</div>
+    </div>
+    <aside class="notes">План: 1. Стабілізатори. 2. Загущувачі. 3. Емульгатори. (У тексті лекції: 4.1 Стабілізатори, 4.1.1 Загущувачі, 4.1.2 Пектинові речовини і желатин, 4.1.3 Полісахариди морських водоростей, 4.1.4 Камеді, 4.2 Емульгатори, 4.3 Застосування харчових стабілізаторів.)
+Основні терміни: стабілізатори, загущувачі, модифіковані крохмалі, патока, пектин, желатин, камеді, емульгатори.
+Ілюстрація: желе, водорості, крапля емульсії, крохмальні зерна, пластина желатину.</aside>
+  </section>
+
+  <!-- ================= 2. Стабілізатори ================= -->
+  <section class="slide" data-title="4.1 · Стабілізатори">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="900" cy="380" r="440" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1 · <i>Стабілізатори</i></p><h2 class="rv">Тримають форму, текстуру і вигляд</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="rv" style="position:absolute;left:80px;top:180px;width:560px;">
+        <p class="s">Формують і зберігають <b>консистенцію, текстуру, форму</b> та споживчі якості молочних, м’ясних, хлібопекарських і кондитерських продуктів.</p>
+        <p class="big g" style="font-size:58px;margin-top:22px;">Е400–Е449</p>
+        <p class="xs m" style="margin-top:6px;">коди стабілізаторів консистенції в європейській кодифікації</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:430px;width:560px;padding:16px 22px;">
+        <p class="xs" style="margin-bottom:8px;"><b>Що дають виробнику</b></p>
+        <div class="pills" style="gap:7px;"><span class="pill g">потрібна консистенція</span><span class="pill g">довший термін зберігання</span><span class="pill g">нижча собівартість</span></div>
+        <p class="xs m" style="margin-top:10px;">Перелік дозволених постійно переглядають національні та міжнародні організації.</p>
+      </div>
+    </div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Сировина для стабілізаторів">
+        <rect x="680" y="180" width="520" height="440" rx="22" fill="#242019" stroke="#3B342B"/>
+        <text x="704" y="214" font-family="Manrope" font-weight="800" font-size="17" fill="#F5EDDF">З чого їх одержують</text>
+        <use href="#apple" x="712" y="240" width="76" height="76"/><use href="#citrus" x="834" y="242" width="72" height="72"/><use href="#cob" x="966" y="234" width="44" height="88"/><g style="color:#6CC3A0"><use href="#weed" x="1080" y="232" width="60" height="88"/></g>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B" text-anchor="middle"><text x="750" y="342">яблука</text><text x="870" y="342">цитрусові</text><text x="988" y="342">пшениця, кукурудза</text><text x="1110" y="342">водорості</text></g>
+        <use href="#bark" x="712" y="384" width="100" height="84"/><use href="#gsheet" x="850" y="396" width="104" height="70"/>
+        <g transform="translate(1030 424)"><circle r="30" fill="none" stroke="#A387E6" stroke-width="3" stroke-dasharray="4 5"/><g fill="#A387E6"><ellipse cx="-8" cy="-6" rx="7" ry="4"/><ellipse cx="9" cy="4" rx="7" ry="4" transform="rotate(40 9 4)"/><ellipse cx="-4" cy="12" rx="6" ry="3.5"/></g></g>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B" text-anchor="middle"><text x="762" y="498">смоли рослин</text><text x="902" y="498">тваринна сировина</text><text x="1030" y="498">мікробіологія</text></g>
+        <text x="704" y="580" font-family="Manrope" font-weight="700" font-size="15" fill="#B5EBD5">пектини, карагінани, камеді — похідні натуральних речовин</text>
+      </svg>
+    </div>
+    <aside class="notes">Харчові стабілізатори — особлива група добавок, головне призначення яких — формування та збереження консистенції, текстури, форми і споживчих якостей продуктів молочного, м’ясопереробного, хлібопекарського та кондитерського виробництв.
+Поряд з традиційними стабілізаторами (крохмалі) широко використовують стабілізатори тваринного (желатин) і рослинного (камеді, пектини, карагінани) походження; їх розробляють спеціально під певні продукти, і вони працюють як багатофункціональні системи.
+Застосування під постійним контролем національних і міжнародних організацій; перелік дозволених постійно переглядається.
+Стабілізатори дозволяють отримати потрібну консистенцію, поліпшити якість, подовжити термін зберігання і зменшити собівартість. Коди — Е400–Е449.
+Головні групи — пектини, карагінани, камеді — похідні натуральних речовин; деякі стабілізатори синтезують промислово. За лекцією, стабілізатори безпечні для здоров’я. Сировина: яблука, цитрусові, пшениця, кукурудза, морські водорості, смоли наземних рослин; окремі види — продукти мікробіологічної промисловості.</aside>
+  </section>
+
+  <!-- ================= 3. Карта добавок ================= -->
+  <section class="slide" data-title="Огляд · Регулятори консистенції">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="200" cy="380" r="320" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">Огляд · <i>Карта лекції</i></p><h2 class="rv">Хто відповідає за консистенцію</h2></div></div>
+    <div class="L" data-depth="0.45">
+      <svg width="1280" height="720" aria-hidden="true"><g stroke="#4D443A" stroke-width="3" fill="none">
+        <path class="draw" style="--len:300" d="M300 400C340 400 340 260 380 260"/><path class="draw" style="--len:120" d="M300 400C340 400 340 452 380 452"/><path class="draw" style="--len:300" d="M300 400C340 400 340 586 380 586"/>
+        <path d="M640 260H690"/><path d="M640 452H690"/><path d="M640 586H690"/></g></svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:366px;width:220px;padding:14px 18px;background:linear-gradient(135deg,#6CC3A0,#62A9E0);border:none;"><h3 style="color:#10201A;font-size:18px;">Регулятори консистенції</h3></div>
+      <div class="card frag" style="position:absolute;left:380px;top:228px;width:260px;padding:13px 18px;border-color:#6CC3A0;"><h3 style="font-size:17px;" class="g">Стабілізатори й загущувачі</h3></div>
+      <div class="card frag" style="position:absolute;left:380px;top:426px;width:260px;padding:13px 18px;border-color:#62A9E0;"><h3 style="font-size:17px;" class="sk">Емульгатори</h3></div>
+      <div class="card frag" style="position:absolute;left:380px;top:560px;width:260px;padding:13px 18px;border-color:#A387E6;"><h3 style="font-size:17px;" class="pl">Проти злежування</h3></div>
+      <div class="pills frag" style="position:absolute;left:700px;top:170px;width:500px;gap:7px;"><span class="pill g">модифіковані крохмалі Е1400–Е1450</span><span class="pill g">патока</span><span class="pill g">целюлоза Е460–Е466</span><span class="pill g">пектин Е440</span><span class="pill g">желатин Е441</span><span class="pill g">альгінати Е400–Е405</span><span class="pill g">агар Е406</span><span class="pill g">карагінан Е407</span><span class="pill g">камеді Е410–Е419</span></div>
+      <div class="pills frag" style="position:absolute;left:700px;top:432px;width:500px;gap:7px;"><span class="pill">природні: лецитин Е322</span><span class="pill">синтетичні: Е432–Е492</span></div>
+      <div class="pills frag" style="position:absolute;left:700px;top:566px;width:500px;gap:7px;"><span class="pill pl">алюмосилікат Е559</span></div>
+    </div>
+    <aside class="notes">Карта лекції: стабілізатори та загущувачі (модифіковані крохмалі, патока, модифікована целюлоза, пектин, желатин, полісахариди морських водоростей — альгінати, агароїди, карагінани, камеді); емульгатори (природні — лецитин, фосфоліпіди, яєчний білок, сапоніни; синтетичні — табл. 4.2); речовини, що запобігають злежуванню та грудкуванню (в Україні — лише алюмосилікат Е559).
+Гілки з’являються автоматично по черзі.</aside>
+  </section>
+
+  <!-- ================= 4. Загущувачі ================= -->
+  <section class="slide" data-title="4.1.1 · Загущувачі">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="420" cy="420" r="400" fill="url(#glowS)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.1 · <i>Загущувачі</i></p><h2 class="rv">Ланцюги, що тримають воду</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Полісахаридні ланцюги зв’язують воду">
+        <g class="bob"><use href="#chain" x="90" y="200" width="460" height="184"/></g>
+        <g class="bob2"><use href="#chain" x="130" y="340" width="420" height="168"/></g>
+        <g fill="#62A9E0" opacity=".6"><circle cx="110" cy="460" r="5"/><circle cx="210" cy="520" r="5"/><circle cx="330" cy="500" r="5"/><circle cx="450" cy="540" r="5"/><circle cx="520" cy="470" r="5"/><circle cx="80" cy="300" r="5"/></g>
+        <g font-family="Manrope" font-weight="700" font-size="15"><text x="90" y="585" fill="#FFD39A">● полісахаридний ланцюг</text><text x="320" y="585" fill="#9CCBF0">● молекули води</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div style="position:absolute;left:640px;top:190px;width:560px;">
+        <p class="s rv"><b>Загущувачі</b> — речовини, що <b class="a">підвищують в’язкість</b> харчової системи.</p>
+        <p class="xs m rv" style="margin-top:12px;">За хімічною природою — полісахариди, рослинні гідроколоїди. Лінійні чи розгалужені ланцюги містять <b style="color:var(--text)">гідрофільні групи</b>, які взаємодіють з водою продукту → в’язкість зростає.</p>
+        <div class="pills rv" style="margin-top:18px;gap:7px;"><span class="pill a">модифіковані крохмалі</span><span class="pill a">целюлоза</span><span class="pill a">пектини</span><span class="pill a">камеді</span><span class="pill a">альгінати</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:640px;top:470px;width:560px;padding:16px 22px;border-color:rgba(98,169,224,.55);">
+        <p class="xs"><b class="sk">Підвищити в’язкість чи утворити гель?</b> Від цієї мети залежить вибір добавки і технологія її застосування (п. 4.3).</p>
+      </div>
+    </div>
+    <aside class="notes">Загущувачі — речовини, які підвищують в’язкість харчової системи: модифіковані крохмалі, целюлоза, пектини, камеді, альгінати. За хімічною природою загущувачі є полісахаридами, рослинними гідроколоїдами. Їх лінійні чи розгалужені ланцюги містять гідрофільні групи, які взаємодіють з водою, що міститься у продукті, — це сприяє підвищенню в’язкості.
+Схема — умовна.</aside>
+  </section>
+
+  <!-- ================= 5. Модифікований крохмаль ================= -->
+  <section class="slide" data-title="4.1.1 · Модифікований крохмаль">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="300" cy="360" r="380" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.1 · <i>Модифікований крохмаль</i></p><h2 class="rv">Крохмаль із заданими властивостями</h2></div></div>
+    <div class="L" data-depth="0.55"><svg width="1280" height="720" aria-hidden="true"><g class="bob"><use href="#starch" x="430" y="170" width="150" height="125"/></g></svg></div>
+    <div class="L" data-depth="0.95">
+      <div style="position:absolute;left:80px;top:180px;width:350px;">
+        <p class="s rv">Властивості змінено <b>фізичною, хімічною, біохімічною</b> або комбінованою обробкою.</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:320px;width:500px;padding:14px 20px;border-color:rgba(108,195,160,.55);">
+        <p class="xs"><b class="g">Не ГМО.</b> Модифікований крохмаль не змінений на генному рівні. У помірній кількості (<b>≤ 10%</b> у їжі) не діє негативно.</p>
+      </div>
+      <div class="rv" style="position:absolute;left:80px;top:430px;width:500px;">
+        <p class="xs m">Відрізняється гідрофільністю, клейстеризацією, драглеутворенням. Застосування:</p>
+        <div class="pills" style="margin-top:8px;gap:7px;"><span class="pill">соуси, підливи</span><span class="pill">супи-пюре</span><span class="pill">начинки для пирогів</span><span class="pill">креми</span><span class="pill">киселі</span></div>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:640px;top:180px;width:560px;"><b style="color:var(--text)">Дозволено в Україні</b> — 11 видів:</p>
+      <div id="starchTiles"></div>
+    </div>
+    <aside class="notes">Модифікований крохмаль — крохмаль, властивості якого змінено внаслідок фізичної, хімічної, біохімічної або комбінованої обробки; не має відношення до ГМО, бо не змінений на генному рівні. Може утримувати вологу в різних середовищах, що дає продукт заданої консистенції.
+Від звичайного відрізняється ступенем гідрофільності, здатністю до клейстеризації, драглеутворення. Використовують як загущувачі, стабілізатори, зв’язуючі речовини (від м’яких до твердих драглів), текстуратори (від крихких до гумоподібних текстур): соуси, підливи, супи-пюре, начинки для пирогів, креми, киселі (рис. 4.1).
+У помірній кількості (вміст у їжі не вище 10%) не проявляють негативної дії. В Україні дозволено: Е1400 декстрин харчовий; Е1404 оксидований крохмаль; Е1410 монокрохмалю фосфат; Е1412 дикрохмалю фосфат; Е1413 фосфатованого крохмалю фосфат; Е1414 ацетильованого крохмалю фосфат; Е1420 крохмаль ацетильований; Е1422 ацетильованого крохмалю адипат; Е1440 гідроксипропілкрохмаль; Е1442 гідроксипропілкрохмалю фосфат; Е1450 крохмалю натрійоктенілсукцинат.
+⚠ У лекції — «гідрооксипропілен-крохмаль» і «натрійоктанілсукцинат»; загальноприйняті назви — гідроксипропілкрохмаль та натрію октенілсукцинат крохмалю.</aside>
+  </section>
+
+  <!-- ================= 6. Чотири типи модифікації ================= -->
+  <section class="slide" data-title="4.1.1 · Типи модифікації крохмалю">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="440" r="500" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.1 · <i>Табл. 4.1 · види модифікованих крохмалів</i></p><h2 class="rv">Чотири способи змінити крохмаль</h2></div></div>
+    <div class="card rv" data-depth="0.6" style="position:absolute;left:80px;top:180px;width:266px;height:456px;padding:18px 20px;">
+      <svg width="64" height="64" viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="#F5EDDF"/><circle cx="50" cy="50" r="40" fill="none" stroke="#62A9E0" stroke-width="5" stroke-dasharray="6 6"/><path d="M50 4V16M50 84V96M4 50H16M84 50H96" stroke="#62A9E0" stroke-width="5" stroke-linecap="round"/></svg>
+      <h3 style="margin-top:8px;font-size:18px;">Набухання</h3><p class="xs a" style="margin-top:4px;"><b>набухаючі (інстант)</b></p>
+      <p class="xs m" style="margin-top:8px;">Вологотермічна обробка: гаряча екструзія або вальцьове сушіння вище t° клейстеризації. Зерна руйнуються → активне набухання, утримання вологи.</p>
+      <p class="xs" style="margin-top:8px;">помадкові цукерки, зефір, сухі суміші морозива</p>
+    </div>
+    <div class="card rv" data-depth="0.75" style="position:absolute;left:364px;top:180px;width:266px;height:456px;padding:18px 20px;">
+      <svg width="64" height="64" viewBox="0 0 100 100"><path d="M8 50L26 36 44 50" stroke="#F2A541" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M56 50L74 36 92 50" stroke="#F2A541" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M50 30V70" stroke="#E8573A" stroke-width="4" stroke-dasharray="5 5"/></svg>
+      <h3 style="margin-top:8px;font-size:18px;">Деполімеризація</h3><p class="xs a" style="margin-top:4px;"><b>розщеплені: декстрини, окислені</b></p>
+      <p class="xs m" style="margin-top:8px;">Короткі ланцюги → нижча здатність утворювати драглі. Окислений (KMnO₄) — прозорі клейстери низької в’язкості, стабільні при зберіганні, охолодженні.</p>
+      <p class="xs" style="margin-top:8px;">морозиво, кондитерські, хліб зі слабкою клейковиною</p>
+    </div>
+    <div class="card rv" data-depth="0.9" style="position:absolute;left:648px;top:180px;width:266px;height:456px;padding:18px 20px;">
+      <svg width="64" height="64" viewBox="0 0 100 100"><path d="M8 50L26 36 44 50 62 36 80 50" stroke="#F2A541" stroke-width="6" fill="none" stroke-linecap="round"/><g fill="#6CC3A0"><circle cx="26" cy="22" r="7"/><circle cx="62" cy="22" r="7"/><circle cx="44" cy="66" r="7"/><circle cx="80" cy="66" r="7"/></g></svg>
+      <h3 style="margin-top:8px;font-size:18px;">Стабілізація</h3><p class="xs a" style="margin-top:4px;"><b>ацетильовані, фосфатні, оксиалкільні</b></p>
+      <p class="xs m" style="margin-top:8px;">Властивості ПАР: стабілізують емульсії; нижча t° гелеутворення, прозорі клейстери, стійкі до ретроградації.</p>
+      <p class="xs" style="margin-top:8px;">соуси, салатні заправки</p>
+    </div>
+    <div class="card rv" data-depth="1.05" style="position:absolute;left:932px;top:180px;width:268px;height:456px;padding:18px 20px;">
+      <svg width="64" height="64" viewBox="0 0 100 100"><path d="M8 30L26 16 44 30 62 16 80 30" stroke="#F2A541" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M8 74L26 60 44 74 62 60 80 74" stroke="#F2A541" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M26 22V60M62 22V60" stroke="#A387E6" stroke-width="5"/></svg>
+      <h3 style="margin-top:8px;font-size:18px;">Поперечне зшивання</h3><p class="xs a" style="margin-top:4px;"><b>зшиті: POCl₃, епіхлоргідрин, адипінова к-та</b></p>
+      <p class="xs m" style="margin-top:8px;">Повільніше набухають; в’язкі клейстери, стійкі до високих t°, низького pH, механічного навантаження.</p>
+      <p class="xs" style="margin-top:8px;">м’ясні консерви, дієтичні майонези, заморожені продукти, хліб, вафлі</p>
+    </div>
+    <aside class="notes">Технологічні властивості залежать від типу модифікації (табл. 4.1):
+• Набухання → набухаючі крохмалі: розчинні у холодній воді (інстант) і набухаючі у холодній воді. Одержують вологотермічною обробкою суспензії крохмалю — гарячою екструзією або вальцьовим сушінням при температурі вище клейстеризації. Структура зерен руйнується, нова структура активно набухає: добрі вологоутримуючі, структуроутворюючі, згущувальні властивості. Приклади: набухаючий кукурудзяний крохмаль — стабілізатор цукерок з помадковим корпусом; крохмаль з підвищеним вмістом білків замінює частину яєчного білка у зефірі; набухаючий картопляний — у сухих сумішах морозива.
+• Деполімеризація → розщеплені крохмалі: декстрини (гідролізовані кислотою, ферментами чи окислені). Короткі ланцюги — понижена студнеутворююча здатність. Окислений крохмаль (KMnO₄ у кислому середовищі) дає концентровані клейстери пониженої в’язкості, підвищеної прозорості, стабільні при зберіганні, перемішуванні, охолодженні — для морозива, кондитерської й хлібопекарської промисловості. Для хліба — марки А (бромат калію), Б (перманганат калію), В (двоосновна сіль гідрохлориду кальцію); поліпшують хліб з борошна зі слабкою клейковиною.
+• Стабілізація → стабілізовані крохмалі: зі складним ефірним зв’язком (ацетильовані, фосфатні) і з простим (оксиалкільні). Властивості ПАР: стабілізують емульсії, понижена t° гелеутворення, прозорі клейстери, стійкі до ретроградації — соуси, салатні заправки.
+• Поперечне зшивання → зшиті крохмалі (хлорокис фосфору, епіхлоргідрин, адипінова кислота). Понижена швидкість набухання і клейстеризації; клейстери в’язкіші, стійкі до високих t°, низьких pH, механічного навантаження. Фосфатний крохмаль: підвищена кінцева в’язкість, стабільність. Використання — м’ясні консерви, дієтичні майонези зі зниженим вмістом жиру, жирові креми, соуси, киселі, швидкозаморожені продукти, хліб, печиво, вафлі. Колір фосфатного крохмалю марки А — від білого до білого з жовтуватим відтінком, марки Б — від кремового до палевого.
+Картки з’являються автоматично.</aside>
+  </section>
+
+  <!-- ================= 7. Патока ================= -->
+  <section class="slide" data-title="4.1.1 · Патока">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="300" cy="400" r="380" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.1 · <i>Патока</i></p><h2 class="rv">Сироп, що не дає цукру кристалізуватися</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Патока: крохмаль гідролізується до сиропу">
+        <use href="#starch" x="90" y="210" width="130" height="108"/>
+        <path d="M240 264H330" stroke="#F2A541" stroke-width="4" marker-end="url(#ah)"/>
+        <text x="285" y="250" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">кислоти або</text><text x="285" y="290" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">ферменти</text>
+        <g class="bob"><use href="#honey" x="350" y="180" width="140" height="154"/></g>
+        <g font-family="Manrope" font-weight="800" font-size="16" fill="#F5EDDF" text-anchor="middle"><text x="155" y="350">крохмаль</text><text x="420" y="360">патока</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <p class="xs m rv" style="position:absolute;left:80px;top:390px;width:470px;">Продукт <b style="color:var(--text)">неповного гідролізу крохмалю</b>: густа, в’язка, безбарвна або жовтувата прозора рідина солодкуватого смаку.</p>
+      <div class="card rv" style="position:absolute;left:80px;top:480px;width:470px;padding:14px 20px;">
+        <p class="xs"><b class="a">Декстрини</b> підвищують в’язкість сиропу і сповільнюють кристалізацію сахарози; <b class="g">редукуючі цукри</b> гігроскопічні й утримують вологу.</p>
+      </div>
+      <div style="position:absolute;left:600px;top:180px;width:600px;">
+        <p class="s rv"><b>Антикристалізаційна + гігроскопічна</b></p>
+        <div class="pills rv" style="margin-top:10px;gap:7px;"><span class="pill a">карамель</span><span class="pill a">халва</span><span class="pill a">варення</span><span class="pill a">цукерки</span><span class="pill a">пряники</span><span class="pill a">лікери</span><span class="pill a">хлібобулочні вироби</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:600px;top:330px;width:600px;padding:16px 22px;">
+        <p class="xs" style="margin-bottom:8px;"><b>Види патоки</b></p>
+        <ul class="ul"><li><b>карамельна</b> — низькооцукрена, вищого і 1-го сортів (різняться редукуючими речовинами, карамельною пробою, золою, кислотністю)</li><li><b>глюкозна високооцукрена</b> — 44–60% редукуючих цукрів: варення, джеми, пастила</li><li><b>декстрин-мальтозна</b> — у сумішах для дітей раннього віку</li><li><b>мальтозна</b> — ≥ 65%, коричнева, солодовий присмак</li></ul>
+      </div>
+    </div>
+    <aside class="notes">Патока — продукт неповного гідролізу крохмалю розбавленими кислотами або амілолітичними ферментами: сиропоподібна густа, в’язка, безбарвна або трохи жовтувата, прозора рідина солодкуватого смаку (рис. 4.2). Завдяки антикристалізаційним і гігроскопічним властивостям її використовують для карамелі, халви, варення, цукерок, пряників, лікерів, деяких хлібобулочних виробів. Декстрини патоки підвищують в’язкість цукрового сиропу і сповільнюють кристалізацію сахарози; редукуючі цукри завдяки гігроскопічності зберігають вологість.
+Види: карамельна патока — низькооцукрена, вищого і 1-го сортів (різняться вмістом редукуючих речовин, температурою карамельної проби, масовою часткою золи, кислотністю). Глюкозна високооцукрена — 44–60% редукуючих цукрів на суху речовину; варення, джеми, пастила, хлібобулочні вироби. Декстрин-мальтозна — складова рідких і сухих молочних сумішей для дітей раннього віку. Мальтозна — не менше 65% редукуючих цукрів (у перерахунку на мальтозу), коричнева, солодкий солодовий присмак; солодкі страви, дитячі суміші, пряники, дієтичне харчування.</aside>
+  </section>
+
+  <!-- ================= 8. Гідроліз крохмалю ================= -->
+  <section class="slide" data-title="4.1.1 · Продукти гідролізу крохмалю">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="360" r="500" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.1 · <i>Продукти гідролізу крохмалю</i></p><h2 class="rv">Чим глибший гідроліз — тим солодше</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Вміст редукуючих речовин у продуктах гідролізу крохмалю">
+        <g stroke="#3B342B" stroke-width="1.5"><path d="M330 176V440M500 176V440M670 176V440M840 176V440M1010 176V440M1180 176V440"/></g>
+        <g font-family="Unbounded" font-weight="600" font-size="13" fill="#BDB09B" text-anchor="middle"><text x="330" y="464">0</text><text x="500" y="464">20</text><text x="670" y="464">40</text><text x="840" y="464">60</text><text x="1010" y="464">80</text><text x="1180" y="464">100 %</text></g>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B" text-anchor="end"><text x="314" y="208">мальтодекстрини</text><text x="314" y="268">глюкозна високооцукрена</text><text x="314" y="328">мальтозна патока</text><text x="314" y="388">глюкоза кристалічна</text></g>
+        <rect class="grow" x="372" y="192" width="170" height="22" rx="11" fill="#A387E6" style="transform-origin:372px 203px"/>
+        <rect class="grow" x="704" y="252" width="136" height="22" rx="11" fill="#F2A541" style="transform-origin:704px 263px;animation-delay:.15s"/>
+        <rect class="grow" x="882" y="312" width="298" height="22" rx="11" fill="#E8573A" opacity=".55" style="transform-origin:882px 323px;animation-delay:.3s"/><rect x="882" y="312" width="10" height="22" rx="5" fill="#E8573A"/>
+        <rect x="1166" y="372" width="14" height="22" rx="7" fill="#6CC3A0"/>
+        <g font-family="Manrope" font-weight="800" font-size="15" fill="#F5EDDF" class="lbl"><text x="552" y="208">5–25%</text><text x="850" y="268">44–60%</text><text x="900" y="304">≥ 65%</text><text x="1150" y="388" text-anchor="end">99,5%</text></g>
+        <text x="330" y="494" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">редукуючі речовини, % на суху речовину (за лекцією)</text>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:520px;width:540px;padding:14px 20px;">
+        <p class="xs"><b class="pl">Мальтодекстрини</b> — дитячі продукти, наповнювачі пудингів, кондитерських виробів, штучного крему. <b class="g">Глюкоза</b> — кінцевий продукт гідролізу: вологість ≤ 9%, зберігання 1 рік.</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:640px;top:520px;width:560px;padding:14px 20px;border-color:rgba(242,165,65,.55);">
+        <p class="xs"><b class="a">Глюкозо-фруктозний сироп:</b> ізомеризувати можна ≤ 50% глюкози → ≈ <b>42%</b> фруктози на СР; сироп містить 71% СР, солодкість близька до сахарози.</p>
+      </div>
+    </div>
+    <aside class="notes">Мальтодекстрини — низькооцукрені крохмальні гідролізати з 5–25% редукуючих речовин; для дитячих продуктів, наповнювачі пудингів, кондитерських виробів, штучного крему.
+Глюкоза — кінцевий продукт гідролізу крохмалю. Глюкоза кристалічна — білий порошок, що проходить крізь сито з отворами 1,5 мм; солодкий смак без присмаку; вологість ≤ 9%; редукуючих речовин на СР — 99,5%; зберігання 1 рік. Глюкозу харчову готують, не виділяючи міжкристалічну рідину; для кондитерських виробів, безалкогольних напоїв, морозива.
+Глюкозо-фруктозний сироп готують із високоякісного крохмалю оцукрюванням та ізомеризацією глюкози. За умови хімічної рівноваги не можна ізомеризувати у фруктозу понад 50% глюкози, тому в сиропі ≈ 42% фруктози на СР. Готовий сироп містить 71% СР, солодкість близька до сахарози; використовують замість сахарози в напоях, консервуванні фруктів і овочів, кондитерських і хлібобулочних виробах, морозиві, згущеному молоці.
+Смужка мальтозної патоки показує «не менше 65%» — верхня межа в лекції не вказана.</aside>
+  </section>
+
+  <!-- ================= 9. Модифікована целюлоза ================= -->
+  <section class="slide" data-title="4.1.1 · Модифікована целюлоза">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="960" cy="400" r="400" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.1 · <i>Модифікована целюлоза</i></p><h2 class="rv">Целюлоза в ролі загущувача</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="rv" style="position:absolute;left:80px;top:180px;width:540px;">
+        <p class="s"><b class="g">Е460 целюлоза</b> — емульгатор, текстуратор, засіб проти злежування.</p>
+        <p class="xs m" style="margin-top:8px;">Ефіри целюлози (метил-, етил-, гідроксипропіл-, карбоксиметилцелюлоза) — загущувачі, стабілізатори, емульгатори.</p>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:80px;top:300px;width:540px;"><b style="color:var(--text)">В Україні дозволено лише:</b></p>
+      <div class="tile rv" style="left:80px;top:330px;width:170px;"><div class="code" style="color:var(--mint)">Е461</div><div class="nm">метилцелюлоза · ДДС 30 мг/кг</div></div>
+      <div class="tile rv" style="left:265px;top:330px;width:170px;"><div class="code" style="color:var(--mint)">—</div><div class="nm">карбюлоза (без номера)</div></div>
+      <div class="tile rv" style="left:450px;top:330px;width:170px;"><div class="code" style="color:var(--mint)">Е466</div><div class="nm">карбоксиметил&shy;целюлоза (КМЦ)</div></div>
+      <div class="card rv" style="position:absolute;left:80px;top:460px;width:540px;padding:14px 20px;">
+        <p class="xs"><b class="a">КМЦ</b> — одна з найпоширеніших: у морозиві заважає утворенню кристалів льоду, у хлібі затримує вологу і сповільнює черствіння.</p>
+        <p class="xs m" style="margin-top:6px;">Метилцелюлоза — з деревини або бавовни, обробленої лугом; не токсична.</p>
+      </div>
+    </div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="МДР модифікованої целюлози, г/кг">
+        <rect x="680" y="180" width="520" height="420" rx="22" fill="#242019" stroke="#3B342B"/>
+        <text x="704" y="216" font-family="Manrope" font-weight="800" font-size="17" fill="#F5EDDF">МДР модифікованої целюлози, г/кг</text>
+        <use href="#bread" x="704" y="260" width="74" height="44"/><use href="#jelly" x="710" y="350" width="60" height="55" style="color:#E8573A"/><use href="#icecream" x="722" y="436" width="40" height="70"/>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B"><text x="800" y="276">хлібобулочні</text><text x="800" y="370">мармелад</text><text x="800" y="464">креми</text></g>
+        <rect class="grow" x="800" y="288" width="360" height="20" rx="10" fill="#6CC3A0" style="transform-origin:800px 298px"/>
+        <rect class="grow" x="800" y="382" width="180" height="20" rx="10" fill="#6CC3A0" style="transform-origin:800px 392px;animation-delay:.15s"/>
+        <rect class="grow" x="800" y="476" width="72" height="20" rx="10" fill="#6CC3A0" style="transform-origin:800px 486px;animation-delay:.3s"/>
+        <g font-family="Unbounded" font-weight="700" font-size="16" fill="#F5EDDF" class="lbl"><text x="1130" y="276" text-anchor="end">10</text><text x="992" y="397">5</text><text x="884" y="491">2</text></g>
+      </svg>
+    </div>
+    <aside class="notes">Целюлозу (Е460) як харчову добавку використовують як емульгатор, текстуратор і добавку, що запобігає злежуванню та грудкуванню. Ефіри целюлози (гідроксипропілцелюлоза, гідроксипропілметилцелюлоза, метилцелюлоза, етилцелюлоза, карбоксиметилнатрійцелюлоза) — загущувачі, стабілізатори, емульгатори. В Україні дозволені лише: метилцелюлоза (Е461), карбюлоза (без номера), карбоксиметилцелюлоза (Е466).
+Метилцелюлозу виготовляють з целюлози деревини або бавовни, обробляючи лугом; не токсична, ДДС 30 мг на 1 кг маси тіла. Карбоксиметилцелюлоза — одна з найпоширеніших добавок целюлозної природи, хороший згущувач і стабілізатор; у морозиві перешкоджає утворенню кристалів льоду, у хлібобулочних виробах затримує вологу і сповільнює черствіння.
+МДР модифікованої целюлози, г/кг: хлібобулочні вироби — 10, мармелад — 5, креми — 2.</aside>
+  </section>
+
+  <!-- ================= 10. Пектин ================= -->
+  <section class="slide" data-title="4.1.2 · Пектин">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="330" cy="400" r="380" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.2 · <i>Пектин Е440</i></p><h2 class="rv">Желе з фруктів</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Джерела пектину">
+        <g class="bob"><use href="#citrus" x="90" y="190" width="100" height="100"/></g>
+        <g class="bob2"><use href="#apple" x="230" y="186" width="104" height="104"/></g>
+        <g class="bob"><use href="#beet" x="380" y="176" width="92" height="110"/></g>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B" text-anchor="middle"><text x="140" y="314">цитрусові</text><text x="282" y="314">яблука</text><text x="426" y="314">буряк (до 25%)</text></g>
+        <path d="M140 330C200 380 260 380 282 400M282 330V400M426 330C380 380 320 380 290 400" stroke="#F2A541" stroke-width="3" fill="none" stroke-dasharray="6 7"/>
+        <g class="bob2" style="color:#E8573A"><use href="#jelly" x="210" y="400" width="150" height="138"/></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div style="position:absolute;left:560px;top:180px;width:640px;">
+        <p class="s rv">Натуральна <b>желеутворююча</b> речовина фруктів і овочів. Осаджують етанолом. <b class="g">Без обмежень</b> на застосування.</p>
+        <div class="pills rv" style="margin-top:14px;gap:7px;"><span class="pill a">гелеутворювач</span><span class="pill a">стабілізатор</span><span class="pill a">загущувач</span><span class="pill a">вологоутримувач</span><span class="pill a">освітлювач</span><span class="pill a">полегшує фільтрування</span><span class="pill a">капсулювання</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:560px;top:360px;width:640px;padding:18px 22px;border-color:rgba(242,165,65,.55);">
+        <p class="xs" style="margin-bottom:10px;"><b>Гель утворюється лише за умови:</b></p>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;"><span class="pill">цукор</span><span class="a big" style="font-size:20px;">+</span><span class="pill">кислота</span><span class="m xs">або</span><span class="pill g">іони кальцію Ca²⁺</span></div>
+        <p class="xs m" style="margin-top:12px;">Головна функціональна відмінність від інших полісахаридів — <b style="color:var(--text)">нейтральність</b>.</p>
+      </div>
+    </div>
+    <aside class="notes">Пектин (Е440) — натуральна желеутворююча речовина фруктів і багатьох овочів. Зазвичай його екстрагують з цитрусових (лайм, лимон, апельсин, грейпфрут) або яблук (рис. 4.3); у промислових масштабах — також з буряка (суха маса до 25% пектину).
+Використовують як гелеутворювач, стабілізатор, загущувач, вологоутримуючий агент, освітлювач, речовину, що полегшує фільтрування, засіб для капсулювання. Спеціальних обмежень на застосування немає.
+Головна функціональна особливість — здатність формувати гелі у водних розчинах лише в присутності певної кількості цукру і кислоти або іонів кальцію. Найважливіша відмінність від інших полісахаридів — нейтральність. Виробництво пектину ґрунтується на його здатності осідати етанолом.</aside>
+  </section>
+
+  <!-- ================= 11. Вибір пектину ================= -->
+  <section class="slide" data-title="4.1.2 · Який пектин обрати">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="400" r="500" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.2 · <i>Вибір пектину</i></p><h2 class="rv">Високо- чи низькоетерифікований</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="cmp" style="top:176px;grid-template-columns:240px 1fr 1fr;">
+        <div class="h"></div><div class="h a">Високоетерифіковані</div><div class="h g">Низькоетерифіковані</div>
+        <div class="c rv">Желювання</div><div class="rv">потрібні цукор і кислота</div><div class="rv ok">желюють без кислоти</div>
+        <div class="c rv">Регулювання</div><div class="rv ok">ширші можливості</div><div class="rv">вужчі</div>
+        <div class="c rv">Сухі речовини</div><div class="rv no">СР &lt; 55% обмежує застосування</div><div class="rv ok">підходять для низької СР</div>
+        <div class="c rv">Смак продукту</div><div class="rv">—</div><div class="rv ok">нейтральний: м’ята, кориця, ром</div>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:430px;width:550px;padding:16px 22px;">
+        <h3 style="font-size:18px;">Яблучний чи цитрусовий</h3>
+        <p class="xs" style="margin-top:8px;"><b class="a">Яблучні</b> особливо цінують у кондитерській промисловості, <b class="a">цитрусові</b> — у молочній і консервній.</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:650px;top:430px;width:550px;padding:16px 22px;">
+        <h3 style="font-size:18px;">Порошковий чи рідкий — не взаємозамінні</h3>
+        <p class="xs" style="margin-top:8px;"><b class="g">Порошковий</b> змішують зі свіжими холодними фруктами або соками; <b class="g">рідкий</b> додають у зварений гарячий продукт.</p>
+      </div>
+    </div>
+    <aside class="notes">За структуроутворюючими характеристиками пектини ділять на високоетерифіковані і низькоетерифіковані. Перші дають ширші можливості регулювання желеутворення, другі здатні желювати без застосування кислоти. Низькоетерифіковані застосовують для продуктів з нейтральним смаком (з ароматизаторами м’яти, кориці, рому). На вибір впливає і вміст сухих речовин: СР нижче 55% обмежує застосування високоетерифікованих пектинів.
+У кондитерській промисловості особливо цінують яблучні пектини, у молочній і консервній — цитрусові. Виробляють рідкий і порошковий пектин; у рецептах вони не взаємозамінні: порошковий змішують зі свіжими холодними фруктами або соками, рідкий додають у зварений гарячий продукт.</aside>
+  </section>
+
+  <!-- ================= 12. Желатин ================= -->
+  <section class="slide" data-title="4.1.2 · Желатин">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="900" cy="360" r="420" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.2 · <i>Желатин Е441</i></p><h2 class="rv">Білок із колагену</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Желатин: від колагену до пластин">
+        <g class="bob"><use href="#gsheet" x="760" y="190" width="230" height="154"/></g>
+        <g class="bob2"><use href="#gsheet" x="900" y="250" width="230" height="154"/></g>
+        <g class="bob" style="color:#C2185B"><use href="#jelly" x="830" y="430" width="160" height="146"/></g>
+        <use href="#powder" x="1020" y="500" width="140" height="82"/>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B" text-anchor="middle"><text x="1090" y="604">порошок</text><text x="910" y="604">желе</text><text x="1020" y="428">пластини — вищі сорти</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <p class="s rv" style="position:absolute;left:80px;top:180px;width:600px;">Клейкий білковий продукт з <b>колагену</b> кісток, хрящів і сухожиль тварин. <b class="g">Без обмежень.</b></p>
+      <div class="rv" style="position:absolute;left:80px;top:290px;width:600px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="card" style="padding:16px 20px;"><p class="big a" style="font-size:36px;">Тип А</p><p class="xs" style="margin-top:8px;">свинячі шкіри + <b>кислота</b></p></div>
+        <div class="card" style="padding:16px 20px;"><p class="big sk" style="font-size:36px;">Тип B</p><p class="xs" style="margin-top:8px;">шкури ВРХ + <b>луг</b></p></div>
+      </div>
+      <ul class="ul rv" style="position:absolute;left:80px;top:430px;width:600px;"><li>порошковий погано розчиняється: спершу <b>набухання</b>, потім розчинення</li><li>вищі сорти (пластини) — без сторонніх запахів і смаку; нижчі — слабкий «клейовий» присмак</li></ul>
+      <div class="pills rv" style="position:absolute;left:80px;top:560px;width:640px;gap:7px;"><span class="pill a">желе</span><span class="pill a">заливні</span><span class="pill a">холодці</span><span class="pill a">муси</span><span class="pill a">креми</span><span class="pill a">мармелад</span></div>
+    </div>
+    <aside class="notes">Желатин (Е441) — клейкий білковий продукт, який отримують з колагену кісток, хрящів і сухожиль тварин (рис. 4.4). Порошковий желатин погано розчиняється у воді і вимагає набухання та подальшого розчинення. Желатин типу А — обробка колагену свинячих шкір кислотою; типу В — обробка шкур ВРХ лугом. Вищі сорти (у пластинках) не мають побічних запахів і смаку; низькі іноді мають слабкий «клейовий» присмак і запах. Використовують для желе, заливних, холодців, мусів, кремів, мармеладу. Дозволено без обмежень.</aside>
+  </section>
+
+  <!-- ================= 13. Альгінати ================= -->
+  <section class="slide" data-title="4.1.3 · Альгінати">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="300" cy="400" r="380" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.3 · <i>Полісахариди бурих водоростей</i></p><h2 class="rv">Альгінати Е400–Е405</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Будова альгінату: блоки манурону і гулурону">
+        <g class="bob" style="color:#8A6A2E"><use href="#weed" x="90" y="170" width="90" height="130"/></g>
+        <g class="bob2" style="color:#6B5A24"><use href="#weed" x="170" y="190" width="76" height="110"/></g>
+        <text x="270" y="230" font-family="Manrope" font-weight="800" font-size="16" fill="#F5EDDF">бурі водорості</text>
+        <text x="270" y="252" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">300+ видів: ламінарієві,</text><text x="270" y="270" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">фукусові</text>
+        <g transform="translate(90 350)">
+          <g fill="#62A9E0"><rect x="0" y="0" width="40" height="30" rx="8"/><rect x="46" y="0" width="40" height="30" rx="8"/><rect x="92" y="0" width="40" height="30" rx="8"/></g>
+          <g fill="#6CC3A0"><rect x="138" y="0" width="40" height="30" rx="8"/><rect x="184" y="0" width="40" height="30" rx="8"/><rect x="230" y="0" width="40" height="30" rx="8"/></g>
+          <g fill="#62A9E0"><rect x="276" y="0" width="40" height="30" rx="8"/><rect x="322" y="0" width="40" height="30" rx="8"/></g>
+          <g font-family="Unbounded" font-weight="700" font-size="13" fill="#14120F" text-anchor="middle"><text x="20" y="20">M</text><text x="66" y="20">M</text><text x="112" y="20">M</text><text x="158" y="20">G</text><text x="204" y="20">G</text><text x="250" y="20">G</text><text x="296" y="20">M</text><text x="342" y="20">M</text></g>
+          <g transform="translate(204 62)"><circle r="14" fill="#E8573A"/><text y="5" text-anchor="middle" font-family="Unbounded" font-weight="700" font-size="11" fill="#14120F">Ca²⁺</text></g>
+          <path d="M166 34L196 50M242 34L212 50" stroke="#E8573A" stroke-width="2.5"/>
+        </g>
+        <g font-family="Manrope" font-weight="700" font-size="15"><text x="90" y="470" fill="#9CCBF0">M — маннуронова: в’язкість розчину</text><text x="90" y="494" fill="#B5EBD5">G — гулуронова: сила гелю, зв’язування Ca²⁺</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div style="position:absolute;left:640px;top:180px;width:560px;">
+        <p class="s rv">Утворюють <b class="g">термостійкі гелі за кімнатної температури</b>, надають в’язкість, стабілізують емульсії та дисперсії.</p>
+        <div class="pills rv" style="margin-top:14px;gap:7px;"><span class="pill g">морозиво</span><span class="pill g">майонез</span><span class="pill g">кетчуп</span><span class="pill g">заморожена риба</span><span class="pill g">соуси</span><span class="pill g">заправки</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:640px;top:380px;width:560px;padding:16px 22px;border-color:rgba(108,195,160,.55);">
+        <p class="xs"><b class="g">Е405 пропіленглікольальгінат</b> не осаджується в кислих розчинах → морозиво, концентрування м’якоті у фруктових напоях, стабілізація піни пива.</p>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:640px;top:500px;width:560px;">Виробники: США, Норвегія, Франція, Велика Британія, Японія; менше — Чилі, Китай, Росія, Індія.</p>
+    </div>
+    <aside class="notes">У харчовій промисловості використовують полісахариди бурих і червоних морських водоростей — альгінати, карагінани, агароїди.
+Альгінати (альгінова кислота та її солі) займають домінуюче положення серед продуктів з морських водоростей. Альгінат відкрив англійський хімік Е.С. Стенфорд як побічний продукт отримання йоду з водоростей.
+Альгінати (Е400–405) — полімерні молекули з блоків маннуронової та гулуронової кислот. Блоки полімануронової кислоти надають в’язкість розчинам, блоки гулуронової — відповідають за силу гелю і специфічне зв’язування двовалентних іонів металів. Джерела — великі бурі водорості (понад 300 видів): ламінарієві і фукусові. Виробники — США, Норвегія, Франція, Великобританія, Японія; невелике виробництво — Чилі, Китай, Росія, Індія.
+Застосування: здатні утворювати термостійкі гелі за кімнатної температури, надають структуру і в’язкість, стабілізують емульсії й дисперсії. Стабілізатори й емульгатори для морозива, олійно-водних емульсій (майонез, кетчуп), запобігання втраті води при відтаванні замороженої риби, дисперсанти в приправах до салатів, соусах. Пропіленглікольальгінат (Е405) не осаджується в кислих розчинах — для морозива, концентрування м’якоті у фруктових напоях, стабілізації піни пива.
+⚠ У лекції — «відкритий у 1981 році»; насправді альгінат описав E.C.C. Stanford у 1881 р. Схема блоків — умовна.</aside>
+  </section>
+
+  <!-- ================= 14. Агар і карагінан ================= -->
+  <section class="slide" data-title="4.1.3 · Агар і карагінан">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="420" r="500" fill="url(#glowT)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.3 · <i>Полісахариди червоних водоростей</i></p><h2 class="rv">Агар і карагінан</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Агару потрібно у 8 разів менше, ніж желатину">
+        <rect x="80" y="180" width="540" height="270" rx="22" fill="#242019" stroke="#3B342B"/>
+        <text x="104" y="216" font-family="Manrope" font-weight="800" font-size="17" fill="#F5EDDF">Для однакового желе потрібно:</text>
+        <g fill="#F2D9A8" stroke="#D9B27C" stroke-width="2"><rect x="104" y="244" width="40" height="40" rx="6"/><rect x="152" y="244" width="40" height="40" rx="6"/><rect x="200" y="244" width="40" height="40" rx="6"/><rect x="248" y="244" width="40" height="40" rx="6"/><rect x="104" y="292" width="40" height="40" rx="6"/><rect x="152" y="292" width="40" height="40" rx="6"/><rect x="200" y="292" width="40" height="40" rx="6"/><rect x="248" y="292" width="40" height="40" rx="6"/></g>
+        <rect x="420" y="268" width="40" height="40" rx="6" fill="#E8573A"/>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B"><text x="104" y="364">желатин × 8</text><text x="420" y="364">агар × 1</text></g>
+        <text x="104" y="420" font-family="Manrope" font-weight="700" font-size="15" fill="#FFB6A4">агар без запаху; желатин з концентрацією «пахне клеєм»</text>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:470px;width:540px;padding:14px 20px;">
+        <h3 style="font-size:18px;"><span class="t">Е406</span> Агар-агар</h3>
+        <p class="xs" style="margin-top:6px;">Прозорі стрічки чи пластинки: набухають у холодній воді, розчиняються в гарячій → міцний безбарвний холодець. Мармелад, пастила, суфле, зефір, холодці.</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:180px;width:540px;height:456px;padding:18px 22px;">
+        <div style="display:flex;gap:14px;align-items:center;"><svg width="56" height="80" viewBox="0 0 90 130" style="color:#C2185B;flex-shrink:0"><use href="#weed"/></svg><div><h3 style="font-size:19px;"><span class="t">Е407</span> Карагінан</h3><p class="xs m" style="margin-top:4px;">червоні водорості Rhodophyceae (як і для агару); найкраща сировина — Філіппіни, Індонезія</p></div></div>
+        <p class="xs" style="margin-top:14px;">Сульфатні ефіри галактози (K, Na, Mg, Ca) і 3,6-ангідрогалактоза. Структура залежить від фази росту, часу збору, місця і глибини.</p>
+        <p class="xs" style="margin-top:12px;"><b>Взаємодіє з:</b></p>
+        <div class="pills" style="margin-top:6px;gap:6px;"><span class="pill sm">м’язові білки</span><span class="pill sm">ксантан</span><span class="pill sm">гуарова камедь</span><span class="pill sm">камедь ріжкового дерева</span><span class="pill sm">желатин</span></div>
+        <p class="xs m" style="margin-top:8px;">→ в’язкість, студнеутворення, стабілізація, осадження</p>
+        <p class="xs" style="margin-top:12px;"><b class="g">Термооборотний:</b> після нагрівання й охолодження продукт повертається до попередньої консистенції.</p>
+      </div>
+    </div>
+    <aside class="notes">Агароїди (різні види агарів) відрізняються залежно від походження, але всі погано розчиняються в холодній воді, хоча набухають у ній. Їх використовують у кондитерській промисловості (желейний мармелад, пастила, суфле, зефір) і для м’ясних і рибних холодців.
+Харчовий агар-агар (Е406) — блискучі прозорі стрічки або пластинки (рис. 4.5). Швидко набухають у холодній воді, без залишку розчиняються в гарячій і утворюють безбарвний міцний холодець без смаку й запаху. Желююча здатність дуже велика: агару потрібно у 8 разів менше, ніж желатину. Агар не має побічного запаху, а желатин зі збільшенням концентрації посилює «клейовий» аромат.
+Карагінан і його солі (Е407) — природні загущувачі з червоних водоростей класу Rhodophyceae (сировина й для агару). Найякісніша сировина — прибережні води Східної Азії, Філіппіни, Індонезія. Хімічно — гідроколоїд з калієвих, натрієвих, магнієвих і кальцієвих сульфатних ефірів галактози та сополімерів 3,6-ангідрогалактози; структура залежить від фази росту водоростей, часу збору, місця й глибини. Різні види карагінанів відрізняються розчинністю і стійкістю гелю. Карагінан взаємодіє з м’язовими білками, ксантаном, гуаровою камеддю, камеддю ріжкового дерева, желатином (збільшення в’язкості, студнеутворення, стабілізація, осадження). Після нагрівання і охолодження продукт повертається до попередньої консистенції.</aside>
+  </section>
+
+  <!-- ================= 15. Камеді ================= -->
+  <section class="slide" data-title="4.1.4 · Камеді">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="330" cy="380" r="380" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.4 · <i>Камеді Е410–Е419</i></p><h2 class="rv">Сік, яким рослина «заліковує рану»</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Камедь виділяється з пошкодженої кори">
+        <g class="bob"><use href="#bark" x="80" y="180" width="300" height="250"/></g>
+        <g transform="translate(250 400)"><g class="fall"><use href="#drop" x="-10" y="0" width="20" height="27" style="color:#F2A541"/></g></g>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B"><text x="400" y="250">механічне поранення,</text><text x="400" y="270">комахи, бактерії, грибки</text></g>
+        <path d="M396 262H350" stroke="#F2A541" stroke-width="3" marker-end="url(#ah)"/>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="rv" style="position:absolute;left:80px;top:470px;width:520px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="card" style="padding:12px 16px;"><p class="xs"><b class="a">Захисні</b><br><span class="m">ексудати, смоли — при пошкодженні</span></p></div>
+        <div class="card" style="padding:12px 16px;"><p class="xs"><b class="g">Резервні</b><br><span class="m">борошно насіння</span></p></div>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:80px;top:580px;width:520px;">Багаті родини: Fabaceae, Rosaceae, Rutaceae, Meliaceae; переважно тропічні.</p>
+      <div style="position:absolute;left:640px;top:180px;width:560px;">
+        <p class="s rv">Полісахариди природного походження, <b>рослинні гідроколоїди</b>; головний компонент соку — високомолекулярний вуглевод.</p>
+        <div class="pills rv" style="margin-top:14px;gap:7px;"><span class="pill a">загущувачі</span><span class="pill a">стабілізатори</span><span class="pill a">гелеутворювачі</span><span class="pill a">капсулювання</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:640px;top:376px;width:560px;padding:14px 22px;">
+        <p class="xs" style="margin-bottom:8px;"><b>Де працюють</b></p>
+        <p class="xs m">плавлені сири, морозиво, молочні продукти, фруктові й овочеві консерви, сирокопчені ковбаси, соуси, кетчупи, майонез, хліб, рибні консерви, низькожирні маргарини і спреди</p>
+        <p class="xs" style="margin-top:10px;">Комбінують з іншими: <b class="g">гуарова камедь + карагінан</b> — у виробництві сиру.</p>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:640px;top:566px;width:560px;">Складні ексудати: <b style="color:var(--text)">танно-камеді</b> (з дубильними речовинами), <b style="color:var(--text)">камедесмоли</b> (зі смолами), <b style="color:var(--text)">ароматичні камедесмоли</b> (зі смолами й ефірними оліями).</p>
+    </div>
+    <aside class="notes">Камеді (Е410–419) — полісахариди природного походження, рослинні гідроколоїди. Утворюються при механічних пошкодженнях кори деяких рослин, які виділяють сік із головним компонентом — високомолекулярним вуглеводом (рис. 4.6). Найбагатші камеденосні родини — Fabaceae, Rosaceae, Rutaceae, Meliaceae; більшість камеденосних сімейств тропічні.
+Камедеутворення виникає під впливом зовнішніх стимулів: механічних поранень, пошкоджень комахами чи личинками, бактеріальних чи грибкових захворювань. Тому камеді бувають захисними (ексудати, смоли) або резервними (борошно насіння). Часто утворюють складні ексудати: з дубильними речовинами (танно-камеді), смолами (камедесмоли), смолами й ефірними оліями (ароматичні камедесмоли).
+Функції: загущувачі, стабілізатори, гелеутворювачі, засоби для капсулювання. Застосування: плавлені сири, морозиво, молочні продукти, фруктові та овочеві консерви, сирокопчені ковбаси, соуси, кетчупи, майонез, хлібобулочні вироби, рибні консерви, низькожирні маргарини і спреди. Застосовують разом з іншими загущувачами: наприклад, гуарова камедь + карагінан у виробництві сиру.</aside>
+  </section>
+
+  <!-- ================= 16. Класифікація камедей ================= -->
+  <section class="slide" data-title="4.1.4 · Класифікація камедей">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="440" r="500" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.4 · <i>Класифікація камедей</i></p><h2 class="rv">Три способи розкласти камеді</h2></div></div>
+    <div class="card rv" data-depth="0.6" style="position:absolute;left:80px;top:180px;width:360px;height:456px;padding:20px 22px;">
+      <p class="kicker" style="font-size:13px;">I · за хімічними ознаками</p>
+      <ul class="ul" style="margin-top:10px;"><li><b>кислі</b> — глюкуронова й галактуронова кислоти <span class="m">(камеді акації)</span></li><li><b>кислі</b> — сульфатні групи <span class="m">(водорості, мохи)</span></li><li><b>нейтральні</b> — глюкоманнани, галактоманнани <span class="m">(насіння)</span></li></ul>
+    </div>
+    <div class="card rv" data-depth="0.8" style="position:absolute;left:460px;top:180px;width:360px;height:456px;padding:20px 22px;">
+      <p class="kicker" style="font-size:13px;">II · за розчинністю у воді</p>
+      <ul class="ul g" style="margin-top:10px;"><li><b>розчинні</b> — прозорі клейкі розчини <span class="m">(абрикосова, аравійська)</span></li><li><b>напіврозчинні</b> — частина набухає в желе <span class="m">(вишня, слива)</span></li><li><b>нерозчинні</b> — набухають, утворюючи желеподібні маси <span class="m">(трагакант, камедь моху)</span></li></ul>
+    </div>
+    <div class="card rv" data-depth="1.0" style="position:absolute;left:840px;top:180px;width:360px;height:456px;padding:20px 22px;">
+      <p class="kicker" style="font-size:13px;">III · за походженням</p>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;gap:12px;align-items:center;"><svg width="70" height="34" viewBox="0 0 130 60"><use href="#pod"/></svg><p class="xs"><b class="a">Е410</b> камедь бобів ріжкового дерева</p></div>
+        <div style="display:flex;gap:12px;align-items:center;"><svg width="70" height="34" viewBox="0 0 130 60" style="filter:hue-rotate(60deg)"><use href="#pod"/></svg><p class="xs"><b class="a">Е412</b> гуарова камедь</p></div>
+        <div style="display:flex;gap:12px;align-items:center;"><svg width="70" height="34" viewBox="0 0 120 120"><circle cx="60" cy="60" r="30" fill="none" stroke="#A387E6" stroke-width="5" stroke-dasharray="5 5"/><g fill="#A387E6"><ellipse cx="52" cy="54" rx="10" ry="6"/><ellipse cx="70" cy="68" rx="10" ry="6"/></g></svg><p class="xs"><b class="a">Е415</b> ксантанова камедь</p></div>
+      </div>
+    </div>
+    <aside class="notes">Класифікація камедей.
+I. За хімічними ознаками: кислі полісахариди, кислотність яких зумовлена глюкуроновою і галактуроновою кислотами (камеді різних видів акації); кислі полісахариди з сульфатними групами (водорості, мохи); нейтральні полісахариди — глюкоманнани або галактоманнани (у насінні).
+II. За розчинністю у воді: розчинні — повністю розчиняються з утворенням більш-менш прозорих клейких розчинів (абрикосова, аравійська); напіврозчинні — частково розчиняються, інша частина набухає у желеподібну масу, що переходить у розчин лише при великому розведенні (вишня, слива); нерозчинні — набухають, утворюючи желеподібні маси (трагакант, камедь моху).
+III. За походженням: найширше використовують камедь бобів ріжкового дерева (Е410), гуарову камедь (Е412), ксантанову камедь (Е415).
+Ксантан одержують мікробіологічно — тому піктограма у вигляді клітини (за загальною довідкою; у лекції спосіб одержання ксантану не описано).</aside>
+  </section>
+
+  <!-- ================= 17. Три камеді ================= -->
+  <section class="slide" data-title="4.1.4 · Е410, Е412, Е415">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="360" r="500" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.1.4 · <i>Найпоширеніші камеді</i></p><h2 class="rv">Ріжкове дерево, гуар і ксантан</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:176px;width:360px;height:300px;">
+        <h3 style="font-size:18px;"><span class="a">Е410</span> Ріжкове дерево</h3>
+        <ul class="ul" style="margin-top:6px;"><li>зі стручків середземноморської акації</li><li>схожа на гуарову за будовою</li><li>розчинна <b>лише при нагріванні</b>; зв’язує воду</li><li><b>синергізм</b> з ксантаном → загущувач чи гелеутворювач</li></ul>
+      </div>
+      <div class="card rv" style="position:absolute;left:460px;top:176px;width:360px;height:300px;">
+        <h3 style="font-size:18px;"><span class="a">Е412</span> Гуарова камедь</h3>
+        <ul class="ul" style="margin-top:6px;"><li>з насіння гуару (горохового дерева)</li><li>одна з <b>найекономічніших</b>; без смаку, малокалорійна</li><li>набухає і в <b>холодній, і в гарячій</b> воді</li><li>морозиво (проти льоду), сири, хліб, фарш, соуси</li></ul>
+      </div>
+      <div class="card rv" style="position:absolute;left:840px;top:176px;width:360px;height:300px;">
+        <h3 style="font-size:18px;"><span class="a">Е415</span> Ксантанова камедь</h3>
+        <ul class="ul" style="margin-top:6px;"><li>багато бічних ланцюгів, що відштовхуються</li><li><b>чудова загущуюча</b> здатність</li><li>стійка до <b>кислот і високих t°</b>, запобігає розшаруванню</li><li>підсилює желювання карагінанів і Е410</li></ul>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:496px;width:1120px;padding:16px 24px;display:flex;gap:24px;align-items:center;border-color:rgba(242,165,65,.6);">
+        <p class="big a" style="font-size:38px;flex-shrink:0;">1 : 4 <span class="m" style="font-size:22px;">або</span> 1 : 2</p>
+        <p class="xs"><b>Ксантанова + гуарова камедь</b> — суміш для посилення властивостей (п. 4.3). Інші дозування визначають дослідним шляхом.</p>
+      </div>
+    </div>
+    <aside class="notes">Камедь ріжкового дерева (Е410) одержують зі стручків середземноморської акації; за будовою схожа з гуаровою. Розчинна лише при нагріванні; у рідкому середовищі зв’язує воду і підвищує в’язкість. Характерна риса — синергізм з ксантаном та іншими гідроколоїдами, тому з ксантаном її застосовують як загущувач чи гелеутворювач.
+Гуарова камедь (Е412) — одна з найекономічніших і найпоширеніших добавок: без смаку, малокалорійна, характерний запах, колір від білого до жовтуватого. Отримують з насіння Cyamopsis tetragonoloba — гуару, «горохового дерева». Зв’язує воду, колоїдна система втрачає рухливість, в’язкість зростає. Рівномірно диспергується і набухає в холодній і гарячій воді; не розчиняється в органічних розчинниках. Загущувач і емульгатор у соусах, кетчупах, майонезі, молочних десертах, йогуртах, супах, напоях, хлібі; у молочних продуктах утримує вологу; у морозиві запобігає утворенню кристалів льоду; у сирах збільшує обсяг продукції; у хлібі поліпшує смак; у м’ясі підвищує пластичність фаршу.
+Ксантанова камедь (Е415) — полісахарид з великою кількістю бічних ланцюгів, між якими є електростатичне відштовхування через кислотні групи. Чудова загущуюча здатність; збільшує термін зберігання, запобігає розшаруванню, стійка до кислот і високих температур. Синергізм з гуаром та іншими гідроколоїдами; підсилює желюючу здатність карагінанів і камеді ріжкового дерева — тому застосовується в суміші з камеддю ріжкового дерева як загущувач і гелеутворювач.
+Суміш «ксантанова + гуарова камедь» у співвідношенні 1:4 або 1:2 (п. 4.3).
+⚠ У лекції Е410 названо «камеддю середземноморської акації»; ріжкове дерево (Ceratonia siliqua) — це не акація, хоча належить до бобових. Назва «Cyamopsistetraganoloba» — правильно Cyamopsis tetragonoloba.</aside>
+  </section>
+
+  <!-- ================= 18. Емульгатори ================= -->
+  <section class="slide" data-title="4.2 · Емульгатори">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="340" cy="400" r="380" fill="url(#glowS)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.2 · <i>Емульгатори</i></p><h2 class="rv">Мирять олію з водою</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Краплі олії в оболонці емульгатора у воді">
+        <rect x="80" y="180" width="500" height="380" rx="22" fill="#62A9E0" fill-opacity=".08" stroke="#3B342B"/>
+        <g class="bob"><use href="#emul" x="120" y="210" width="150" height="150"/></g>
+        <g class="bob2"><use href="#emul" x="320" y="250" width="120" height="120"/></g>
+        <g class="bob"><use href="#emul" x="230" y="380" width="130" height="130"/></g>
+        <g class="bob2"><use href="#emul" x="440" y="410" width="96" height="96"/></g>
+        <use href="#surf" x="500" y="200" width="40" height="80"/>
+        <g font-family="Manrope" font-weight="700" font-size="14"><text x="96" y="586" fill="#9CCBF0">● гідрофільна «голова» — у воді</text><text x="330" y="586" fill="#FFD39A">〰 гідрофобний «хвіст» — в олії</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div style="position:absolute;left:640px;top:180px;width:560px;">
+        <p class="s rv"><b>Поверхнево-активні речовини (ПАР)</b>, що створюють і зберігають однорідну суміш фаз, які не змішуються.</p>
+        <div class="rv" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+          <div class="card" style="padding:12px 16px;"><p class="xs"><b class="sk">Піноутворювачі</b><br><span class="m">рівномірно розподіляють газ у продукті</span></p></div>
+          <div class="card" style="padding:12px 16px;"><p class="xs"><b class="sk">Стабілізатори піни</b><br><span class="m">запобігають руйнуванню піни</span></p></div>
+        </div>
+      </div>
+      <div class="rv" style="position:absolute;left:640px;top:366px;width:560px;">
+        <p class="xs m">Технологічні функції:</p>
+        <div class="pills" style="margin-top:8px;gap:7px;"><span class="pill">емульгування, піноутворення</span><span class="pill">солюбілізація</span><span class="pill">комплекси з крохмалем</span><span class="pill">взаємодія з білками</span><span class="pill">зміна в’язкості</span><span class="pill">модифікація кристалів</span><span class="pill">змочування і змазування</span></div>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:640px;top:608px;width:560px;">Зазвичай це не індивідуальні речовини, а суміші під фірмовими назвами; можуть бути і стабілізаторами чи антиоксидантами.</p>
+    </div>
+    <aside class="notes">Емульгатори — поверхнево-активні речовини, які сприяють створенню або збереженню стійкості однорідної суміші двох або більше фаз, що не змішуються (рис. 4.7). Впливають на консистенцію, в’язкість, утворення емульсій і пін. Ті, що сприяють рівномірній дифузії газоподібної фази у рідкі або тверді продукти, — піноутворювачі; ті, що запобігають руйнуванню піни, — стабілізатори піни.
+Принцип дії — стабілізація харчової системи; поверхнева активність зазвичай більша, ніж у стабілізаторів. За хімічною природою — похідні одно- і багатоатомних спиртів, моно- і дисахаридів із залишками кислот різної будови.
+ПАР у харчовій промисловості зазвичай — багатокомпонентні суміші під фірмовими назвами; хімічна назва відповідає лише основній частині. Деякі мають суміжні функції — стабілізаторів чи антиоксидантів. Загальна властивість, що відрізняє емульгатори, — поверхнева активність.
+Основні функції: диспергування (емульгування, піноутворення); солюбілізація; комплексоутворення з крохмалем; взаємодія з білками; зміна в’язкості; модифікація кристалів; змочування і змазування.
+Схема молекули ПАР — загальновідома модель, у лекції не описана.</aside>
+  </section>
+
+  <!-- ================= 19. Лецитин ================= -->
+  <section class="slide" data-title="4.2.1 · Природні емульгатори">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="900" cy="380" r="420" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.2.1 · <i>Природні емульгатори</i></p><h2 class="rv">Лецитин — від слова «жовток»</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="rv" style="position:absolute;left:80px;top:180px;width:520px;">
+        <p class="s"><b class="a">Е322</b> лецитин (грец. λέκιθος — жовток) і фосфоліпіди; синтетичний аналог — <b class="a">Е442</b>.</p>
+        <p class="xs m" style="margin-top:10px;">Давні природні емульгатори: <b style="color:var(--text)">яєчний білок, лецитин, сапоніни</b> (відвар мильного кореня).</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:330px;width:520px;padding:16px 22px;">
+        <p class="xs" style="margin-bottom:8px;"><b>Джерела для промисловості</b></p>
+        <p class="xs"><b class="a">Соєвий</b> — з очищеної соєвої олії при низькій t°; містить фосфоліпіди, вітаміни А та Е.</p>
+        <p class="xs" style="margin-top:6px;"><b class="g">Соняшниковий</b> — інший склад жирних кислот і <b>без фітоестрогенів</b>.</p>
+      </div>
+      <div class="pills rv" style="position:absolute;left:80px;top:500px;width:520px;gap:7px;"><span class="pill a">шоколад, глазур</span><span class="pill a">маргарин</span><span class="pill a">майонез</span><span class="pill a">вафлі</span><span class="pill a">хліб, макарони</span><span class="pill a">змащення форм</span></div>
+    </div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Три ролі лецитину">
+        <rect x="660" y="180" width="540" height="456" rx="22" fill="#242019" stroke="#3B342B"/>
+        <text x="684" y="214" font-family="Manrope" font-weight="800" font-size="17" fill="#F5EDDF">Роль залежить від межі фаз</text>
+        <g transform="translate(684 240)"><rect width="110" height="100" rx="12" fill="#62A9E0" fill-opacity=".25"/><circle cx="40" cy="40" r="16" fill="#F2C14E"/><circle cx="74" cy="64" r="12" fill="#F2C14E"/><text x="130" y="36" font-family="Manrope" font-weight="800" font-size="16" fill="#F5EDDF">рідина — рідина</text><text x="130" y="60" font-family="Manrope" font-weight="700" font-size="15" fill="#9CCBF0">емульгатор:</text><text x="130" y="80" font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B">знижує поверхневий натяг</text></g>
+        <g transform="translate(684 370)"><rect width="110" height="100" rx="12" fill="#62A9E0" fill-opacity=".25"/><g fill="#8A5A2B"><rect x="22" y="30" width="18" height="18" rx="3"/><rect x="60" y="50" width="20" height="20" rx="3"/><rect x="36" y="64" width="14" height="14" rx="3"/></g><text x="130" y="36" font-family="Manrope" font-weight="800" font-size="16" fill="#F5EDDF">тверде — рідина</text><text x="130" y="60" font-family="Manrope" font-weight="700" font-size="15" fill="#B5EBD5">змочувальний і</text><text x="130" y="80" font-family="Manrope" font-weight="700" font-size="15" fill="#B5EBD5">диспергуючий агент</text></g>
+        <g transform="translate(684 500)"><rect width="110" height="100" rx="12" fill="#3B342B"/><rect x="16" y="30" width="78" height="22" rx="4" fill="#8E989E"/><rect x="16" y="56" width="78" height="22" rx="4" fill="#C98A3C"/><text x="130" y="36" font-family="Manrope" font-weight="800" font-size="16" fill="#F5EDDF">тверде — тверде</text><text x="130" y="60" font-family="Manrope" font-weight="700" font-size="15" fill="#FFD39A">мастильний агент,</text><text x="130" y="80" font-family="Manrope" font-weight="700" font-size="15" fill="#FFD39A">«не прилипає до форм»</text></g>
+      </svg>
+    </div>
+    <aside class="notes">Здавна як емульгатори використовують яєчний білок, природний лецитин, сапоніни (відвар мильного кореня). Природні емульгатори — фосфоліпіди: природні фосфатиди, лецитин (Е322) та їх синтетичний аналог — амонійні солі фосфатидилової кислоти (Е442). Фосфоліпіди — амфотерні ПАР.
+Лецитини (від грец. λέκιθος — жовток) — жовто-коричневі жирні субстанції тканин тварин і рослин, яєчних жовтків: ортофосфатна кислота, холін, жирні кислоти, гліцерин, гліколіпіди, фосфоліпіди (фосфатидилхолін, фосфатидилетаноламін).
+За лекцією, лецитин важливий для міжклітинного простору, нервової системи, мозку, печінки, відновлення клітин, транспортування поживних речовин; є антиоксидантом; при його дефіциті знижується ефективність ліків; важливий для розвитку дитини (грудне молоко багате на холін, суміші — менше).
+Як ПАР: між двома незмішуваними рідинами знижує поверхневий натяг (емульгатор); між твердою і рідкою фазою — змочувальний і диспергуючий агент; між твердими фазами — мастильний агент і агент звільнення (не прилипання до форм).
+Джерела: багаті на жир продукти (м’ясо птиці, риби, тварин); у промисловості — з побічних продуктів виробництва соєвого борошна та олії. Соєвий лецитин — з очищеної соєвої олії при низькотемпературній обробці; містить олію, фосфоліпіди, вітаміни А та Е. Соняшниковий — екстракцією з соняшникової олії; інший склад жирних кислот і не містить фітоестрогенів.
+Застосування: шоколад і глазур (зниження в’язкості в роті, антиоксидант проти старіння виробів), кондитерські, хлібобулочні й макаронні вироби, маргарин, майонез, вафлі, жироводні емульсії для змащення форм і листів.
+Оздоровчі твердження наведено за лекцією.</aside>
+  </section>
+
+  <!-- ================= 20. Синтетичні емульгатори ================= -->
+  <section class="slide" data-title="4.2.2 · Синтетичні емульгатори">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="420" r="500" fill="url(#glowS)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.2.2 · <i>Табл. 4.2 · дозволені в Україні</i></p><h2 class="rv">Синтетичні емульгатори та їх ДДС</h2></div></div>
+    <div class="L" data-depth="0.55"><svg width="1280" height="720" id="ddsSvg" aria-label="ДДС синтетичних емульгаторів, мг/кг маси тіла"></svg></div>
+    <div class="L" data-depth="0.95">
+      <p class="xs m rv" style="position:absolute;left:80px;top:612px;width:1120px;">ДДС — допустима добова доза, мг на 1 кг маси тіла (верхня межа з табл. 4.2). Сьогодні у промисловості використовують переважно синтетичні емульгатори.</p>
+    </div>
+    <aside class="notes">Таблиця 4.2. Основні групи емульгаторів (Е-номер · емульгатор · функції · ДДС, мг/кг маси тіла):
+Е432–436 — ефіри поліоксиетиленсорбітану — 0–25.
+Е471 — моно- і дигліцериди жирних кислот — емульгатор, стабілізатор — 125.
+Е472 (a–g) — ефіри гліцерину та кислот — емульгатор, стабілізатор, комплексоутворювач — 0–30.
+Е473 — ефіри сахарози та жирних кислот — емульгатор — 0–25.
+Е475–477 — ефіри полігліцерину — емульгатор — 0–25.
+Е481–482 — ефіри молочної кислоти (лактилати) — емульгатор, стабілізатор — 0–20.
+Е492 — ефіри сорбітану — емульгатор — 0–25.
+⚠ Для Е471 JECFA не встановлює числової ДДС («not limited»); у лекції — 125 мг/кг. На діаграмі — значення з лекції; стовпчик Е471 виходить за шкалу.</aside>
+  </section>
+
+  <!-- ================= 21. Проти злежування ================= -->
+  <section class="slide" data-title="4.2 · Проти злежування і грудкування">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="340" cy="420" r="380" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.2 · <i>Речовини, що запобігають злежуванню та грудкуванню</i></p><h2 class="rv">Щоб порошок залишався сипким</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Порошок без добавки злежується в грудки, з добавкою — сипкий">
+        <rect x="80" y="180" width="250" height="300" rx="22" fill="#242019" stroke="#3B342B"/><rect x="350" y="180" width="250" height="300" rx="22" fill="#242019" stroke="#3B342B"/>
+        <g fill="#F5EDDF"><circle cx="150" cy="300" r="34"/><circle cx="196" cy="290" r="26"/><circle cx="172" cy="330" r="28"/><circle cx="250" cy="360" r="30"/><circle cx="226" cy="388" r="20"/></g>
+        <g fill="#F5EDDF"><circle cx="400" cy="260" r="8"/><circle cx="440" cy="290" r="8"/><circle cx="480" cy="250" r="8"/><circle cx="520" cy="300" r="8"/><circle cx="420" cy="340" r="8"/><circle cx="470" cy="360" r="8"/><circle cx="540" cy="350" r="8"/><circle cx="500" cy="400" r="8"/><circle cx="440" cy="410" r="8"/><circle cx="560" cy="250" r="8"/></g>
+        <g fill="#A387E6"><circle cx="420" cy="276" r="3"/><circle cx="460" cy="270" r="3"/><circle cx="500" cy="276" r="3"/><circle cx="446" cy="340" r="3"/><circle cx="520" cy="330" r="3"/><circle cx="470" cy="388" r="3"/><circle cx="530" cy="380" r="3"/></g>
+        <g font-family="Manrope" font-weight="800" font-size="16" text-anchor="middle"><text x="205" y="456" fill="#FFB6A4">грудки</text><text x="475" y="456" fill="#B5EBD5">сипкий</text></g>
+        <g font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B" text-anchor="middle"><text x="205" y="214">без добавки</text><text x="475" y="214">+ Е559</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <p class="xs m rv" style="position:absolute;left:80px;top:500px;width:520px;">Порошки (борошно, сухе молоко, цукрова пудра) — двофазні системи з великою міжфазною поверхнею: звідси сипучість, ущільнення, злежування.</p>
+      <div style="position:absolute;left:640px;top:180px;width:560px;">
+        <p class="s rv">Злежування — <b>самовільне з’єднання частинок</b> у просторові структури: борошно в силосах, грудки цукру, солі.</p>
+        <p class="xs m rv" style="margin-top:12px;">За хімічною природою — силікати та алюмосилікати; це ПАР, що вносять у готові порошкоподібні чи кристалічні продукти.</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:640px;top:370px;width:560px;padding:18px 22px;border-color:rgba(163,135,230,.55);">
+        <p class="xs"><b class="pl">В Україні дозволено лише Е559</b> — алюмосилікат.</p>
+        <div class="pills" style="margin-top:10px;gap:6px;"><span class="pill pl sm">виноматеріали, соки</span><span class="pill pl sm">кондитерські (крім шоколадних)</span><span class="pill pl sm">обробка поверхні</span><span class="pill pl sm">екструзійні зернові</span><span class="pill pl sm">консервовані супи</span></div>
+      </div>
+    </div>
+    <aside class="notes">Речовини, що запобігають злежуванню та грудкуванню, — поверхнево-активні речовини, які вносять у готові порошкоподібні або кристалічні продукти. В основі злежування та грудкування — структуроутворення через самовільне з’єднання частинок дисперсної фази у просторові структури (злежування борошна у силосах, грудкування цукру, солі).
+Порошкоподібні продукти (борошно, сухе молоко, цукрова пудра) — двофазні системи, де частинки твердої фази розподілені в газоподібному середовищі; велика міжфазна поверхня зумовлює сипучість, ущільнення, злежування.
+За хімічною природою — силікати та алюмосилікати. В Україні дозволено лише алюмосилікат (Е559): оброблення виноматеріалів, плодоягідних соків; кондитерські вироби (окрім шоколадних), обробка поверхні, екструзійні зернові продукти, консервовані супи.
+Ілюстрація — умовна.</aside>
+  </section>
+
+  <!-- ================= 22. Застосування ================= -->
+  <section class="slide" data-title="4.3 · Як вводити стабілізатор">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="440" r="500" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.3 · <i>Застосування харчових стабілізаторів</i></p><h2 class="rv">Ввести загущувач — і без грудок</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="rv" style="position:absolute;left:80px;top:176px;width:1120px;">
+        <p class="xs m">Спершу визначають мету — <b style="color:var(--text)">в’язкість чи гель</b>. Далі враховують:</p>
+        <div class="pills" style="margin-top:8px;gap:7px;"><span class="pill">бажана текстура</span><span class="pill">точне дозування</span><span class="pill">t° і тривалість процесу</span><span class="pill">t° зберігання</span><span class="pill">диспергування на наявному устаткуванні</span><span class="pill">економічна доцільність</span></div>
+      </div>
+    </div>
+    <div class="card rv" data-depth="0.6" style="position:absolute;left:80px;top:300px;width:360px;height:336px;padding:18px 22px;">
+      <svg width="64" height="76" viewBox="0 0 100 120"><use href="#mixer"/></svg>
+      <h3 style="font-size:18px;margin-top:6px;">Інтенсивне перемішування</h3>
+      <p class="big a" style="font-size:28px;margin-top:6px;">&gt; 3000 об/хв</p>
+      <p class="xs m" style="margin-top:8px;">Відцентрова сила збільшує відстань між частинками — грудки не утворюються.</p>
+    </div>
+    <div class="card rv" data-depth="0.8" style="position:absolute;left:460px;top:300px;width:360px;height:336px;padding:18px 22px;">
+      <svg width="64" height="76" viewBox="0 0 120 120"><circle cx="60" cy="60" r="44" fill="#F2C14E" fill-opacity=".35"/><g fill="#F5EDDF"><circle cx="40" cy="44" r="6"/><circle cx="74" cy="40" r="6"/><circle cx="56" cy="70" r="6"/><circle cx="84" cy="76" r="6"/><circle cx="36" cy="80" r="6"/></g></svg>
+      <h3 style="font-size:18px;margin-top:6px;">Суспензія в олії</h3>
+      <p class="big a" style="font-size:28px;margin-top:6px;">≈ 20% олії</p>
+      <p class="xs m" style="margin-top:8px;">Частинки утворюють завись в олії і при переході у водну фазу не злипаються, а рівномірно гідратують.</p>
+    </div>
+    <div class="card rv" data-depth="1.0" style="position:absolute;left:840px;top:300px;width:360px;height:336px;padding:18px 22px;">
+      <svg width="76" height="76" viewBox="0 0 120 70"><use href="#powder"/></svg>
+      <h3 style="font-size:18px;margin-top:6px;">Суха суміш</h3>
+      <p class="big a" style="font-size:28px;margin-top:6px;">+ сухі</p>
+      <p class="xs m" style="margin-top:8px;">Загущувач заздалегідь змішують з іншими сухими інгредієнтами — частинки розходяться.</p>
+    </div>
+    <aside class="notes">При виборі добавки і технології враховують мету — підвищення в’язкості чи гелеутворення, а також: формування бажаної текстури; точне дозування (задана в’язкість чи гель певної міцності); температуру процесу і його тривалість; температуру зберігання готового продукту; можливість ефективного диспергування на наявному устаткуванні; економічну доцільність.
+Основні способи введення стабілізатора-загущувача без грудкування:
+• при інтенсивному перемішуванні (понад 3000 об/хв) — відцентрова сила збільшує відстань між частинками;
+• як суспензію в олії (близько 20% загального завантаження олії за рецептурою) — частинки утворюють завись і при переведенні у водну фазу не злипаються, ефективно гідратують;
+• у вигляді попередньо підготовленої суміші з сухими компонентами — частинки змішуються з іншими інгредієнтами, відстань між ними збільшується.
+Для посилення властивостей додають суміш «ксантанова + гуарова камедь» у співвідношенні 1:4 або 1:2; інші дозування визначають дослідним шляхом.
+Картки з’являються автоматично.</aside>
+  </section>
+
+  <!-- ================= 23. Переробка фруктів ================= -->
+  <section class="slide" data-title="4.3 · Стабілізатори у переробці фруктів">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="330" cy="420" r="380" fill="url(#glowT)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4.3 · <i>Переробка фруктів</i></p><h2 class="rv">Джеми, соки — і довгий трубопровід</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Пектин для фруктових продуктів">
+        <g class="bob" style="color:#C2185B"><use href="#jarC" x="90" y="190" width="150" height="180"/></g>
+        <g class="bob2"><use href="#apple" x="250" y="220" width="90" height="90"/></g>
+        <g class="bob"><use href="#citrus" x="350" y="230" width="76" height="76"/></g>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B"><text x="90" y="400">варення, джеми, повидло, конфітюри</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:430px;width:500px;padding:16px 22px;border-color:rgba(242,165,65,.55);">
+        <p class="xs"><b class="a">Пектин — головний стабілізатор:</b> споріднений за походженням (з яблук чи цитрусових), найменше змінює смак, робить продукт економічнішим, компенсує нестачу фруктової частини.</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:568px;width:500px;padding:12px 22px;">
+        <p class="xs"><b>Соки й напої:</b> однорідна консистенція без осідання м’якоті; збереження смаку концентратів.</p>
+      </div>
+      <div class="cmp sm" style="left:620px;top:176px;width:580px;grid-template-columns:150px 1fr 1fr;gap:6px 8px;">
+        <div class="h"></div><div class="h a">Камеді (загущувачі)</div><div class="h g">Гелеутворювачі</div>
+        <div class="c rv">Ціна</div><div class="rv ok">дешевші</div><div class="rv no">дорожчі</div>
+        <div class="c rv">Доза</div><div class="rv">—</div><div class="rv ok">іноді нижча</div>
+        <div class="c rv">В’язкість при варінні</div><div class="rv no">висока, зростає</div><div class="rv ok">низька при варінні й розливі</div>
+        <div class="c rv">Фасування</div><div class="rv no">ускладнене</div><div class="rv ok">майже повне навіть через довгий трубопровід</div>
+      </div>
+      <div class="card rv" style="position:absolute;left:620px;top:552px;width:580px;padding:12px 20px;">
+        <p class="xs"><b class="g">Яблучний пектин</b> виробляти складніше й дорожче (освітлення, менше пектину в сировині), але його властивості роблять його вкрай затребуваним для фруктової переробки.</p>
+      </div>
+    </div>
+    <aside class="notes">Стабілізатори всіх типів застосовують у консервах з овочів і фруктів; для варення, джемів, повидла, конфітюрів основний тип — пектини: вони споріднені за походженням (з яблук або цитрусових), найменше впливають на смак і роблять продукти економічнішими. Пектин відповідає за структуру при традиційному виготовленні джему; при зниженні вмісту фруктової частини нестачу природного гелеутворювача найприродніше компенсувати таким самим, отриманим з натуральної сировини.
+Пектини дають більше можливостей оптимізувати технологію під конкретне обладнання. Яблучні пектини: виробництво менш вигідне, ніж з цитрусових (складніша технологія, освітлення, менше пектину), але особливі властивості роблять їх вкрай затребуваними.
+Соки й напої: желюючі властивості пектинів дають однорідну консистенцію без осідання м’якоті; інше призначення — збереження смакових якостей концентратів. Для оптимізації собівартості знижують втрати сировини, а консистенцію отримують додатковими желюючими або загущуючими добавками.
+Як загущувачі використовують камеді; їх недолік — значна в’язкість, яка зростає під час варіння і ускладнює фасування. Тоді застосовують гелеутворювачі: дорожчі, але дозування іноді нижче, а головне — при температурі варіння і розливу маса має низьку в’язкість і фасується майже повністю навіть через довгий трубопровід.</aside>
+  </section>
+
+  <!-- ================= 24. Підсумок ================= -->
+  <section class="slide" data-title="Підсумок">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="400" r="420" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.4"><svg width="1280" height="720" aria-hidden="true">
+      <g class="spin" style="transform-origin:640px 410px"><circle cx="640" cy="410" r="214" fill="none" stroke="#3B342B" stroke-width="2" stroke-dasharray="4 10"/><circle cx="640" cy="196" r="9" fill="#6CC3A0"/><circle cx="854" cy="410" r="8" fill="#F2A541"/><circle cx="640" cy="624" r="9" fill="#62A9E0"/><circle cx="426" cy="410" r="8" fill="#E8573A"/></g>
+      <circle cx="640" cy="410" r="140" fill="#242019" stroke="#3B342B" stroke-width="2"/></svg></div>
+    <div class="L" data-depth="0.8">
+      <div class="head"><p class="kicker rv">Підсумок</p><h2 class="rv">П’ять думок про консистенцію</h2></div>
+      <p class="rv" style="position:absolute;left:520px;top:368px;width:240px;text-align:center;font-family:var(--display);font-weight:700;font-size:20px;line-height:1.35;"><span class="g">структура</span> і <span class="a">текстура</span><br>під контролем</p>
+    </div>
+    <div class="L" data-depth="1.15">
+      <div class="frag card" style="position:absolute;left:500px;top:150px;width:280px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">1</b> Стабілізатори Е400–Е449 формують і зберігають консистенцію</p></div>
+      <div class="frag card" style="position:absolute;left:840px;top:290px;width:270px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">2</b> Загущувачі — полісахариди: крохмалі, патока, целюлоза підвищують в’язкість</p></div>
+      <div class="frag card" style="position:absolute;left:770px;top:520px;width:280px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">3</b> Пектин, желатин, альгінати, агар, карагінан, камеді — гелі й стабільні системи</p></div>
+      <div class="frag card" style="position:absolute;left:230px;top:520px;width:280px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">4</b> Емульгатори — ПАР: лецитин Е322 і синтетичні Е432–Е492</p></div>
+      <div class="frag card" style="position:absolute;left:170px;top:290px;width:270px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">5</b> Результат залежить від мети, дозування і способу введення</p></div>
+    </div>
+    <aside class="notes">Підсумок лекції:
+1. Стабілізатори (Е400–Е449) формують і зберігають консистенцію, текстуру, форму; дають змогу поліпшити якість, подовжити зберігання і знизити собівартість.
+2. Загущувачі — полісахариди-гідроколоїди; модифіковані крохмалі (4 типи модифікації), патока і продукти гідролізу крохмалю, модифікована целюлоза.
+3. Пектин (гель з цукром і кислотою або Ca²⁺), желатин (колаген, типи А і В), альгінати, агар (у 8 разів менше за желатин), карагінан, камеді Е410/Е412/Е415 та їх синергізм.
+4. Емульгатори — ПАР: природні (лецитин, фосфоліпіди) і синтетичні (табл. 4.2); проти злежування — лише Е559.
+5. Вибір і введення: мета (в’язкість чи гель), дозування, t°, устаткування; без грудок — перемішування > 3000 об/хв, суспензія в олії, суха суміш.
+Вузли з’являються автоматично.</aside>
+  </section>
+
+  <!-- ===== Нижня панель ===== -->
+  <div class="bar-nav">
+    <div class="ttl" id="ttl"></div>
+    <nav class="dots" id="dots" aria-label="Навігація по слайдах"></nav>
+    <div class="cnt" id="cnt"></div>
+  </div>
+  <div class="notes-panel" id="notesPanel"></div>
+</div>
+
+<script>
+/* ---------- масштабування полотна 1280×720 ---------- */
+const W = 1280, H = 720, stage = document.getElementById('stage');
+function fit(){ const s = Math.min(innerWidth / W, innerHeight / H); stage.style.transform = `scale(${s})`; stage.style.left = (innerWidth - W*s)/2 + 'px'; stage.style.top = (innerHeight - H*s)/2 + 'px'; }
+addEventListener('resize', fit); document.addEventListener('fullscreenchange', fit); fit();
+const STATIC = document.documentElement.classList.contains('static');
+const NS = 'http://www.w3.org/2000/svg';
+
+/* ---------- кольорові кола: [data-wheel="cx,cy,R,r,n"] → n кольорових секторів ---------- */
+document.querySelectorAll('[data-wheel]').forEach(g=>{
+  const [cx, cy, R, r, n] = g.dataset.wheel.split(',').map(Number);
+  let s = '';
+  for(let i=0;i<n;i++){
+    const a0 = i/n*Math.PI*2 - Math.PI/2, a1 = (i+1)/n*Math.PI*2 - Math.PI/2, la = 0;
+    const p = (rad, a)=>`${(cx + rad*Math.cos(a)).toFixed(2)} ${(cy + rad*Math.sin(a)).toFixed(2)}`;
+    const d = r > 0 ? `M${p(R,a0)} A${R} ${R} 0 ${la} 1 ${p(R,a1)} L${p(r,a1)} A${r} ${r} 0 ${la} 0 ${p(r,a0)}Z` : `M${cx} ${cy} L${p(R,a0)} A${R} ${R} 0 ${la} 1 ${p(R,a1)}Z`;
+    s += `<path d="${d}" fill="hsl(${Math.round(i/n*360)} 72% 56%)"/>`;
+  }
+  g.innerHTML = s;
+});
+
+
+/* ---------- слайд 5: плитки модифікованих крохмалів ---------- */
+(function(){
+  const T = [['Е1400','декстрин харчовий'],['Е1404','оксидований крохмаль'],['Е1410','монокрохмалю фосфат'],['Е1412','дикрохмалю фосфат'],['Е1413','фосфатованого крохмалю фосфат'],['Е1414','ацетильованого крохмалю фосфат'],
+    ['Е1420','крохмаль ацетильований'],['Е1422','ацетильованого крохмалю адипат'],['Е1440','гідроксипропіл&shy;крохмаль'],['Е1442','гідроксипропіл&shy;крохмалю фосфат'],['Е1450','крохмалю октеніл&shy;сукцинат натрію']];
+  let h = '';
+  T.forEach((t, i) => { const c = i % 4, r = Math.floor(i / 4);
+    h += `<div class="tile rv" style="left:${640 + c*142}px;top:${214 + r*112}px;width:132px;height:100px;padding:10px 12px;"><div class="code" style="font-size:18px">${t[0]}</div><div class="nm" style="font-size:12.5px;margin-top:6px">${t[1]}</div></div>`; });
+  document.getElementById('starchTiles').outerHTML = h;
+})();
+
+/* ---------- слайд 20: ДДС синтетичних емульгаторів ---------- */
+(function(){
+  const D = [['Е432–436','ефіри поліоксиетиленсорбітану',25],['Е471','моно- і дигліцериди жирних кислот',125],['Е472 a–g','ефіри гліцерину та кислот',30],['Е473','ефіри сахарози та жирних кислот',25],
+    ['Е475–477','ефіри полігліцерину',25],['Е481–482','лактилати',20],['Е492','ефіри сорбітану',25]];
+  const X0 = 560, K = 14, MAX = 40;   // шкала до 40 мг/кг
+  let s = '<g stroke="#3B342B" stroke-width="1.5">';
+  [0,10,20,30,40].forEach(v => s += `<path d="M${X0+v*K} 176V${176+D.length*56}"/>`);
+  s += '</g><g font-family="Unbounded" font-weight="600" font-size="13" fill="#BDB09B" text-anchor="middle">';
+  [0,10,20,30,40].forEach(v => s += `<text x="${X0+v*K}" y="${176+D.length*56+22}">${v}</text>`);
+  s += '</g>';
+  D.forEach(([c, n, v], i) => { const y = 186 + i*56, w = Math.min(v, MAX)*K, over = v > MAX;
+    s += `<text x="80" y="${y+16}" font-family="Unbounded" font-weight="700" font-size="16" fill="#F2A541">${c}</text><text x="80" y="${y+36}" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">${n}</text>`;
+    s += `<rect class="grow" x="${X0}" y="${y+6}" width="${w}" height="24" rx="12" fill="${over ? '#E8573A' : '#62A9E0'}" style="transform-origin:${X0}px ${y+18}px;animation-delay:${(0.3+i*0.08).toFixed(2)}s"/>`;
+    s += `<text class="lbl" x="${X0+w+12}" y="${y+24}" font-family="Unbounded" font-weight="700" font-size="15" fill="#F5EDDF">${over ? v + ' →' : '0–' + v}</text>`; });
+  document.getElementById('ddsSvg').innerHTML = s;
+})();
+
+
+/* =========================================================
+   ДВИЖОК СЛАЙДІВ З ПАРАЛАКСОМ (як у Темі 1)
+   ========================================================= */
+const slides = [...document.querySelectorAll('.slide')];
+const SHIFT = 520, DUR = 1050, EASE = 'cubic-bezier(.22,.8,.18,1)';
+let cur = -1, busy = false;
+const layers = s => [...s.querySelectorAll('[data-depth]')];
+const frags = s => [...s.querySelectorAll('.frag')];
+const dotsNav = document.getElementById('dots');
+slides.forEach((_, i) => { const b = document.createElement('button'); b.setAttribute('aria-label', 'Слайд ' + (i + 1));
+  b.onclick = e => { e.stopPropagation(); go(i, i > cur ? 1 : -1); }; dotsNav.appendChild(b); });
+function ui(){
+  document.querySelectorAll('#dots button').forEach((d, i) => d.classList.toggle('on', i === cur));
+  document.getElementById('cnt').textContent = `${cur + 1} / ${slides.length}`;
+  document.getElementById('ttl').textContent = slides[cur].dataset.title || '';
+  document.getElementById('prog').style.width = ((cur + 1) / slides.length * 100) + '%';
+  const n = slides[cur].querySelector('.notes'); document.getElementById('notesPanel').textContent = n ? n.textContent.trim() : '';
+  history.replaceState(null, '', '#' + (cur + 1));
+}
+function go(i, dir = 1){
+  if (i < 0 || i >= slides.length || i === cur || busy) return;
+  const from = slides[cur], to = slides[i];
+  to.classList.add('active');
+  const fs = frags(to);
+  fs.forEach(f => { f.style.transitionDelay = '0s'; f.classList.remove('on'); });
+  void to.offsetWidth;
+  fs.forEach((f, k) => { f.style.transitionDelay = STATIC ? '0s' : (0.75 + k * 0.35) + 's'; f.classList.add('on'); });
+  cur = i; ui();
+  if (STATIC || !from) { if (from) from.classList.remove('active'); return; }
+  busy = true;
+  layers(from).forEach(el => { const d = +el.dataset.depth;
+    el.animate([{ transform: 'translateX(0)', opacity: 1 }, { transform: `translateX(${-dir * SHIFT * d}px)`, opacity: 0 }], { duration: DUR * .8, easing: EASE, fill: 'forwards' }); });
+  layers(to).forEach(el => { const d = +el.dataset.depth;
+    el.animate([{ transform: `translateX(${dir * SHIFT * d}px)`, opacity: 0 }, { transform: 'translateX(0)', opacity: 1 }], { duration: DUR, easing: EASE }); });
+  to.querySelectorAll('.rv').forEach((el, k) => el.animate([{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 650, delay: 250 + Math.min(k, 14) * 60, easing: 'ease-out', fill: 'backwards' }));
+  setTimeout(() => { from.classList.remove('active'); layers(from).forEach(el => el.getAnimations().forEach(a => a.cancel())); busy = false; }, DUR * .8);
+}
+function next(){ go(cur + 1, 1); }
+function prev(){ go(cur - 1, -1); }
+if (!STATIC) stage.addEventListener('mousemove', e => {
+  const mx = e.clientX / innerWidth - .5, my = e.clientY / innerHeight - .5;
+  layers(slides[cur]).forEach(el => { const d = +el.dataset.depth; el.style.translate = `${-mx * d * 30}px ${-my * d * 18}px`; });
+});
+addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') go(0, -1);
+  else if (e.key === 'End') go(slides.length - 1, 1);
+  else if (/^[fFаА]$/.test(e.key)) { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
+  else if (/^[nNтТ]$/.test(e.key)) document.getElementById('notesPanel').classList.toggle('on');
+});
+addEventListener('click', e => { if (e.target.closest('button,a,[data-no-nav]')) return; e.clientX > innerWidth / 2 ? next() : prev(); });
+let wheelLock = false;
+addEventListener('wheel', e => { if (wheelLock || Math.abs(e.deltaY) < 12) return; wheelLock = true; setTimeout(() => wheelLock = false, 900); e.deltaY > 0 ? next() : prev(); }, { passive: true });
+let tx = 0; addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+addEventListener('touchend', e => { const d = tx - e.changedTouches[0].clientX; if (Math.abs(d) > 50) d > 0 ? next() : prev(); }, { passive: true });
+
+const start = parseInt(location.hash.slice(1), 10);
+go(start >= 1 && start <= slides.length ? start - 1 : 0, 1);
+addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1), 10) - 1; if (n >= 0 && n < slides.length && n !== cur) go(n, n > cur ? 1 : -1); });
+
+/* перевірка: текст за межами полотна або під нижньою панеллю (дивіться консоль) */
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+  const bad = [];
+  slides.forEach((s, i) => { const was = s.classList.contains('active'); s.classList.add('active');
+    s.querySelectorAll('p,h1,h2,h3,.pill,.chip').forEach(el => { const r = el.getBoundingClientRect(), sr = stage.getBoundingClientRect(), k = sr.width / W;
+      if (r.width && (r.left < sr.left - 1 || r.right > sr.right + 1 || r.top < sr.top - 1 || (r.bottom - sr.top) / k > H - 56)) bad.push(i + 1); });
+    if (!was) s.classList.remove('active'); });
+  document.body.dataset.overflow = [...new Set(bad)].join(',');
+  if (bad.length) console.warn('Елементи за межами / під панеллю на слайдах:', [...new Set(bad)]);
+});
+</script>
+</body>
+</html>

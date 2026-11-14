@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Смак і аромат — Тема 3</title>
+<script>
+  // ?static — без анімацій (друк, скриншоти, перевірка)
+  if (location.search.includes('static') || matchMedia('(prefers-reduced-motion: reduce)').matches)
+    document.documentElement.classList.add('static');
+</script>
+<style>
+/* =========================================================
+   Тема 3. Харчові добавки, що впливають на смак та аромат харчових продуктів
+   Стиль — як у презентаціях Тем 1–2: «нічна лабораторія», лише векторна графіка, паралакс-шари.
+   Шрифти — локальні (папка fonts/), працює без інтернету.
+   ========================================================= */
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-cyrillic-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Unbounded";font-weight:200 900;font-display:swap;src:url(fonts/unbounded-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-cyrillic.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-cyrillic-ext.woff2) format("woff2");unicode-range:U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-latin.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Manrope";font-weight:200 800;font-display:swap;src:url(fonts/manrope-latin-ext.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+1E00-1E9F,U+1EF2-1EFF,U+20A0-20AB,U+20AD-20C0,U+2C60-2C7F,U+A720-A7FF}
+
+:root{
+  --bg:#14120F; --card:#242019; --line:#3B342B;
+  --text:#F5EDDF; --muted:#BDB09B;
+  --amber:#F2A541; --tomato:#E8573A; --mint:#6CC3A0; --plum:#A387E6; --sky:#62A9E0;
+  --display:"Unbounded","Segoe UI",Arial,sans-serif;
+  --body:"Manrope","Segoe UI",Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--body);-webkit-font-smoothing:antialiased}
+
+/* ---------- Полотно 1280×720 ---------- */
+.stage{position:fixed;width:1280px;height:720px;overflow:hidden;background:var(--bg);transform-origin:0 0}
+.slide{position:absolute;inset:0;visibility:hidden}
+.slide.active{visibility:visible}
+.L{position:absolute;inset:0;pointer-events:none}
+.L *{pointer-events:auto}
+[data-depth]{transition:translate .9s cubic-bezier(.2,.7,.2,1)}
+.notes{display:none}
+
+/* ---------- Типографіка ---------- */
+.kicker{font-weight:800;font-size:15px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}
+.kicker i{font-style:normal;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.12;letter-spacing:-.01em}
+h1{font-size:44px} h2{font-size:34px} h3{font-size:21px;line-height:1.25}
+p{font-size:23px;line-height:1.4}
+.s{font-size:19px;line-height:1.35}
+.xs{font-size:16px;line-height:1.35}
+.m{color:var(--muted)}
+.a{color:var(--amber)} .t{color:var(--tomato)} .g{color:var(--mint)} .pl{color:var(--plum)} .sk{color:var(--sky)}
+b{font-weight:800}
+.head{position:absolute;left:80px;top:54px;right:80px}
+.head h2{margin-top:10px}
+
+/* ---------- Компоненти ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px 24px}
+.pill{display:inline-block;font-weight:800;font-size:17px;padding:7px 14px;border-radius:999px;background:#2E2820;color:var(--text);border:1px solid var(--line)}
+.pill.a{background:rgba(242,165,65,.16);border-color:rgba(242,165,65,.45);color:#FFD39A}
+.pill.t{background:rgba(232,87,58,.16);border-color:rgba(232,87,58,.5);color:#FFB6A4}
+.pill.g{background:rgba(108,195,160,.15);border-color:rgba(108,195,160,.45);color:#B5EBD5}
+.pill.pl{background:rgba(163,135,230,.16);border-color:rgba(163,135,230,.5);color:#D8CBFA}
+.pills{display:flex;flex-wrap:wrap;gap:9px}
+.chip{position:absolute;font-family:var(--display);font-weight:700;font-size:20px;padding:10px 16px;border-radius:14px;background:rgba(245,237,223,.06);border:1px solid rgba(245,237,223,.18);color:var(--text)}
+.num{display:inline-flex;width:38px;height:38px;border-radius:50%;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:17px;background:var(--amber);color:#1B1408}
+.ico{width:64px;height:64px;display:block}
+
+/* кроки, що з'являються автоматично по черзі */
+.frag{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+.frag.on{opacity:1;transform:none}
+
+/* палітра натуральних барвників (слайд 8) */
+.sw{position:absolute;width:262px;height:140px;padding:0;overflow:hidden}
+.sw .bar{height:36px}
+.sw .in{padding:10px 16px}
+.sw .code{font-family:var(--display);font-weight:700;font-size:17px}
+.sw .nm{font-weight:800;font-size:17px;margin-left:6px}
+.sw .src{font-size:15px;color:var(--muted);margin-top:4px;line-height:1.3}
+
+/* таблиця порівняння (слайд 10) */
+.cmp{position:absolute;left:80px;top:180px;width:1120px;display:grid;grid-template-columns:270px 1fr 1fr;gap:8px 10px}
+.cmp > div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 14px;font-size:17px;line-height:1.3;display:flex;align-items:center;gap:10px}
+.cmp > .h{background:none;border:none;font-family:var(--display);font-weight:700;font-size:18px;padding:0 14px}
+.cmp > .c{font-weight:800;color:var(--muted)}
+.ok::before{content:"✓";color:var(--mint);font-weight:900}
+.no::before{content:"✕";color:var(--tomato);font-weight:900}
+
+/* навігація */
+.bar-nav{position:absolute;left:0;right:0;bottom:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;z-index:20}
+.bar-nav .ttl{font-size:14px;font-weight:700;color:var(--muted);width:340px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dots{display:flex;gap:7px}
+.dots button{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:var(--muted);opacity:.3;cursor:pointer;transition:.3s}
+.dots button.on{background:var(--amber);opacity:1;transform:scale(1.4)}
+.cnt{width:340px;text-align:right;font-family:var(--display);font-weight:600;font-size:14px;color:var(--muted)}
+.prog{position:absolute;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--amber),var(--tomato),var(--plum));z-index:20;transition:width .6s ease}
+.notes-panel{position:absolute;left:40px;right:40px;bottom:66px;max-height:300px;overflow:auto;background:rgba(20,18,15,.96);border:1px solid var(--amber);border-radius:18px;padding:18px 22px;z-index:30;display:none;white-space:pre-line;font-size:17px;line-height:1.5}
+.notes-panel.on{display:block}
+
+/* ---------- Анімації ілюстрацій (лише на активному слайді) ---------- */
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fall{0%{transform:translateY(-10px);opacity:0}15%{opacity:1}100%{transform:translateY(110px);opacity:0}}
+@keyframes grow{from{transform:scaleX(0);opacity:0}to{transform:none;opacity:1}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes drain{from{transform:scaleY(1)}to{transform:scaleY(.6)}}
+@keyframes draw{from{stroke-dashoffset:var(--len,1200)}to{stroke-dashoffset:0}}
+.active .bob{animation:bob 6s ease-in-out infinite}
+.active .bob2{animation:bob 7.5s ease-in-out -2s infinite}
+.spin,.spinr,.grow{transform-box:view-box}
+.active .spin{animation:spin 40s linear infinite}
+.active .spinr{animation:spin 30s linear reverse infinite}
+.active .fall{animation:fall 2.2s ease-in infinite}
+.active .grow{animation:grow .6s cubic-bezier(.2,.8,.2,1) both}
+.active .lbl{animation:fadeIn .7s ease 1.2s both}
+.active .drain{animation:drain 2.4s cubic-bezier(.4,0,.2,1) .8s both;transform-box:fill-box;transform-origin:50% 100%}
+.active .draw{stroke-dasharray:var(--len,1200);animation:draw 1.6s cubic-bezier(.4,0,.2,1) .5s both}
+html.static *, html.static *::before{animation:none !important;transition:none !important}
+html.static .frag{opacity:1;transform:none}
+
+/* ---------- Тема 3: додаткові компоненти ---------- */
+.big{font-family:var(--display);font-weight:900;line-height:1}
+.sel{font-family:var(--body);font-weight:800;font-size:15px;padding:6px 12px;border-radius:999px;background:#2E2820;color:var(--text);border:1px solid var(--line);cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.sel:hover{border-color:var(--amber)}
+.sel.on{background:var(--amber);color:#1B1408;border-color:var(--amber)}
+.cmp.sm > div{font-size:15.5px;padding:8px 12px}
+.tile{position:absolute;width:150px;height:100px;border-radius:16px;background:var(--card);border:1px solid var(--line);padding:12px 14px}
+.tile .code{font-family:var(--display);font-weight:700;font-size:22px;color:var(--amber)}
+.tile .nm{font-size:14px;font-weight:700;color:var(--muted);margin-top:8px;line-height:1.25}
+.ul{list-style:none}
+.ul li{font-size:16px;line-height:1.35;padding-left:18px;position:relative;margin-top:6px}
+.ul li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;border-radius:50%;background:var(--amber)}
+.ul.g li::before{background:var(--mint)} .ul.t li::before{background:var(--tomato)} .ul.pl li::before{background:var(--plum)}
+@keyframes steam{0%{transform:translateY(8px);opacity:0}40%{opacity:.85}100%{transform:translateY(-18px);opacity:0}}
+.active .steam{animation:steam 3.2s ease-in-out infinite}
+.active .steam2{animation:steam 3.2s ease-in-out -1.6s infinite}
+.pill.sm{font-size:14px;padding:5px 11px}
+</style>
+</head>
+<body>
+
+<!-- ===== Векторні символи ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="glowA" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F2A541" stop-opacity=".33"/><stop offset="1" stop-color="#F2A541" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowT" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#E8573A" stop-opacity=".28"/><stop offset="1" stop-color="#E8573A" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowM" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#6CC3A0" stop-opacity=".24"/><stop offset="1" stop-color="#6CC3A0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowP" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#A387E6" stop-opacity=".28"/><stop offset="1" stop-color="#A387E6" stop-opacity="0"/></radialGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.4" fill="#F5EDDF" fill-opacity=".08"/></pattern>
+    <linearGradient id="glass" x1="0" x2="1"><stop offset="0" stop-color="#F5EDDF" stop-opacity=".16"/><stop offset=".5" stop-color="#F5EDDF" stop-opacity=".04"/><stop offset="1" stop-color="#F5EDDF" stop-opacity=".12"/></linearGradient>
+    <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#FFE7A3"/><stop offset=".5" stop-color="#E0A93B"/><stop offset="1" stop-color="#9C6A16"/></linearGradient>
+    <linearGradient id="anto" x1="0" x2="1"><stop offset="0" stop-color="#D81B4A"/><stop offset=".5" stop-color="#8E3FA8"/><stop offset="1" stop-color="#2F5FD0"/></linearGradient>
+    <!-- Крапля (колір через currentColor) -->
+    <symbol id="drop" viewBox="0 0 60 80"><path d="M30 4C30 4 6 34 6 52a24 24 0 0 0 48 0C54 34 30 4 30 4Z" fill="currentColor"/><path d="M18 50a12 12 0 0 0 8 14" stroke="#fff" stroke-opacity=".45" stroke-width="4" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Пробірка з рідиною (currentColor) -->
+    <symbol id="tube" viewBox="0 0 70 260"><rect x="6" y="2" width="58" height="14" rx="5" fill="#8E989E"/><path d="M12 16H58V226A23 23 0 0 1 12 226Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M15 110H55V226A20 20 0 0 1 15 226Z" fill="currentColor"/><path d="M15 110Q35 102 55 110V118Q35 110 15 118Z" fill="#fff" fill-opacity=".25"/><path d="M22 40V96" stroke="#fff" stroke-opacity=".3" stroke-width="5" stroke-linecap="round"/></symbol>
+    <!-- Банка (рідина currentColor) -->
+    <symbol id="jarC" viewBox="0 0 200 240"><rect x="48" y="8" width="104" height="30" rx="7" fill="#C97F25"/><path d="M40 54Q40 40 54 40H146Q160 40 160 54V206Q160 230 136 230H64Q40 230 40 206Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path class="fillc" d="M46 96H154V204Q154 224 134 224H66Q46 224 46 204Z" fill="currentColor"/><path d="M54 60V90" stroke="#fff" stroke-opacity=".35" stroke-width="6" stroke-linecap="round"/></symbol>
+    <!-- Буряк, морква, жовток -->
+    <symbol id="beet" viewBox="0 0 100 120"><path d="M40 30Q30 8 18 6M50 28Q52 6 62 2M58 32Q74 14 86 16" stroke="#6CC3A0" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M50 30C20 30 10 60 22 82c8 14 20 22 28 36 8-14 20-22 28-36 12-22 2-52-28-52z" fill="#A61E4D"/><path d="M30 60q4-14 16-18" stroke="#fff" stroke-opacity=".35" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="carrot" viewBox="0 0 100 120"><path d="M50 26Q40 6 30 4M50 26Q56 4 70 2M50 26Q66 12 82 14" stroke="#6CC3A0" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M30 30H70L54 116Q50 122 46 116Z" fill="#F07C2B"/><path d="M38 48h10M42 70h10M44 92h8" stroke="#B4521A" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="egg" viewBox="0 0 120 100"><ellipse cx="60" cy="54" rx="56" ry="42" fill="#F5EDDF"/><circle cx="62" cy="52" r="24" fill="#F2B23A"/><circle cx="54" cy="44" r="6" fill="#fff" fill-opacity=".55"/></symbol>
+    <!-- Око -->
+    <symbol id="eyeO" viewBox="0 0 300 180"><path d="M8 90Q150 -40 292 90Q150 220 8 90Z" fill="#F5EDDF"/></symbol>
+    <!-- Ягоди -->
+    <symbol id="berries" viewBox="0 0 120 100"><path d="M60 8Q60 30 40 44M60 8Q64 30 82 42" stroke="#6CC3A0" stroke-width="5" fill="none"/><circle cx="38" cy="58" r="20" fill="#5B2A86"/><circle cx="76" cy="56" r="20" fill="#3B2F8F"/><circle cx="58" cy="78" r="18" fill="#7A1F5C"/><circle cx="32" cy="52" r="5" fill="#fff" fill-opacity=".4"/></symbol>
+    <!-- Шматок м'яса (колір currentColor) -->
+    <symbol id="steak" viewBox="0 0 160 110"><path d="M20 40C30 10 90 4 126 18c30 12 32 50 10 70-24 22-86 22-112 4C8 80 12 58 20 40Z" fill="currentColor"/><path d="M34 46c20-18 60-22 86-10" stroke="#F5EDDF" stroke-opacity=".7" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="104" cy="62" r="10" fill="#F5EDDF" fill-opacity=".85"/></symbol>
+    <!-- Щит, лупа, сонце, термометр, полум'я, годинник -->
+    <symbol id="shield" viewBox="0 0 100 110"><path d="M50 4L92 20V52C92 80 72 98 50 106 28 98 8 80 8 52V20Z" fill="currentColor"/><path d="M30 54L44 68 72 40" stroke="#14120F" stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="sun" viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#F2C14E"/><g stroke="#F2C14E" stroke-width="7" stroke-linecap="round"><path d="M50 8v12M50 80v12M8 50h12M80 50h12M20 20l9 9M71 71l9 9M80 20l-9 9M29 71l-9 9"/></g></symbol>
+    <symbol id="thermo" viewBox="0 0 60 120"><rect x="20" y="6" width="20" height="80" rx="10" fill="none" stroke="#F5EDDF" stroke-width="5"/><circle cx="30" cy="96" r="18" fill="#E8573A"/><rect x="26" y="40" width="8" height="56" fill="#E8573A"/></symbol>
+    <symbol id="flame" viewBox="0 0 80 100"><path d="M40 4C52 26 72 38 72 62a32 32 0 0 1-64 0C8 46 20 36 26 22c4 12 10 18 16 20C44 30 40 18 40 4Z" fill="#E8573A"/><path d="M40 52c8 10 16 14 16 26a16 16 0 0 1-32 0c0-8 6-12 8-20 2 6 6 8 8-6Z" fill="#F2C14E"/></symbol>
+    <symbol id="clock" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#F5EDDF" stroke-width="7"/><path d="M50 26V52L66 62" stroke="#F2A541" stroke-width="7" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="lens" viewBox="0 0 100 100"><circle cx="42" cy="42" r="28" fill="none" stroke="#F5EDDF" stroke-width="8"/><path d="M62 62L90 90" stroke="#F5EDDF" stroke-width="10" stroke-linecap="round"/></symbol>
+    <symbol id="ban" viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="none" stroke="#E8573A" stroke-width="5"/><path d="M11 11L37 37" stroke="#E8573A" stroke-width="5"/></symbol>
+    <symbol id="leaf" viewBox="0 0 100 100"><path d="M12 88C12 44 38 14 92 8 88 62 58 88 12 88Z" fill="currentColor"/><path d="M14 86L64 36" stroke="#14120F" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="flower" viewBox="0 0 100 100"><g fill="#C2185B"><circle cx="50" cy="26" r="16"/><circle cx="74" cy="44" r="16"/><circle cx="66" cy="72" r="16"/><circle cx="34" cy="72" r="16"/><circle cx="26" cy="44" r="16"/></g><circle cx="50" cy="52" r="12" fill="#F2C14E"/></symbol>
+    <symbol id="flask" viewBox="0 0 100 120"><path d="M36 6H64M40 6V42L10 104Q6 114 18 114H82Q94 114 90 104L60 42V6" fill="none" stroke="#F5EDDF" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><path d="M22 84H78L88 104Q90 110 82 110H18Q10 110 12 104Z" fill="currentColor"/></symbol>
+    <symbol id="glassD" viewBox="0 0 80 110"><path d="M8 8H72L64 100Q63 106 56 106H24Q17 106 16 100Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path class="fillc" d="M12 40H68L63 98Q62 102 57 102H23Q18 102 17 98Z" fill="currentColor"/></symbol>
+    <symbol id="candy" viewBox="0 0 120 60"><path d="M30 30L6 12V48ZM90 30L114 12V48Z" fill="#F2A541"/><ellipse cx="60" cy="30" rx="32" ry="22" fill="#E8573A"/><path d="M44 22q16-8 32 0" stroke="#fff" stroke-opacity=".5" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="wine" viewBox="0 0 70 110"><path d="M10 6H60Q62 44 35 54Q8 44 10 6Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M14 22H56Q54 44 35 50Q16 44 14 22Z" fill="#8E1B3A"/><path d="M35 54V96M18 100H52" stroke="#BDB09B" stroke-width="5" stroke-linecap="round"/></symbol>
+    <symbol id="soda" viewBox="0 0 60 120"><path d="M22 4H38V20Q50 30 50 48V108Q50 116 42 116H18Q10 116 10 108V48Q10 30 22 20Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M13 56H47V108Q47 112 42 112H18Q13 112 13 108Z" fill="#E8573A"/><rect x="13" y="66" width="34" height="18" fill="#F5EDDF"/></symbol>
+    <symbol id="bottleB" viewBox="0 0 60 100"><path d="M22 4H38L40 16H20Z" fill="#E8A9A0"/><rect x="14" y="16" width="32" height="8" rx="3" fill="#F2A541"/><rect x="12" y="24" width="36" height="72" rx="10" fill="#F5EDDF"/></symbol>
+    <symbol id="apple" viewBox="0 0 120 120"><path d="M60 30C42 18 14 26 14 58c0 30 22 56 36 56 6 0 7-3 10-3s4 3 10 3c14 0 36-26 36-56 0-32-28-40-46-28z" fill="#E8573A"/><path d="M60 30c0-10 2-18 8-24" stroke="#7A4B25" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M66 18c10-12 26-12 30-8-4 12-18 16-30 8z" fill="#6CC3A0"/></symbol>
+    <symbol id="hex" viewBox="0 0 100 100"><path d="M50 6L88 28V72L50 94 12 72V28Z" fill="none" stroke="currentColor" stroke-width="6"/></symbol>
+    <marker id="ah" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L11 6 1 11Z" fill="#F2A541"/></marker>
+    <!-- ===== Тема 3: смак і аромат ===== -->
+    <radialGradient id="glowS" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#62A9E0" stop-opacity=".26"/><stop offset="1" stop-color="#62A9E0" stop-opacity="0"/></radialGradient>
+    <marker id="ahM" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1L11 6 1 11Z" fill="#6CC3A0"/></marker>
+    <!-- Кубик цукру -->
+    <symbol id="cube" viewBox="0 0 60 62"><path d="M30 4L56 17V45L30 58 4 45V17Z" fill="#EDE4D3"/><path d="M30 4L56 17 30 30 4 17Z" fill="#FFFFFF"/><path d="M30 30V58L4 45V17Z" fill="#D9CFBD"/><g fill="#BDB09B" opacity=".55"><circle cx="22" cy="16" r="1.6"/><circle cx="38" cy="14" r="1.6"/><circle cx="14" cy="36" r="1.6"/><circle cx="44" cy="40" r="1.6"/><circle cx="40" cy="28" r="1.4"/></g></symbol>
+    <!-- Банка меду -->
+    <symbol id="honey" viewBox="0 0 100 110"><rect x="24" y="6" width="52" height="16" rx="5" fill="#C97F25"/><path d="M18 30Q18 22 26 22H74Q82 22 82 30V92Q82 104 70 104H30Q18 104 18 92Z" fill="#E9A23B"/><path d="M18 44Q29 52 40 44T62 44T82 44" stroke="#C97F25" stroke-width="5" fill="none"/><path d="M30 60V88" stroke="#fff" stroke-opacity=".4" stroke-width="6" stroke-linecap="round"/></symbol>
+    <!-- Молекула (currentColor) -->
+    <symbol id="mol" viewBox="0 0 120 110"><g stroke="currentColor" stroke-width="5" fill="none"><path d="M50 22L76 37V67L50 82 24 67V37Z"/><path d="M76 37L100 24M50 82V104M24 37L6 26"/></g><g fill="currentColor"><circle cx="50" cy="22" r="8"/><circle cx="76" cy="37" r="8"/><circle cx="76" cy="67" r="8"/><circle cx="50" cy="82" r="8"/><circle cx="24" cy="67" r="8"/><circle cx="24" cy="37" r="8"/></g><circle cx="100" cy="24" r="9" fill="#E8573A"/><circle cx="50" cy="104" r="6" fill="#F5EDDF"/><circle cx="6" cy="26" r="6" fill="#F5EDDF"/></symbol>
+    <!-- Стручок ванілі -->
+    <symbol id="vanilla" viewBox="0 0 140 50"><path d="M6 38Q66 -6 134 12Q138 18 130 20Q70 10 12 44Q2 46 6 38Z" fill="#4A2E1C"/><path d="M20 34Q70 6 124 14" stroke="#7A5136" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M130 14q6-4 8-10" stroke="#6CC3A0" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Корінь солодки -->
+    <symbol id="root" viewBox="0 0 100 100"><g stroke="#A8743F" stroke-width="10" stroke-linecap="round"><path d="M18 78L68 18"/><path d="M34 88L84 30"/></g><g stroke="#6B4423" stroke-width="3" stroke-linecap="round"><path d="M30 64l7 5M48 42l7 5M46 74l7 5M64 52l7 5"/></g><circle cx="68" cy="18" r="5" fill="#E6C08A"/><circle cx="84" cy="30" r="5" fill="#E6C08A"/></symbol>
+    <!-- Скибка грейпфрута -->
+    <symbol id="citrus" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#F2A541"/><circle cx="50" cy="50" r="40" fill="#F5EDDF"/><circle cx="50" cy="50" r="36" fill="#F07B6B"/><g stroke="#F5EDDF" stroke-width="3"><path d="M50 14V86M14 50H86M25 25L75 75M75 25L25 75"/></g><circle cx="50" cy="50" r="5" fill="#F5EDDF"/></symbol>
+    <!-- Плід катемфе -->
+    <symbol id="katemfe" viewBox="0 0 100 100"><path d="M50 4Q46 14 50 20" stroke="#6CC3A0" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M52 14Q68 4 80 12Q66 22 52 14Z" fill="#6CC3A0"/><path d="M50 18C72 30 88 52 80 74 74 88 62 94 50 94S26 88 20 74C12 52 28 30 50 18Z" fill="#C8243B"/><path d="M50 22V92M34 30Q30 60 38 90M66 30Q70 60 62 90" stroke="#8E1B2E" stroke-width="3" fill="none"/><path d="M28 54q2-14 12-20" stroke="#fff" stroke-opacity=".4" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Кукурудзяний качан -->
+    <symbol id="cob" viewBox="0 0 60 120"><path d="M30 8C46 8 50 40 48 70 46 100 38 110 30 110S14 100 12 70C10 40 14 8 30 8Z" fill="#F2C14E"/><g stroke="#D69A2A" stroke-width="2.5"><path d="M16 30H44M13 46H47M12 62H48M13 78H47M16 94H44M24 12V104M36 12V104"/></g><path d="M12 64Q4 100 30 116Q16 90 22 60Z" fill="#6CC3A0"/><path d="M48 64Q56 100 30 116Q44 90 38 60Z" fill="#4E9E7C"/></symbol>
+    <!-- Колода деревини -->
+    <symbol id="log" viewBox="0 0 130 70"><path d="M24 8H106V62H24Z" fill="#8A5A2B"/><path d="M30 20H96M36 34H100M30 48H92" stroke="#6B4423" stroke-width="3" stroke-linecap="round"/><ellipse cx="24" cy="35" rx="18" ry="27" fill="#E6C08A"/><ellipse cx="24" cy="35" rx="11" ry="17" fill="none" stroke="#C49358" stroke-width="3"/><ellipse cx="24" cy="35" rx="4" ry="7" fill="#C49358"/></symbol>
+    <!-- Горобина -->
+    <symbol id="rowan" viewBox="0 0 110 100"><path d="M56 4Q56 26 40 40M56 4Q60 28 76 38M56 4Q50 30 58 52" stroke="#7A4B25" stroke-width="4" fill="none" stroke-linecap="round"/><g fill="#E8573A"><circle cx="34" cy="50" r="11"/><circle cx="54" cy="58" r="11"/><circle cx="76" cy="48" r="11"/><circle cx="42" cy="72" r="11"/><circle cx="64" cy="76" r="11"/><circle cx="84" cy="68" r="10"/><circle cx="24" cy="68" r="10"/><circle cx="52" cy="90" r="9"/></g><g fill="#fff" fill-opacity=".45"><circle cx="31" cy="47" r="3"/><circle cx="51" cy="55" r="3"/><circle cx="73" cy="45" r="3"/></g><g fill="#6CC3A0"><path d="M60 8Q78 0 96 8Q78 16 60 8Z"/><path d="M52 8Q34 0 16 8Q34 16 52 8Z"/></g></symbol>
+    <!-- Чашка (напій currentColor) -->
+    <symbol id="cup" viewBox="0 0 120 90"><ellipse cx="56" cy="80" rx="50" ry="8" fill="#3B342B"/><path d="M14 22H98V54Q98 78 74 78H38Q14 78 14 54Z" fill="#F5EDDF"/><path d="M98 32Q116 32 114 46Q112 60 96 58" stroke="#F5EDDF" stroke-width="7" fill="none"/><ellipse cx="56" cy="22" rx="42" ry="8" fill="currentColor"/></symbol>
+    <!-- Хліб -->
+    <symbol id="bread" viewBox="0 0 120 70"><path d="M10 56Q6 20 40 14Q60 4 80 14Q114 20 110 56Q110 64 100 64H20Q10 64 10 56Z" fill="#C98A3C"/><path d="M36 26q8 10 4 22M58 20q8 12 4 26M80 26q8 10 4 22" stroke="#F2C98A" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Пара / аромат -->
+    <symbol id="steamS" viewBox="0 0 60 80"><g stroke="currentColor" stroke-width="5" fill="none" stroke-linecap="round"><path d="M14 76Q4 62 14 48T14 20"/><path d="M30 70Q20 56 30 42T30 6"/><path d="M46 76Q36 62 46 48T46 20"/></g></symbol>
+    <!-- Флакон із піпеткою (рідина currentColor) -->
+    <symbol id="dropper" viewBox="0 0 60 120"><path d="M24 4H36Q40 4 40 10V30H20V10Q20 4 24 4Z" fill="#2B2724" stroke="#4D443A" stroke-width="2"/><rect x="16" y="30" width="28" height="10" rx="2" fill="#8E989E"/><path d="M14 40H46Q52 40 52 48V108Q52 116 44 116H16Q8 116 8 108V48Q8 40 14 40Z" fill="currentColor"/><rect x="14" y="64" width="32" height="28" rx="3" fill="#F5EDDF" opacity=".9"/><path d="M14 48V58" stroke="#fff" stroke-opacity=".45" stroke-width="4" stroke-linecap="round"/></symbol>
+    <!-- Прянощі -->
+    <symbol id="cinn" viewBox="0 0 120 50"><rect x="8" y="8" width="104" height="16" rx="8" fill="#9B5A2A"/><rect x="14" y="28" width="98" height="16" rx="8" fill="#B5652E"/><ellipse cx="12" cy="16" rx="6" ry="8" fill="#6B3A1E"/><ellipse cx="18" cy="36" rx="6" ry="8" fill="#7A4422"/><path d="M12 12a4 4 0 1 1 0 8" stroke="#D9A066" stroke-width="2" fill="none"/></symbol>
+    <symbol id="clove" viewBox="0 0 50 90"><path d="M25 30L22 86" stroke="#6B3A1E" stroke-width="7" stroke-linecap="round"/><g fill="#7A4422"><path d="M10 26L25 34 40 26 36 12 25 18 14 12Z"/></g><circle cx="25" cy="14" r="9" fill="#9B5A2A"/></symbol>
+    <symbol id="pepper" viewBox="0 0 90 70"><g fill="#3A2A20"><circle cx="20" cy="46" r="13"/><circle cx="46" cy="52" r="13"/><circle cx="70" cy="42" r="13"/><circle cx="36" cy="24" r="12"/><circle cx="60" cy="18" r="11"/></g><g fill="#fff" fill-opacity=".25"><circle cx="16" cy="42" r="3"/><circle cx="42" cy="48" r="3"/><circle cx="66" cy="38" r="3"/></g></symbol>
+    <symbol id="nutmeg" viewBox="0 0 90 70"><ellipse cx="34" cy="38" rx="28" ry="24" fill="#8A5A2B"/><path d="M14 30q20 6 40-4M12 44q24 6 44-6M24 58q14-4 24-18" stroke="#5B3A1E" stroke-width="3" fill="none"/><g fill="#E6B83A"><circle cx="70" cy="26" r="6"/><circle cx="80" cy="40" r="6"/><circle cx="68" cy="52" r="6"/></g></symbol>
+    <symbol id="ginger" viewBox="0 0 100 70"><path d="M10 46Q8 30 24 30Q30 14 44 22Q56 10 66 24Q84 20 86 36Q96 44 86 54Q76 64 60 58Q48 66 36 58Q18 62 10 46Z" fill="#D9B27C"/><path d="M26 44q10-4 18 2M54 36q10 0 16 8M40 30q4-4 8 0" stroke="#A8743F" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="dill" viewBox="0 0 90 100"><path d="M45 98V40" stroke="#4E9E7C" stroke-width="5" stroke-linecap="round"/><g stroke="#6CC3A0" stroke-width="3" stroke-linecap="round"><path d="M45 40L14 18M45 40L28 10M45 40V6M45 40L62 10M45 40L76 18M45 40L84 34M45 40L6 34"/></g><g fill="#E6D36A"><circle cx="14" cy="18" r="5"/><circle cx="28" cy="10" r="5"/><circle cx="45" cy="6" r="5"/><circle cx="62" cy="10" r="5"/><circle cx="76" cy="18" r="5"/><circle cx="84" cy="34" r="5"/><circle cx="6" cy="34" r="5"/></g><path d="M45 72Q26 66 18 76M45 62Q64 56 74 64" stroke="#6CC3A0" stroke-width="3" fill="none" stroke-linecap="round"/></symbol>
+    <!-- Сільничка (кристали) -->
+    <symbol id="shaker" viewBox="0 0 60 100"><path d="M12 30Q12 8 30 8T48 30Z" fill="#8E989E"/><g fill="#14120F"><circle cx="24" cy="20" r="2.2"/><circle cx="36" cy="20" r="2.2"/><circle cx="30" cy="14" r="2.2"/></g><path d="M10 30H50L46 90Q45 96 38 96H22Q15 96 14 90Z" fill="url(#glass)" stroke="#BDB09B" stroke-width="3"/><path d="M14 56H46L44 88Q43 92 38 92H22Q17 92 16 88Z" fill="#F5EDDF"/></symbol>
+    <!-- Гриб, томат, сир -->
+    <symbol id="mush" viewBox="0 0 100 100"><path d="M8 50Q10 10 50 8Q90 10 92 50Q70 58 50 56Q30 58 8 50Z" fill="#B5652E"/><path d="M38 54H62L66 90Q66 96 58 96H42Q34 96 34 90Z" fill="#F5EDDF"/><g fill="#E6C08A"><circle cx="34" cy="28" r="6"/><circle cx="60" cy="22" r="5"/><circle cx="72" cy="38" r="4"/></g></symbol>
+    <symbol id="tomato" viewBox="0 0 100 100"><circle cx="50" cy="56" r="40" fill="#E8573A"/><path d="M50 22L42 10M50 22L32 22M50 22L68 22M50 22L60 10M50 22L36 32M50 22L64 32" stroke="#6CC3A0" stroke-width="6" stroke-linecap="round"/><path d="M28 50q4-14 16-18" stroke="#fff" stroke-opacity=".4" stroke-width="5" fill="none" stroke-linecap="round"/></symbol>
+    <symbol id="cheese" viewBox="0 0 120 80"><path d="M6 66L110 66 110 32 6 52Z" fill="#E6B83A"/><path d="M6 52L84 10 110 32Z" fill="#F2D06B"/><g fill="#C9962A"><circle cx="40" cy="58" r="6"/><circle cx="74" cy="50" r="8"/><circle cx="98" cy="58" r="4"/></g></symbol>
+    <!-- Пляшечка соусу -->
+    <symbol id="sauce" viewBox="0 0 50 110"><rect x="18" y="4" width="14" height="16" rx="3" fill="#E8573A"/><path d="M18 20H32L36 34Q42 40 42 50V100Q42 106 36 106H14Q8 106 8 100V50Q8 40 14 34Z" fill="#3A2318"/><rect x="12" y="56" width="26" height="26" rx="3" fill="#F5EDDF"/></symbol>
+  </defs>
+</svg>
+
+<div class="stage" id="stage">
+  <div class="prog" id="prog"></div>
+
+  <!-- ================= 1. Титул ================= -->
+  <section class="slide" data-title="Тема 3 · Смак і аромат">
+    <div class="L" data-depth="0.15"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="980" cy="370" r="420" fill="url(#glowA)"/><circle cx="150" cy="700" r="320" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.35">
+      <svg width="1280" height="720" aria-hidden="true">
+        <g class="spin" style="transform-origin:980px 380px">
+          <circle cx="980" cy="380" r="226" fill="none" stroke="#3B342B" stroke-width="2" stroke-dasharray="4 10"/>
+          <circle cx="980" cy="154" r="9" fill="#F2A541"/><circle cx="1206" cy="380" r="7" fill="#6CC3A0"/><circle cx="980" cy="606" r="9" fill="#A387E6"/><circle cx="754" cy="380" r="7" fill="#E8573A"/>
+        </g>
+        <g class="spinr" style="transform-origin:980px 380px"><circle cx="980" cy="380" r="170" fill="none" stroke="#3B342B" stroke-width="2" stroke-dasharray="2 8"/><circle cx="1100" cy="260" r="6" fill="#62A9E0"/><circle cx="860" cy="500" r="6" fill="#F2A541"/></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.6">
+      <svg width="1280" height="720" aria-label="Чашка з ароматом, кубики цукру, ваніль і листок стевії">
+        <g style="color:#6B3A1E"><use href="#cup" x="890" y="360" width="190" height="142"/></g>
+        <g class="steam" style="color:#BDB09B"><use href="#steamS" x="935" y="270" width="60" height="80"/></g>
+        <g class="steam2" style="color:#F2A541"><use href="#steamS" x="975" y="250" width="44" height="60"/></g>
+        <g transform="translate(1110 160)"><g class="fall"><use href="#cube" x="0" y="0" width="44" height="46"/></g></g>
+        <g class="bob"><use href="#cube" x="1100" y="420" width="62" height="64"/></g>
+        <g class="bob2"><use href="#cube" x="1150" y="455" width="52" height="54"/></g>
+        <g class="bob2"><use href="#vanilla" x="790" y="540" width="190" height="68"/></g>
+        <g class="bob"><use href="#leaf" x="800" y="200" width="70" height="70" style="color:#6CC3A0"/></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.85">
+      <div style="position:absolute;left:80px;top:150px;width:640px;">
+        <p class="kicker rv">Лекція 3 · <i>Тема 3</i></p>
+        <h1 class="rv" style="margin-top:18px;">Харчові добавки, що впливають на <span class="a">смак</span> та <span class="g">аромат</span> продуктів</h1>
+        <div class="pills rv" style="margin-top:30px;max-width:620px;"><span class="pill">1 Підсолоджувачі</span><span class="pill">2 Ароматизатори</span><span class="pill">3 Класифікація ароматизаторів</span><span class="pill">4 Підсилювачі смаку</span></div>
+      </div>
+    </div>
+    <div class="L" data-depth="1.5">
+      <div class="chip bob" style="left:1120px;top:80px;">Е950</div>
+      <div class="chip bob2" style="left:740px;top:110px;">Е960</div>
+      <div class="chip bob2" style="left:700px;top:600px;">Е420</div>
+      <div class="chip bob" style="left:1110px;top:590px;">Е621</div>
+    </div>
+    <aside class="notes">План: 1. Підсолоджуючі речовини. 2. Ароматизатори. 3. Класифікація ароматизаторів. 4. Підсилювачі смаку та аромату.
+Основні терміни: підсолоджувачі; коефіцієнт солодкості; цукрозамінники; ароматизатори; ефірні олії; ароматичні есенції; прянощі; смакові добавки.
+Ілюстрація: чашка з ароматом, кубики цукру, ваніль і листок стевії.</aside>
+  </section>
+
+  <!-- ================= 2. Від меду до підсолоджувачів ================= -->
+  <section class="slide" data-title="1 · Підсолоджуючі речовини">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="300" r="440" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Підсолоджуючі речовини</i></p><h2 class="rv">Від меду — до альтернатив цукру</h2></div></div>
+    <div class="L" data-depth="0.5">
+      <svg width="1280" height="720" aria-label="Історія підсолоджуючих речовин">
+        <g class="bob"><use href="#honey" x="150" y="170" width="110" height="121"/></g>
+        <path d="M290 235H420" stroke="#F2A541" stroke-width="4" marker-end="url(#ah)"/>
+        <g class="bob2"><use href="#cube" x="470" y="200" width="66" height="68"/><use href="#cube" x="530" y="214" width="56" height="58"/><use href="#cube" x="500" y="168" width="52" height="54"/></g>
+        <path d="M640 235H770" stroke="#F2A541" stroke-width="4" marker-end="url(#ah)"/>
+        <g class="bob" style="color:#62A9E0"><use href="#mol" x="830" y="168" width="130" height="120"/></g>
+        <g font-family="Manrope" font-weight="800" font-size="18" fill="#F5EDDF" text-anchor="middle"><text x="205" y="322">мед</text><text x="528" y="322">цукор (сахароза)</text><text x="895" y="322">нові солодкі речовини</text></g>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B" text-anchor="middle"><text x="205" y="344">давнина</text><text x="528" y="344">пізніше</text><text x="895" y="344">останні десятиліття</text></g>
+        <g stroke="#4D443A" stroke-width="3" fill="none"><path class="draw" style="--len:700" d="M895 356C895 400 350 380 350 420"/><path class="draw" style="--len:200" d="M895 356C895 400 930 390 930 420"/></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:425px;width:540px;border-color:rgba(242,165,65,.55);">
+        <h3 class="a">Підсолоджувачі</h3>
+        <p class="xs" style="margin-top:8px;">Енергетичної цінності <b>немає</b> або вона мізерна. Не впливають на травлення і рівень глюкози в крові.</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:425px;width:540px;border-color:rgba(108,195,160,.55);">
+        <h3 class="g">Цукрозамінники</h3>
+        <p class="xs" style="margin-top:8px;">Солодкі й <b>мають енергетичну цінність</b>, але засвоюються повільніше за сахарозу і потребують менше інсуліну.</p>
+      </div>
+      <div class="rv" style="position:absolute;left:80px;top:580px;width:1120px;display:flex;gap:12px;align-items:center;">
+        <p class="xs m" style="white-space:nowrap;">Підсолоджувачі ідеальні для:</p>
+        <div class="pills"><span class="pill a">хворих на діабет</span><span class="pill a">порушень обміну речовин</span><span class="pill a">схильних до карієсу</span><span class="pill a">тих, хто худне</span></div>
+      </div>
+    </div>
+    <aside class="notes">Для приготування продуктів людство завжди використовувало підсолоджуючі речовини: у давнину — мед, потім — цукор (сахарозу), а в останні десятиліття з’явились речовини природного та штучного походження з солодким смаком — підсолоджувачі та цукрозамінники (рис. 3.1).
+Принципова різниця: цукрозамінники мають енергетичну цінність, підсолоджувачі — ні (або вона значно обмежена). Підсолоджувачі також не впливають на процес травлення та рівень глюкози у крові.
+Тому вони ідеальні для діабетиків, людей із хворобами, спричиненими порушенням обміну речовин, та осіб, схильних до карієсу. Найбільшу користь отримують ті, хто цілеспрямовано прагне скинути вагу.</aside>
+  </section>
+
+  <!-- ================= 3. Порівняння ================= -->
+  <section class="slide" data-title="1 · Підсолоджувачі і цукрозамінники">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="440" r="480" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Порівняння</i></p><h2 class="rv">Дві групи солодких речовин</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="cmp" style="top:176px;">
+        <div class="h"></div><div class="h a">Підсолоджувачі <span class="m xs" style="font-family:var(--body)">Е950–Е960</span></div><div class="h g">Цукрозамінники</div>
+        <div class="c rv">Енергетична цінність</div><div class="rv ok">немає або мізерна</div><div class="rv">є (сорбіт ≈ 4 ккал/г, фруктоза 3,8 ккал/г)</div>
+        <div class="c rv">Глюкоза в крові</div><div class="rv ok">не впливають</div><div class="rv ok">у помірних кількостях — без різкого підвищення</div>
+        <div class="c rv">Інсулін</div><div class="rv ok">засвоюються без участі інсуліну</div><div class="rv ok">потрібно менше, ніж для сахарози</div>
+        <div class="c rv">Доза</div><div class="rv">10–100 мг на добу</div><div class="rv">грами: ксиліт — до 30–50 г на добу</div>
+        <div class="c rv">Солодкість, Ксол</div><div class="rv">у десятки–тисячі разів солодші</div><div class="rv">0,3–1,0 (фруктоза — 1,7)</div>
+        <div class="c rv">Походження</div><div class="rv">переважно штучні, є природні</div><div class="rv">природні або штучні</div>
+        <div class="c rv">Приклади</div><div class="rv">сахарин, аспартам, сукралоза, стевіозид</div><div class="rv">сорбіт, ксиліт, ізомальт, лактит, фруктоза</div>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:590px;width:1120px;padding:12px 20px;"><p class="xs"><b class="a">Підсолоджувачі</b> — речовини нецукрової природи; мають бути солодкими без стороннього присмаку, низькокалорійними, легкорозчинними, стійкими при нагріванні</p></div>
+    </div>
+    <aside class="notes">Підсолоджувачі (Е950–960) — речовини нецукрової природи штучного (переважно) або природного походження, які використовуються у невеликих дозах (10–100 мг на добу) для надання солодкого смаку і засвоюються без участі інсуліну. Вимоги: солодкий смак без стороннього присмаку, низька енергетична цінність, легка розчинність, стійкість при нагріванні. Як правило, без відчутного запаху.
+Цукрозамінники — речовини природного або штучного походження, солодкі на смак, мають енергетичну цінність. Засвоюються не так швидко, як сахароза, потребують менше інсуліну, не перевантажують підшлункову залозу, у помірних кількостях не призводять до різкого підвищення глюкози — важливо для лікувально-профілактичного харчування хворих на діабет.
+Цифри калорійності — з розділу 3.1.3 (сорбіт ≈ 4 ккал/г, фруктоза 3,8 ккал/г).</aside>
+  </section>
+
+  <!-- ================= 4. Вади смаку ================= -->
+  <section class="slide" data-title="1 · Органолептичні вади">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="850" cy="360" r="420" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Органолептичні вади</i></p><h2 class="rv">Чому цукор важко замінити</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Схема: як у часі відчувається солодкість">
+        <g stroke="#4D443A" stroke-width="2" fill="none"><path d="M520 200V470H1170"/></g>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B"><text x="1170" y="494" text-anchor="end">час →</text><text x="510" y="196" text-anchor="end">солодкість</text></g>
+        <path class="draw" style="--len:500" d="M522 468C560 468 572 250 612 250C660 250 700 450 820 466" stroke="#F5EDDF" stroke-width="4" fill="none"/>
+        <path class="draw" style="--len:900" d="M522 468C560 468 574 238 618 238C720 238 840 380 1150 460" stroke="#E8573A" stroke-width="4" fill="none"/>
+        <path class="draw" style="--len:700" d="M522 468C660 468 690 290 760 290C820 290 860 440 990 466" stroke="#A387E6" stroke-width="4" fill="none"/>
+        <g font-family="Manrope" font-weight="800" font-size="16"><text x="612" y="236" fill="#F5EDDF" text-anchor="middle" class="lbl">сахароза</text><text x="900" y="350" fill="#FFB6A4" class="lbl">довго тримається</text><text x="760" y="278" fill="#D8CBFA" text-anchor="middle" class="lbl">запізнюється</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div style="position:absolute;left:80px;top:176px;width:380px;">
+        <p class="s rv"><b>Ідеальний підсолоджувач:</b></p>
+        <div class="pills rv" style="margin-top:10px;flex-direction:column;align-items:flex-start;"><span class="pill g">солодкий без присмаку</span><span class="pill g">низькокалорійний</span><span class="pill g">легко розчинний</span><span class="pill g">стійкий при нагріванні</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:420px;width:380px;padding:16px 20px;border-color:rgba(98,169,224,.55);">
+        <h3 class="sk" style="font-size:19px;">❄ Холодок у роті</h3>
+        <p class="xs" style="margin-top:6px;"><b>Від’ємна теплота розчинення:</b> підсолоджувач забирає тепло, приєднуючи воду — ксиліт, сорбіт</p>
+      </div>
+      <div class="rv" style="position:absolute;left:520px;top:512px;width:680px;">
+        <p class="xs"><b class="t">Довго:</b> міракулін, монелін, стевіозид, сахарин, сахарол, осладин</p>
+        <p class="xs" style="margin-top:4px;"><b class="pl">Із запізненням:</b> аспартам, усал, дигідрохалкони, тауматин</p>
+      </div>
+      <p class="s rv" style="position:absolute;left:520px;top:590px;width:680px;">→ Підсолоджувача, що <b class="a">повністю замінює цукор</b>, поки не знайдено</p>
+    </div>
+    <aside class="notes">Вимоги до підсолоджувачів: солодкий смак без стороннього присмаку, низька енергетична цінність, легка розчинність, стійкість при нагріванні. Як правило, без відчутного запаху, але багато з них мають своєрідний присмак, що допомагає їх ідентифікувати.
+Вада багатьох об’ємних підсолоджувачів — відчуття холоду в роті через активне приєднання води (від’ємна теплота розчинення: підсолоджувач відбирає тепло із середовища). Так відчуваються ксиліт і сорбіт.
+Окремі інтенсивні підсолоджувачі дають надто тривале відчуття солодкості (міракулін, монелін, стевіозид, сахарин, сахарол, осладин), інші — запізнення солодкого смаку (аспартам, усал, дигідрохалкони, тауматин).
+Отже, підсолоджувача, який відповідав би всім вимогам і повністю замінював цукор, поки що не знайдено.
+Криві на графіку — наочна схема, не результати вимірювань.</aside>
+  </section>
+
+  <!-- ================= 5. Коефіцієнт солодкості ================= -->
+  <section class="slide" data-title="1 · Коефіцієнт солодкості">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="300" cy="380" r="380" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Коефіцієнт солодкості</i></p><h2 class="rv">Скільки підсолоджувача замість цукру</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:182px;width:500px;padding:22px 26px;border-color:rgba(242,165,65,.55);">
+        <p class="big" style="font-size:54px;"><span class="a">П</span> = <span class="g">Ц</span> / К<sub style="font-size:28px;">сол</sub></p>
+        <ul class="ul" style="margin-top:14px;">
+          <li><b class="a">П</b> — кількість підсолоджувача, кг</li>
+          <li><b class="g">Ц</b> — кількість цукру, що замінюється, кг</li>
+          <li><b>Ксол</b> — у скільки разів підсолоджувач солодший за цукор</li>
+        </ul>
+      </div>
+      <div class="rv" style="position:absolute;left:80px;top:430px;width:500px;">
+        <p class="xs"><b>Еталон</b> — 9% розчин сахарози, її солодкість = 1. Ксол визначають <b>сенсорно</b>: розчиняють трохи підсолоджувача у воді й порівнюють.</p>
+        <p class="xs m" style="margin-top:10px;">За Ксол орієнтовно видно, до якої групи належить добавка — об’ємних чи інтенсивних.</p>
+      </div>
+      <div class="card rv" data-no-nav style="position:absolute;left:620px;top:182px;width:580px;height:462px;padding:18px 22px;">
+        <p class="s"><b>Замінюємо 1 кг цукру</b> <span class="xs m">— оберіть речовину</span></p>
+        <div class="pills" id="calcBtns" style="margin-top:12px;gap:7px;"></div>
+        <svg id="calcSvg" width="536" height="210" style="margin-top:12px;display:block" aria-label="Порівняння маси цукру і підсолоджувача"></svg>
+        <p class="s" id="calcOut" style="margin-top:6px;"></p>
+      </div>
+    </div>
+    <aside class="notes">Солодкість підсолоджувачів і цукрозамінників характеризують коефіцієнтом солодкості відносно сахарози — еталону смаку (9% розчин). Коефіцієнт солодкості Ксол показує, у скільки разів менше підсолоджувача потрібно взяти, щоб досягти еталонного смаку.
+Кількість підсолоджувача для заміни цукру: П = Ц / Ксол, де П — кількість підсолоджувача, кг; Ц — кількість цукру, що замінюється, кг.
+Оцінювання: невеликі кількості підсолоджувача розчиняють у воді й порівнюють із солодкістю сахарози (= 1). Знаючи ступінь солодкості, можна орієнтовно віднести добавку до об’ємних чи інтенсивних.
+Калькулятор: натисніть на назву — площа квадрата пропорційна масі. Перевірка з лекції: 1 кг цукру ÷ 600 ≈ 1,7 г сукралози — збігається з текстом лекції.</aside>
+  </section>
+
+  <!-- ================= 6. Шкала солодкості ================= -->
+  <section class="slide" data-title="1 · Шкала солодкості">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="900" cy="380" r="460" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Табл. 3.1–3.3 · логарифмічна шкала</i></p><h2 class="rv">Солодші за цукор — від 0,3 до 2500 разів</h2></div></div>
+    <div class="L" data-depth="0.6"><svg width="1280" height="720" id="ksolSvg" aria-label="Коефіцієнти солодкості на логарифмічній шкалі"></svg></div>
+    <div class="L" data-depth="0.95">
+      <div class="pills rv" style="position:absolute;left:340px;top:614px;"><span class="pill g">цукрозамінники</span><span class="pill pl">природні підсолоджувачі</span><span class="pill a">синтетичні підсолоджувачі</span></div>
+    </div>
+    <aside class="notes">Коефіцієнти солодкості за таблицями 3.1–3.3 лекції (сахароза = 1):
+Цукрозамінники: лактит Е966 0,3–0,4; сорбіт Е420 0,5–0,6; ізомальт Е953 0,5; ксиліт Е967 0,85–1,0; фруктоза 1,7 (не є харчовою добавкою).
+Природні підсолоджувачі: гліциризин Е958 50–100; стевіозид Е960 100–300; тауматин Е957 1600–2500; неогесперидин дигідрохалкон Е959 1800–2500.
+Синтетичні: цикламат Е952 30–50; аспартам Е951 100–200; ацесульфам К Е950 150–200; сахарин Е954 300–500; сукралоза Е955 600.
+Шкала логарифмічна: кожна поділка — у 10 разів більше. Смужка — діапазон із таблиці.</aside>
+  </section>
+
+  <!-- ================= 7. Застосування і контроль ================= -->
+  <section class="slide" data-title="1 · Застосування в Україні">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="360" r="480" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Застосування та контроль</i></p><h2 class="rv">Де можна і де не можна</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:176px;width:540px;height:160px;">
+        <h3 style="font-size:19px;">Дозволено в Україні</h3>
+        <div class="pills" style="margin-top:12px;gap:7px;"><span class="pill g sm">фруктоза</span><span class="pill g sm">ксиліт</span><span class="pill g sm">сорбіт</span><span class="pill a sm">сахарин</span><span class="pill a sm">ацесульфам К</span><span class="pill a sm">аспартам</span><span class="pill pl sm">стевіозид</span><span class="pill a sm">цикламати</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:640px;top:176px;width:560px;height:160px;display:flex;gap:16px;align-items:center;">
+        <svg width="64" height="64" viewBox="0 0 100 100" style="flex-shrink:0"><use href="#lens"/></svg>
+        <div><h3 style="font-size:19px;">Ідентифікація</h3><p class="xs m" style="margin-top:6px;"><b style="color:var(--text)">хроматографія</b>; вміст сахарину, аспартаму — <b style="color:var(--text)">колориметрично</b>. Недозволений підсолоджувач — експерт забороняє реалізацію</p></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:352px;width:540px;height:180px;">
+        <h3 style="font-size:19px;" class="a">Надають солодкості</h3>
+        <div class="pills" style="margin-top:12px;gap:7px;"><span class="pill sm">йогурти, сири</span><span class="pill sm">освіжаючі напої, нектари</span><span class="pill sm">десерти, пудинги, морозиво</span><span class="pill sm">конфітюри, мармелад, желе</span><span class="pill sm">фруктові й овочеві консерви</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:640px;top:352px;width:560px;height:180px;">
+        <h3 style="font-size:19px;" class="g">Роблять смак «повним»</h3>
+        <div class="pills" style="margin-top:12px;gap:7px;"><span class="pill sm">м’ясні, рибні, овочеві салати</span><span class="pill sm">майонез</span><span class="pill sm">салатні заправки</span><span class="pill sm">мариновані овочі</span></div>
+        <p class="xs m" style="margin-top:10px;">низькокалорійні продукти, продукти для хворих на діабет чи ожиріння</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:552px;width:1120px;display:flex;gap:16px;align-items:center;padding:14px 22px;border-color:rgba(232,87,58,.6);background:rgba(232,87,58,.1);">
+        <svg width="42" height="42" viewBox="0 0 48 48" style="flex-shrink:0"><use href="#ban"/></svg>
+        <p class="xs"><b class="t">Заборонено:</b> підсолоджувачі в дитячому харчуванні (крім спеціальних продуктів для дітей, хворих на діабет) і заміна цукру за рецептурою <b>з метою економії</b></p>
+      </div>
+    </div>
+    <aside class="notes">В Україні дозволено обмежений перелік: фруктоза, ксиліт, сорбіт, сахарин, ацесульфам К, аспартам, стевіозид, цикламати. Їх використовують у низькокалорійних продуктах і продуктах для хворих на діабет чи ожиріння.
+Підсолоджувачі містяться в: молочних продуктах типу йогурту, сиру; освіжаючих напоях і нектарах; десертах, пудингах, морозиві; конфітюрах, мармеладі, желе; фруктових та овочевих консервах.
+У ряді продуктів вони покращують смак, роблячи його насиченим, «повним»: м’ясні, рибні та овочеві салати; майонез; салатні заправки; мариновані овочі.
+Ідентифікація: хроматографічні методи; для визначення вмісту окремих (сахарин, аспартам) — колориметричні. Наявність недозволених підсолоджувачів дає експерту право заборонити реалізацію. Чистоту препарату перевіряють розчиненням у воді, фільтруванням через паперовий фільтр і дослідженням осаду.
+Заборонено: підсолоджувачі в дитячому харчуванні (крім спеціальних продуктів для дітей, хворих на діабет); заміна цукру підсолоджувачами чи цукрозамінниками за рецептурою з метою економії.</aside>
+  </section>
+
+  <!-- ================= 8. Природні підсолоджувачі ================= -->
+  <section class="slide" data-title="1 · Природні підсолоджувачі">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="440" r="500" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Природні підсолоджувачі · табл. 3.1</i></p><h2 class="rv">Солодкість із рослин</h2><p class="s m rv" style="margin-top:8px;">Виділяють з природної сировини; солодші за цукор у сотні й тисячі разів</p></div></div>
+    <div class="card rv" data-depth="0.6" style="position:absolute;left:80px;top:226px;width:266px;height:410px;padding:18px 20px;">
+      <svg width="78" height="78" viewBox="0 0 100 100"><use href="#katemfe"/></svg>
+      <p style="margin-top:6px;"><span class="pill pl">Е957</span></p>
+      <h3 style="margin-top:10px;font-size:19px;">Тауматин</h3>
+      <p class="big pl" style="font-size:25px;margin-top:8px;white-space:nowrap;">1600–2500×</p>
+      <p class="xs m" style="margin-top:8px;">плоди африканської рослини катемфе</p>
+      <p class="xs" style="margin-top:8px;">природний <b>білок</b>; лакричний присмак; підсилює смак; солодкість зникає при денатурації</p>
+    </div>
+    <div class="card rv" data-depth="0.75" style="position:absolute;left:364px;top:226px;width:266px;height:410px;padding:18px 20px;">
+      <svg width="78" height="78" viewBox="0 0 100 100"><use href="#root"/></svg>
+      <p style="margin-top:6px;"><span class="pill pl">Е958</span></p>
+      <h3 style="margin-top:10px;font-size:19px;">Гліциризин</h3>
+      <p class="big pl" style="font-size:25px;margin-top:8px;white-space:nowrap;">50–100×</p>
+      <p class="xs m" style="margin-top:8px;">корінь солодки (Glycyrrhiza glabra)</p>
+      <p class="xs" style="margin-top:8px;">специфічний присмак і запах; розчинний у гарячій воді та спирті; кондитерські вироби, тютюн</p>
+    </div>
+    <div class="card rv" data-depth="0.9" style="position:absolute;left:648px;top:226px;width:266px;height:410px;padding:18px 20px;">
+      <svg width="78" height="78" viewBox="0 0 100 100"><use href="#citrus"/></svg>
+      <p style="margin-top:6px;"><span class="pill pl">Е959</span></p>
+      <h3 style="margin-top:10px;font-size:19px;">Неогесперидин ДГ</h3>
+      <p class="big pl" style="font-size:25px;margin-top:8px;white-space:nowrap;">1800–2500×</p>
+      <p class="xs m" style="margin-top:8px;">шкірка цитрусових (грейпфрут)</p>
+      <p class="xs" style="margin-top:8px;">присмак ментолу; жувальна гумка, напої, низькокалорійне пиво, соуси, морозиво</p>
+    </div>
+    <div class="card rv" data-depth="1.05" style="position:absolute;left:932px;top:226px;width:268px;height:410px;padding:18px 20px;">
+      <svg width="78" height="78" viewBox="0 0 100 100" style="color:#6CC3A0"><use href="#leaf"/></svg>
+      <p style="margin-top:6px;"><span class="pill pl">Е960</span></p>
+      <h3 style="margin-top:10px;font-size:19px;">Стевіозид</h3>
+      <p class="big pl" style="font-size:25px;margin-top:8px;white-space:nowrap;">100–300×</p>
+      <p class="xs m" style="margin-top:8px;">листя стевії</p>
+      <p class="xs" style="margin-top:8px;">у великій кількості гірчить; за лекцією, знижує рівень цукру й холестерину, перешкоджає карієсу</p>
+    </div>
+    <aside class="notes">Натуральні підсолоджувачі виділяють з природної сировини; вони солодші за цукор у сотні й тисячі разів (табл. 3.1).
+Тауматин (Е957), Ксол 1600–2500 — плоди африканської рослини катемфе; підсолоджувач і підсилювач смаку та аромату; природний білок; лакричний присмак; розчинний у воді. Як правило, використовується в поєднанні з іншими підсолоджувачами; солодкість може втрачатися при денатурації білка.
+Гліциризин (Е958), Ксол 50–100 — коріння солодки Glycyrrhiza glabra; специфічні присмак і запах; нерозчинний у холодній воді, розчинний у гарячій воді та спирті. Екстракти (протиточне екстрагування) — у виробництві сигарет, тютюну, кондитерських виробів.
+Неогесперидин дигідрохалкон (Е959), Ксол 1800–2500 — плоди цитрусових (шкірка грейпфрута); присмак ментолу; білий порошок без запаху. Жувальна гумка, м’ясні продукти, мармелад, низькокалорійне пиво, напої, соки, молочні продукти, сухі сніданки, супи швидкого приготування, морозиво, вафлі, гірчиця, соуси.
+Стевіозид (Е960), Ксол 100–300 — листя стевії; у великій кількості гіркий. За лекцією, сприяє зниженню цукру й холестерину в крові, покращує роботу підшлункової залози та ШКТ, перешкоджає карієсу, має протимікробні та протигрибкові властивості, тонізує, не викликає почуття голоду.
+Синтетичні підсолоджувачі мають більший попит, бо значно дешевші.
+⚠ У лекції — «Туаматин» і «Катемі»: правильно тауматин, рослина катемфе (Thaumatococcus daniellii). Про стійкість тауматину лекція суперечлива («нестійкий у кислому середовищі» / «досить стійкий») — на слайді лише факт про денатурацію. Оздоровчі ефекти стевіозиду наведено за лекцією.</aside>
+  </section>
+
+  <!-- ================= 9. Синтетичні підсолоджувачі ================= -->
+  <section class="slide" data-title="1 · Синтетичні підсолоджувачі">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="1000" cy="420" r="400" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Синтетичні підсолоджувачі · табл. 3.2</i></p><h2 class="rv">П’ять підсолоджувачів із лабораторії</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="cmp sm" style="top:172px;grid-template-columns:230px 116px 96px 230px 1fr;gap:7px 8px;">
+        <div class="h"></div><div class="h">Ксол</div><div class="h">ДДС*</div><div class="h">Нагрівання</div><div class="h">Особливості</div>
+        <div class="c rv"><span><span class="a">Е950</span> Ацесульфам К</span></div><div class="rv"><b>150–200</b></div><div class="rv">8</div><div class="rv ok">стійкий: пастеризація, УВТ</div><div class="rv">солодкість миттєва, але нетривка; у великій концентрації — гіркота</div>
+        <div class="c rv"><span><span class="a">Е951</span> Аспартам</span></div><div class="rv"><b>100–200</b></div><div class="rv">7,5</div><div class="rv no">руйнується</div><div class="rv">підсилює смак; протипоказаний при фенілкетонурії</div>
+        <div class="c rv"><span><span class="a">Е952</span> Цикламат</span></div><div class="rv"><b>30–50</b></div><div class="rv">11</div><div class="rv ok">до 250 °C</div><div class="rv">неприємний «хімічний» післясмак; безкалорійний</div>
+        <div class="c rv"><span><span class="a">Е954</span> Сахарин</span></div><div class="rv"><b>300–500</b></div><div class="rv">5</div><div class="rv ok">не руйнується</div><div class="rv">перший штучний (XIX ст., Фальберг); металевий присмак</div>
+        <div class="c rv"><span><span class="a">Е955</span> Сукралоза</span></div><div class="rv"><b>600</b></div><div class="rv">15</div><div class="rv ok">стабільна</div><div class="rv">чистий солодкий смак; найдорожча; 1,7 г ≈ 1 кг цукру</div>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:80px;top:532px;width:1120px;">* ДДС — допустима добова доза, мг на 1 кг маси тіла (за табл. 3.2)</p>
+      <div class="card rv" style="position:absolute;left:80px;top:572px;width:1120px;padding:12px 20px;display:flex;gap:14px;align-items:center;">
+        <svg width="40" height="40" viewBox="0 0 100 100" style="flex-shrink:0"><use href="#clock"/></svg>
+        <p class="xs">Створені хімічним шляхом, низькокалорійні. При тривалому зберіганні повільно розкладаються на <b>нешкідливі, але несолодкі</b> складові</p>
+      </div>
+    </div>
+    <aside class="notes">Синтетичні підсолоджувачі створені хімічним шляхом; низькокалорійні, технологічно неактивні; при тривалому зберіганні повільно розкладаються на нешкідливі, але несолодкі складові. Найпоширеніші — аспартам, ацесульфам К, сахарин, сукралоза, цикламати (табл. 3.2).
+Ацесульфам К (Е950, C4H4KNO4S): Ксол 150–200; білий кристалічний порошок без запаху, термічно й хімічно стійкий, добре розчинний; солодкість настає швидко, але мало стійка. Стабільний при pH 3–7, витримує пастеризацію, стерилізацію, УВТ-обробку; не метаболізується, виводиться нирками, не викликає карієсу.
+Аспартам (Е951): Ксол 100–200; має властивість підсилювача смаку та аромату; протипоказаний хворим на фенілкетонурію.
+Цикламат (Е952, C6H12NNaO3S): Ксол 30–50; стійкий при нагріванні до 250 °C; неприємний хімічний післясмак; не засвоюється, виводиться з сечею. Соки, компоти, кондитерські вироби, джеми, шоколад; дозволений діабетикам, але не рекомендований маленьким дітям і вагітним.
+Сахарин (Е954, C7H5NO3S): Ксол 300–500; перший штучний підсолоджувач (XIX ст., Фальберг); металевий присмак, сечогінний ефект, потребує суворого дозування; не руйнується при термообробці (кондитерські вироби, компоти), але не підходить для маринадів, бо не є консервантом.
+Сукралоза (Е955): Ксол 600; одержана Tate & Lyle у 1976 р. хлоруванням сахарози; стійкий солодкий смак без присмаку; універсальна — напої, десерти, хлібобулочні вироби, соуси, майонези, маринади, жувальна гумка. 1,7 г сукралози замінює 1 кг цукру. Найдорожча.
+⚠ ДДС аспартаму в лекції 7,5 мг/кг, а за JECFA — 40 мг/кг. Для ацесульфаму К у лекції 8, за JECFA — 15 мг/кг. Решту значень (цикламат 11, сахарин 5, сукралоза 15) підтверджує JECFA. На слайді — цифри з лекції.
+⚠ «Нагрівання розчинів при pH=4 до температури 12 °С не призводить до розпаду» — схоже, в тексті пропущено цифру (ймовірно, 120 °С).</aside>
+  </section>
+
+  <!-- ================= 10. Синергізм ================= -->
+  <section class="slide" data-title="1 · Суміші підсолоджувачів">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="360" cy="300" r="380" fill="url(#glowM)"/><circle cx="1000" cy="320" r="320" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Сумішеві підсолоджувачі</i></p><h2 class="rv">Разом — солодше: синергізм</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Синергізм ацесульфаму К і аспартаму">
+        <circle cx="160" cy="280" r="70" fill="rgba(242,165,65,.16)" stroke="#F2A541" stroke-width="3"/>
+        <circle cx="360" cy="280" r="70" fill="rgba(163,135,230,.16)" stroke="#A387E6" stroke-width="3"/>
+        <circle cx="560" cy="280" r="90" fill="rgba(108,195,160,.18)" stroke="#6CC3A0" stroke-width="4"/>
+        <g font-family="Unbounded" font-weight="700" fill="#F5EDDF" text-anchor="middle"><text x="260" y="290" font-size="30">+</text><text x="460" y="290" font-size="30">=</text>
+          <text x="160" y="290" font-size="28" fill="#FFD39A">×200</text><text x="360" y="290" font-size="28" fill="#D8CBFA">×200</text><text x="560" y="294" font-size="36" fill="#B5EBD5">×300</text></g>
+        <g font-family="Manrope" font-weight="800" font-size="16" fill="#F5EDDF" text-anchor="middle"><text x="160" y="378">ацесульфам К</text><text x="360" y="378">аспартам</text><text x="560" y="398">суміш</text></g>
+        <!-- графік -->
+        <g stroke="#4D443A" stroke-width="2" fill="none"><path d="M720 190V430H1190"/></g>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B"><text x="1190" y="454" text-anchor="end">час →</text><text x="730" y="186">солодкість</text></g>
+        <path class="draw" style="--len:600" d="M722 428C740 428 742 250 770 250C800 250 830 420 920 426" stroke="#F2A541" stroke-width="4" fill="none"/>
+        <path class="draw" style="--len:700" d="M722 428C820 428 840 300 900 300C980 300 1060 380 1180 420" stroke="#A387E6" stroke-width="4" fill="none"/>
+        <path class="draw" style="--len:800" d="M722 428C742 428 748 222 790 222C880 222 960 300 1180 408" stroke="#6CC3A0" stroke-width="5" fill="none"/>
+        <g font-family="Manrope" font-weight="800" font-size="15"><text x="742" y="244" fill="#FFD39A" class="lbl">швидко</text><text x="900" y="292" fill="#D8CBFA" class="lbl" text-anchor="middle">довго</text><text x="800" y="212" fill="#B5EBD5" class="lbl">суміш</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:476px;width:600px;padding:16px 22px;">
+        <p class="xs" style="margin-bottom:10px;"><b>Стабільність при тривалому зберіганні</b></p>
+        <div style="height:14px;border-radius:7px;background:linear-gradient(90deg,#E8573A,#F2A541,#6CC3A0);"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;"><span class="xs t"><b>аспартам</b> — розкладається найбільше</span><span class="xs g"><b>ацесульфам К</b> — найстійкіший</span></div>
+        <p class="xs m" style="margin-top:8px;">Швидкість розкладання залежить від кислотності та температури зберігання</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:700px;top:476px;width:500px;padding:16px 22px;">
+        <p class="xs"><b class="a">Ацесульфам К</b> розчиняється найшвидше → розчинна кава, сухі напої, столові підсолоджувачі</p>
+        <p class="xs" style="margin-top:10px;"><b class="pl">Синергізм</b> є й у цикламату з сахарином, ацесульфамом К та аспартамом</p>
+      </div>
+    </div>
+    <aside class="notes">Ацесульфам К добре поєднується з іншими підсолоджувачами, особливо з аспартамом; тому його зазвичай використовують у складі сумішей. Виникає не тільки кількісний, а й якісний синергізм (підсилення властивостей): обидва приблизно в 200 разів солодші за цукор, а в суміші — у 300 разів.
+Солодкість ацесульфаму К відчувається миттєво, але недовго; аспартаму — навпаки, не одразу, але довше. Суміш у різних пропорціях дозволяє підібрати оптимальну солодкість для будь-якого продукту.
+Цикламат покращує смак сахарину; синергічний ефект також з ацесульфамом К і аспартамом. Сумішеві підсолоджувачі — найчастіший спосіб регулювати смак, бо заміна сахарози буває дуже складною.
+Для продуктів із тривалим (кілька років) терміном придатності важлива стабільність при зберіганні: інтенсивні підсолоджувачі повільно розкладаються на нешкідливі, але несолодкі складові; швидкість залежить від кислотності та температури. Найбільше розкладається аспартам, найстійкіший — ацесульфам К; він також найшвидше розчиняється у воді, тому його використовують у порошкоподібних продуктах швидкого приготування (сухі напої).
+⚠ У лекції: цикламат покращує смак сахарину «у кількості 110 частин на 1 частину сахарину» — ймовірно, помилка; типове співвідношення — 10:1. Криві на графіку — наочна схема.</aside>
+  </section>
+
+  <!-- ================= 11. Аспартам ================= -->
+  <section class="slide" data-title="1 · Аспартам">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="340" cy="360" r="380" fill="url(#glowT)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Аспартам Е951</i></p><h2 class="rv">Найпоширеніший — і найпримхливіший</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Будова аспартаму і збереження солодкості">
+        <g style="color:#A387E6"><use href="#hex" x="90" y="176" width="90" height="90"/></g>
+        <g style="color:#62A9E0"><use href="#hex" x="250" y="176" width="90" height="90"/></g>
+        <circle cx="430" cy="221" r="30" fill="none" stroke="#F2A541" stroke-width="5"/>
+        <path d="M180 221H250M340 221H400" stroke="#BDB09B" stroke-width="5"/>
+        <g font-family="Manrope" font-weight="800" font-size="15" fill="#F5EDDF" text-anchor="middle"><text x="135" y="290">аспарагінова</text><text x="135" y="308">кислота</text><text x="295" y="290">фенілаланін</text><text x="430" y="290">метиловий</text><text x="430" y="308">ефір</text></g>
+        <!-- збереження солодкості -->
+        <g font-family="Manrope" font-weight="700" font-size="16" fill="#BDB09B">
+          <text x="80" y="360" fill="#F5EDDF" font-weight="800">Солодкість зберігається:</text>
+          <text x="80" y="402">20 °C</text><text x="80" y="446">10 °C</text><text x="80" y="490">4 °C</text>
+          <rect x="140" y="388" width="420" height="18" rx="9" fill="#3B342B"/><rect x="140" y="432" width="420" height="18" rx="9" fill="#3B342B"/><rect x="140" y="476" width="420" height="18" rx="9" fill="#3B342B"/>
+          <rect class="grow" x="140" y="388" width="60" height="18" rx="9" fill="#E8573A" style="transform-origin:140px 397px"/>
+          <rect class="grow" x="140" y="432" width="210" height="18" rx="9" fill="#F2A541" style="transform-origin:140px 441px;animation-delay:.2s"/>
+          <rect class="grow" x="140" y="476" width="420" height="18" rx="9" fill="#6CC3A0" style="transform-origin:140px 485px;animation-delay:.4s"/>
+          <text x="210" y="403" fill="#F5EDDF">24–48 год</text><text x="360" y="447" fill="#F5EDDF">7 діб</text><text x="570" y="491" fill="#F5EDDF">14 діб</text>
+        </g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:660px;top:176px;width:540px;padding:16px 22px;border-color:rgba(108,195,160,.55);">
+        <h3 class="g" style="font-size:19px;">Доречний — без нагрівання</h3>
+        <div class="pills" style="margin-top:10px;gap:7px;"><span class="pill g">морозиво</span><span class="pill g">креми</span><span class="pill g">йогурти</span><span class="pill g">вершкові й сирні десерти</span><span class="pill g">дієтичні продукти</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:340px;width:540px;padding:16px 22px;border-color:rgba(232,87,58,.55);">
+        <h3 class="t" style="font-size:19px;">Непридатний</h3>
+        <ul class="ul t" style="margin-top:4px;"><li>варіння, випічка — руйнується при кип’ятінні</li><li>кислі продукти з довгим строком: соуси, гірчиця</li><li>сильнокислі й слаболужні середовища (чай з лимоном)</li></ul>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:532px;width:1120px;padding:14px 22px;display:flex;gap:16px;align-items:center;border-color:rgba(232,87,58,.6);background:rgba(232,87,58,.1);">
+        <svg width="42" height="42" viewBox="0 0 48 48" style="flex-shrink:0"><use href="#ban"/></svg>
+        <p class="xs"><b class="t">Протипоказаний при фенілкетонурії.</b> За лекцією — також під час вагітності; у лекції наведено й інші можливі ризики (утворення метанолу, формальдегіду) — вони дискусійні</p>
+      </div>
+    </div>
+    <aside class="notes">Аспартам (С14Н18N2О5) — найпоширеніший штучний підсолоджувач, використовується більш як у 100 країнах. До складу входять дві амінокислоти (аспарагінова кислота і фенілаланін) та невелика кількість метилового ефіру.
+Солодкий смак продуктів з аспартамом не змінюється при 20 °С протягом 24–48 год, при 10 °С — 7 діб, при 4 °С — 14 діб.
+Доцільний для продуктів без теплової обробки: морозиво, креми, йогурти, вершкові й сирні десерти, лікувально-дієтичні продукти. Непридатний для варіння й випічки та для кислих продуктів із тривалим строком зберігання (соуси, гірчиця): розщеплюється і втрачає функції. У дуже малих дозах може бути підсилювачем смаку.
+Недоліки за лекцією: 1) термічно нестійкий; 2) втрачає солодкість у сильнокислих і слаболужних середовищах (чай з лимоном); 3) «при температурі близько 30 °С розкладається на формальдегід, метанол і фенілаланін»; 4) протипоказаний хворим на фенілкетонурію; 5) протипоказаний під час вагітності; 6) у лекції також згадано, що «в США визнано ГМ-продуктом» і перелік захворювань, які він нібито може провокувати.
+⚠ У лекції — «аспарагін»; насправді до складу аспартаму входить аспарагінова кислота.
+⚠ Пункти 3, 5, 6 не відповідають сучасному консенсусу: JECFA (2023) після віднесення аспартаму IARC до групи 2B («можливо канцерогенний») залишила ДДС 40 мг/кг; EFSA (2013) визнала його безпечним у межах ДДС. Метанол утворюється при метаболізмі, але в кількостях, менших, ніж із фруктових соків. Застереження при фенілкетонурії — загальновизнане (маркування «містить джерело фенілаланіну»).
+Шкала на слайді — наочне порівняння тривалості, не в масштабі.</aside>
+  </section>
+
+  <!-- ================= 12. Цукрозамінники ================= -->
+  <section class="slide" data-title="1 · Цукрозамінники">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="300" cy="420" r="380" fill="url(#glowA)"/><circle cx="900" cy="400" r="420" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Цукрозамінники · табл. 3.3</i></p><h2 class="rv">Солодкі й калорійні — але повільні</h2></div></div>
+    <div class="card" data-depth="0.6" style="position:absolute;left:80px;top:176px;width:460px;height:466px;padding:20px 24px;">
+      <svg width="200" height="90" viewBox="0 0 230 110" aria-hidden="true"><use href="#apple" x="0" y="4" width="100" height="100"/><use href="#honey" x="110" y="6" width="92" height="100"/></svg>
+      <h3 class="rv" style="margin-top:8px;">Фруктоза <span class="xs m" style="font-family:var(--body)">— не харчова добавка</span></h3>
+      <div class="rv" style="display:flex;gap:24px;margin-top:12px;">
+        <div><p class="big a" style="font-size:34px;">1,7×</p><p class="xs m">солодша за цукор</p></div>
+        <div><p class="big" style="font-size:34px;">3,8</p><p class="xs m">ккал у 1 г</p></div>
+        <div><p class="big g" style="font-size:34px;">≤45 г</p><p class="xs m">на добу</p></div>
+      </div>
+      <p class="xs rv" style="margin-top:14px;">Плодовий цукор з ягід, фруктів, меду; потребує менше інсуліну. Разова доза — 10–15 г.</p>
+      <p class="xs rv" style="margin-top:10px;"><b class="t">Але</b> калорійна як цукор: надмір → ожиріння, серцево-судинні хвороби, діабет</p>
+    </div>
+    <div class="L" data-depth="0.95" id="szGrid"></div>
+    <aside class="notes">Цукрозамінники — речовини природного або штучного походження, солодкі на смак, з енергетичною цінністю (рис. 3.2). Засвоюються не так швидко, як сахароза, потребують менше інсуліну, не перевантажують підшлункову залозу; у помірних кількостях не підвищують різко рівень глюкози.
+Фруктоза (плодовий цукор) — натуральний моносахарид з ягід, фруктів, деяких овочів, меду; солодша за цукор в 1,7 раза; 3,8 ккал/г; легко й повністю засвоюється. Засвоєння потребує менше інсуліну; добова доза — не більше 45 г, разова — 10–15 г. Використовують для варення, джемів, страв; прискорює розщеплення алкоголю в крові. За калорійністю не поступається цукру: надмірне споживання — ожиріння, серцево-судинні захворювання, діабет. Однією з причин ожиріння в США називають солодкі газовані напої з фруктозою. Фруктоза не є харчовою добавкою.
+Таблиця 3.3: лактит Е966 (Ксол 0,3–0,4) — підсолоджувач, текстуратор, емульгатор; ксиліт Е967 (0,85–1,0) — підсолоджувач, вологоутримувач, стабілізатор, емульгатор; сорбіт Е420 (0,5–0,6) — підсолоджувач, вологоутримувач, текстуратор, емульгатор; ізомальт Е953 (0,5) — підсолоджувач, текстуратор, запобігає грудкуванню.
+⚠ У лекції сказано, що фруктоза «не впливає на рівень цукру в крові» — точніше, впливає значно менше, ніж глюкоза.</aside>
+  </section>
+
+  <!-- ================= 13. Ксиліт і сорбіт ================= -->
+  <section class="slide" data-title="1 · Ксиліт і сорбіт">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="330" cy="400" r="360" fill="url(#glowS)"/><circle cx="960" cy="400" r="360" fill="url(#glowT)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Найпоширеніші цукрозамінники</i></p><h2 class="rv">Ксиліт і сорбіт</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Сировина для ксиліту і сорбіту">
+        <g class="bob"><use href="#log" x="86" y="186" width="120" height="65"/></g>
+        <g class="bob2"><use href="#cob" x="226" y="170" width="46" height="92"/></g>
+        <g class="bob"><circle cx="318" cy="222" r="26" fill="#3A2A20"/><g fill="#E6C08A"><ellipse cx="308" cy="214" rx="4" ry="7"/><ellipse cx="322" cy="210" rx="4" ry="7"/><ellipse cx="316" cy="228" rx="4" ry="7"/><ellipse cx="330" cy="224" rx="4" ry="7"/></g></g>
+        <g class="bob2"><use href="#rowan" x="690" y="170" width="100" height="92"/></g>
+        <g class="bob"><use href="#cob" x="810" y="170" width="46" height="92"/></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div style="position:absolute;left:370px;top:182px;width:240px;"><p class="xs m rv">деревина листяних порід, качани кукурудзи, лушпиння</p></div>
+      <div style="position:absolute;left:880px;top:182px;width:320px;"><p class="xs m rv">горобина (<i>Sorbus aucuparia</i>) — звідси назва; промислово — з кукурудзяного крохмалю</p></div>
+      <div class="card rv" style="position:absolute;left:80px;top:290px;width:540px;height:316px;border-color:rgba(98,169,224,.55);">
+        <h3 class="sk">Ксиліт <span class="xs m" style="font-family:var(--body)">Е967 · Ксол 0,85–1,0</span></h3>
+        <ul class="ul" style="margin-top:6px;"><li>засвоєння майже не залежить від інсуліну</li><li>корисний для ротової порожнини, <b>запобігає карієсу</b> → жувальні гумки</li><li>жовчогінна й послаблювальна дія</li></ul>
+        <div style="display:flex;gap:20px;margin-top:14px;">
+          <div><p class="big sk" style="font-size:28px;">30–50 г</p><p class="xs m">на добу</p></div>
+          <div><p class="big" style="font-size:28px;">15–20 г</p><p class="xs m">при надмірній вазі</p></div>
+          <div><p class="big" style="font-size:28px;">5–10 г</p><p class="xs m">разово</p></div>
+        </div>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:290px;width:540px;height:316px;border-color:rgba(232,87,58,.55);">
+        <h3 class="t">Сорбіт <span class="xs m" style="font-family:var(--body)">Е420 · Ксол 0,5–0,6</span></h3>
+        <ul class="ul t" style="margin-top:6px;"><li>багатоатомний спирт (поліол); засвоюється на <b>98%</b>, ≈ 4 ккал/г</li><li>зберігає смак при кип’ятінні; економить вітаміни групи В</li><li><b>гігроскопічний:</b> 5–10% у цукерках, пастилі — не висихають</li></ul>
+        <div class="pills" style="margin-top:12px;gap:6px;"><span class="pill">кондитерські</span><span class="pill">дієтичні консерви</span><span class="pill">жувальні гумки</span><span class="pill">фармація</span><span class="pill">косметика</span></div>
+      </div>
+    </div>
+    <aside class="notes">Ксиліт — солодка речовина з рослинної сировини: деревина деяких листяних порід, ягоди, фрукти, відходи сільського господарства (бавовняне лушпиння, качани кукурудзи, соняшникове лушпиння). Засвоєння майже не залежить від інсуліну. Має жовчогінну та послаблювальну дію. Добова доза — до 30–50 г, за надмірної маси тіла — до 15–20 г, разова — 5–10 г. Благотворно впливає на мікрофлору ротової порожнини, запобігає карієсу — тому використовується в жувальних гумках; також у кондитерських виробах для хворих на діабет і людей із зайвою вагою.
+Сорбіт (C6H14O6) — натуральний цукрозамінник, багатоатомний спирт (поліол). Багато його в плодах горобини (Sorbus aucuparia) — звідси назва. Промислово виробляється з кукурудзяного крохмалю. Не токсичний, засвоюється на 98%. Сприяє економії вітамінів групи В (тіамін, піридоксин, біотин) і росту кишкової мікрофлори, що їх синтезує. Калорійність ≈ 4 ккал/г (цукор — трохи більше 4). Безпечний для діабетиків; зберігає смак при кип’ятінні. Сильно гігроскопічний: пом’якшує продукти й запобігає висиханню — у цукерки, киселі, пастилу додають 5–10%.
+Застосування: підсолоджувач, стабілізатор, консервант, пластифікатор у кондитерських виробах, дієтичних плодоовочевих консервах, безалкогольних напоях, рибних фаршевих виробах, жувальних гумках; компоти й соки для дитячого та дієтичного харчування на сиропі з сорбітом і ксилітом. Також — шкіряна, текстильна, паперова, тютюнова, хімічна промисловість; фармація (наповнювач, сиропи від кашлю, виробництво вітаміну С); медицина (холецистити, коліти, дискінезія — виражена проносна дія); косметика (креми, зубні пасти, шампуні).</aside>
+  </section>
+
+  <!-- ================= 14. Нове покоління ================= -->
+  <section class="slide" data-title="1 · Ізомальт і нове покоління">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="260" r="460" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">1 · <i>Цукрозамінники нового покоління</i></p><h2 class="rv">Ізомальт: з цукру — майже цукор</h2></div></div>
+    <div class="L" data-depth="0.5">
+      <svg width="1280" height="720" aria-label="Одержання ізомальту">
+        <use href="#cube" x="100" y="180" width="70" height="72"/>
+        <path class="draw" style="--len:140" d="M190 216H300" stroke="#F2A541" stroke-width="4" marker-end="url(#ah)"/>
+        <g style="color:#A387E6"><use href="#mol" x="330" y="172" width="90" height="82"/></g>
+        <path class="draw" style="--len:140" d="M440 216H550" stroke="#F2A541" stroke-width="4" marker-end="url(#ah)"/>
+        <g class="bob"><circle cx="620" cy="216" r="42" fill="#F5EDDF" fill-opacity=".1" stroke="#F5EDDF" stroke-width="3"/><g fill="#F5EDDF"><rect x="596" y="196" width="18" height="18" rx="3"/><rect x="620" y="204" width="20" height="20" rx="3"/><rect x="602" y="220" width="16" height="16" rx="3"/></g></g>
+        <g font-family="Manrope" font-weight="800" font-size="16" fill="#F5EDDF" text-anchor="middle"><text x="135" y="282">сахароза</text><text x="375" y="282">ізомальтулоза</text><text x="620" y="282">ізомальт</text></g>
+        <g font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B" text-anchor="middle"><text x="245" y="204">фермент</text><text x="495" y="204">гідрування</text></g>
+        <!-- часова лінія -->
+        <path d="M100 560H640" stroke="#4D443A" stroke-width="3"/>
+        <circle cx="160" cy="560" r="10" fill="#A387E6"/><circle cx="520" cy="560" r="10" fill="#6CC3A0"/>
+        <g font-family="Unbounded" font-weight="700" font-size="22" fill="#F5EDDF"><text x="160" y="540" text-anchor="middle">1956</text><text x="520" y="540" text-anchor="middle">1990</text></g>
+        <g font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B" text-anchor="middle"><text x="160" y="590">вперше — як побічний</text><text x="160" y="608">продукт декстринів</text><text x="520" y="590">дозвіл у США →</text><text x="520" y="608">широке застосування</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:326px;width:580px;padding:14px 20px;">
+        <p class="xs"><b>Також нове покоління:</b></p>
+        <p class="xs" style="margin-top:6px;"><span class="pill pl">лактоза → лактитол</span> <span class="pill pl">крохмаль → еритритол</span></p>
+        <p class="xs m" style="margin-top:8px;">Лактитол майже не засвоюється, живить біфідобактерії — пребіотик</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:700px;top:176px;width:500px;padding:18px 22px;">
+        <h3 style="font-size:19px;">Чому ізомальт?</h3>
+        <ul class="ul g" style="margin-top:6px;"><li>смак і вигляд — як у цукру, солодкість на <b>40–60% нижча</b></li><li>погано всмоктується → продукти для діабетиків</li><li>схвалений комітетом експертів ВООЗ <b>без обмежень</b></li><li>підкреслює натуральний смак ароматизаторів</li><li>вироби <b>не липнуть</b> до рук і не м’якнуть у теплі</li></ul>
+      </div>
+      <div class="rv" style="position:absolute;left:700px;top:484px;width:500px;">
+        <p class="xs m">Кондитерські вироби з ізомальтом:</p>
+        <div class="pills" style="margin-top:8px;gap:7px;"><span class="pill">карамель</span><span class="pill">грильяж</span><span class="pill">шоколад</span><span class="pill">драже</span><span class="pill">конфітюр</span><span class="pill">морозиво</span><span class="pill">жувальна гумка</span></div>
+      </div>
+    </div>
+    <aside class="notes">До цукрозамінників нового покоління належать: ізомальт (гідрогенізація сахарози), лактитол (гідрогенізація лактози), еритритол (з крохмалевмісної сировини).
+Лактит (лактитол) одержують каталітичною гідрогенізацією лактози. В організмі практично не засвоюється, сприяє розвитку біфідобактерій у товстому кишечнику — пребіотичний ефект. Використовують переважно в кондитерському та харчоконцентратному виробництві.
+Ізомальт (C12H24O11) — низькокалорійний вуглевод нового покоління: ферментативна обробка сахарози в ізомальтулозу з подальшим каталітичним гідруванням. Випускають від порошку до гранул. У природі міститься в цукровмісних рослинах і меді. Солодкість — близько половини сахарози (на 40–60% менша). Вперше одержаний у 1956 р. як побічний продукт виробництва декстринів із сахарози; широке використання — з 1990 р., після визнання безпечним і дозволу в США.
+Схвалений без обмежень об’єднаним комітетом експертів ВООЗ з харчових добавок. Погано всмоктується в кишечнику — тому підходить для продуктів для хворих на діабет. Добре поєднується з ароматизаторами, підкреслюючи натуральний смак. Застосування: грильяж, м’яка й тверда карамель, шоколад, драже, конфітюр, морозиво, жувальна гумка. Дає продуктам потрібний об’єм і структуру при середній солодкості; вироби не прилипають до рук і не м’якнуть при підвищенні температури.</aside>
+  </section>
+
+  <!-- ================= 15. Ароматизатори: навіщо ================= -->
+  <section class="slide" data-title="2 · Ароматизатори">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="420" r="520" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">2 · <i>Ароматизатори</i></p><h2 class="rv">Навіщо продукту ароматизатор</h2><p class="s m rv" style="margin-top:8px;max-width:1000px;">Окремі смакоароматичні речовини або їх суміші, що покращують органолептичні властивості</p></div></div>
+    <div class="card" data-depth="0.45" style="position:absolute;left:80px;top:232px;width:208px;height:236px;text-align:center;padding:18px 14px;">
+      <svg class="ico" style="margin:0 auto 10px;width:72px;height:72px" viewBox="0 0 100 100"><use href="#candy" x="0" y="8" width="60" height="30"/><use href="#candy" x="40" y="36" width="60" height="30" style="filter:hue-rotate(120deg)"/><use href="#candy" x="4" y="64" width="60" height="30" style="filter:hue-rotate(240deg)"/></svg>
+      <h3 style="font-size:18px;">Асортимент</h3><p class="xs m" style="margin-top:8px;">безліч смаків однотипної продукції</p></div>
+    <div class="card" data-depth="0.65" style="position:absolute;left:306px;top:252px;width:208px;height:236px;text-align:center;padding:18px 14px;">
+      <svg class="ico" style="margin:0 auto 10px;width:72px;height:72px" viewBox="0 0 100 100"><path d="M78 40A30 30 0 1 0 74 72" stroke="#F2A541" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M80 24V44H60" stroke="#F2A541" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/><use href="#steamS" x="36" y="34" width="26" height="34" style="color:#A387E6"/></svg>
+      <h3 style="font-size:18px;">Відновити</h3><p class="xs m" style="margin-top:8px;">аромат, втрачений при пастеризації, заморожуванні, концентруванні</p></div>
+    <div class="card" data-depth="0.85" style="position:absolute;left:532px;top:232px;width:208px;height:236px;text-align:center;padding:18px 14px;">
+      <svg class="ico" style="margin:0 auto 10px;width:72px;height:72px" viewBox="0 0 100 100"><g fill="#F2A541"><rect x="10" y="40" width="18" height="50" rx="4"/><rect x="40" y="40" width="18" height="50" rx="4"/><rect x="70" y="40" width="18" height="50" rx="4"/></g><path d="M6 32H94" stroke="#6CC3A0" stroke-width="5" stroke-dasharray="8 6"/></svg>
+      <h3 style="font-size:15.5px;">Стандартизувати</h3><p class="xs m" style="margin-top:8px;">однаковий смак незалежно від якості сировини</p></div>
+    <div class="card" data-depth="1.05" style="position:absolute;left:758px;top:252px;width:208px;height:236px;text-align:center;padding:18px 14px;">
+      <svg class="ico" style="margin:0 auto 10px;width:72px;height:72px" viewBox="0 0 100 100"><g fill="#E6D36A"><ellipse cx="34" cy="62" rx="16" ry="12"/><ellipse cx="62" cy="70" rx="16" ry="12"/><ellipse cx="48" cy="46" rx="16" ry="12"/></g><use href="#steamS" x="50" y="0" width="34" height="44" style="color:#A387E6"/></svg>
+      <h3 style="font-size:18px;">Надати аромат</h3><p class="xs m" style="margin-top:8px;">продуктам без нього — напр., із сої</p></div>
+    <div class="card" data-depth="1.25" style="position:absolute;left:984px;top:232px;width:216px;height:236px;text-align:center;padding:18px 14px;">
+      <svg class="ico" style="margin:0 auto 10px;width:72px;height:72px" viewBox="0 0 100 100"><use href="#steamS" x="14" y="10" width="54" height="72" style="color:#8A7A62"/><use href="#ban" x="46" y="46" width="46" height="46"/></svg>
+      <h3 style="font-size:18px;">Прибрати</h3><p class="xs m" style="margin-top:8px;">небажані відтінки запахів і присмаків</p></div>
+    <div class="L" data-depth="0.95">
+      <div class="rv" style="position:absolute;left:80px;top:504px;width:1120px;display:flex;gap:12px;align-items:center;">
+        <p class="xs m" style="white-space:nowrap;">Переваги:</p>
+        <div class="pills" style="gap:7px;flex-wrap:nowrap;"><span class="pill g">мікробіологічна чистота</span><span class="pill g">стабільність</span><span class="pill g">довгий строк</span><span class="pill g">дешевше зберігати</span><span class="pill g">точне дозування</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:566px;width:1120px;display:flex;gap:16px;align-items:center;padding:12px 22px;border-color:rgba(232,87,58,.6);background:rgba(232,87,58,.1);">
+        <svg width="40" height="40" viewBox="0 0 48 48" style="flex-shrink:0"><use href="#ban"/></svg>
+        <p class="xs"><b class="t">Не можна</b> маскувати псування чи недоброякісну сировину. Надлишок ароматизатора погіршує смак і якість</p>
+      </div>
+    </div>
+    <aside class="notes">Ароматизатори надають чи посилюють смак та аромат. При перевищенні кількості погіршуються органолептичні властивості та якість. Не можна використовувати ароматизатори для усунення аромату, спричиненого псуванням або недоброякісною сировиною.
+Зростання попиту зумовлене технологіями глибокої переробки сировини: одержують стандартизовані концентрати білків, жирів і вуглеводів, а продукти втрачають «баластні» речовини, зокрема леткі ароматичні (рафіновані олії, соєвий білок, борошно, крохмаль, цукор).
+Переваги над рослинною сировиною: мікробіологічна чистота, відсутність токсичних елементів, стабільність при зберіганні та тривалі терміни придатності, мінімальні витрати на склад і транспорт, точне відтворюване дозування. Можуть доповнювати рослинну сировину або повністю замінювати її ароматичні компоненти. Форми — рідини, порошки, іноді пасти.
+Харчові ароматизатори — індивідуальні смакоароматичні речовини або багатокомпонентні суміші запашних речовин для покращення органолептики. Дозволяють: створити необмежений асортимент однотипної продукції (кондитерські вироби, морозиво, напої, йогурти, соуси, желе, жувальна гумка); поновити або підсилити смак і аромат, втрачені під час обробки (пастеризація, стерилізація, заморожування, концентрування); стандартизувати смакоароматичні характеристики незалежно від якості сировини; надати аромат продукції, яка його не має (продукти переробки сої); позбавити продукцію небажаних відтінків. Використання з метою фальсифікації чи маскування псування неприпустиме.</aside>
+  </section>
+
+  <!-- ================= 16. Сотні молекул ================= -->
+  <section class="slide" data-title="2 · Склад ароматів">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="340" cy="320" r="380" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">2 · <i>Склад ароматизаторів</i></p><h2 class="rv">Один аромат — сотні молекул</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Кількість ароматоутворюючих сполук у продуктах">
+        <use href="#bread" x="80" y="186" width="74" height="44"/>
+        <g style="color:#8A4B1E"><use href="#cup" x="84" y="252" width="66" height="50"/></g>
+        <use href="#wine" x="96" y="312" width="42" height="66"/>
+        <g style="color:#2B1A10"><use href="#cup" x="84" y="398" width="66" height="50"/></g>
+        <g font-family="Manrope" font-weight="800" font-size="16" fill="#F5EDDF"><text x="170" y="214">хліб</text><text x="170" y="284">чай</text><text x="170" y="354">вино</text><text x="170" y="430">кава</text></g>
+        <g>
+          <rect x="250" y="198" width="380" height="24" rx="12" fill="#3B342B"/><rect x="250" y="268" width="380" height="24" rx="12" fill="#3B342B"/><rect x="250" y="338" width="380" height="24" rx="12" fill="#3B342B"/><rect x="250" y="414" width="380" height="24" rx="12" fill="#3B342B"/>
+          <rect class="grow" x="250" y="198" width="152" height="24" rx="12" fill="#C98A3C" style="transform-origin:250px 210px"/>
+          <rect class="grow" x="250" y="268" width="228" height="24" rx="12" fill="#A387E6" style="transform-origin:250px 280px;animation-delay:.15s"/>
+          <rect class="grow" x="250" y="338" width="304" height="24" rx="12" fill="#B21F4C" style="transform-origin:250px 350px;animation-delay:.3s"/>
+          <rect class="grow" x="250" y="414" width="380" height="24" rx="12" fill="#F2A541" style="transform-origin:250px 426px;animation-delay:.45s"/>
+        </g>
+        <g font-family="Unbounded" font-weight="700" font-size="17" fill="#F5EDDF" class="lbl"><text x="412" y="216">&gt; 200</text><text x="488" y="286">&gt; 300</text><text x="564" y="356">≈ 400</text><text x="560" y="432" text-anchor="end" fill="#1B1408">≈ 500</text></g>
+        <text x="250" y="470" font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B">кількість ароматоутворюючих сполук</text>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:690px;top:176px;width:510px;padding:16px 20px;">
+        <p class="xs"><b>Класи речовин у складі</b></p>
+        <div class="pills" style="margin-top:10px;gap:6px;"><span class="pill">альдегіди</span><span class="pill">кетони</span><span class="pill">спирти</span><span class="pill">кислоти</span><span class="pill">ефіри</span><span class="pill">меркаптани</span><span class="pill">сульфіди</span><span class="pill">піразини</span><span class="pill">тіазоли</span><span class="pill">оксазоли</span><span class="pill">тіофени</span><span class="pill">фурани</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:690px;top:390px;width:510px;padding:14px 20px;border-color:rgba(242,165,65,.6);">
+        <p class="s"><b class="a">Тому Е-кодів ароматизатори не мають</b></p>
+        <p class="xs m" style="margin-top:4px;">суміші налічують десятки й сотні речовин</p>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:80px;top:494px;width:600px;"><b style="color:var(--text)">Реєстр ароматизаторів МОЗ України</b> — загальні вимоги:</p>
+      <div class="rv" style="position:absolute;left:80px;top:524px;width:1120px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div class="card" style="padding:12px 14px;"><p class="xs"><b class="g">Безпечно й чесно:</b> не підвищує ризик і не вводить в оману</p></div>
+        <div class="card" style="padding:12px 14px;"><p class="xs"><b class="g">Є в Реєстрі</b> — обіг без додаткових дозволів</p></div>
+        <div class="card" style="padding:12px 14px;"><p class="xs"><b class="a">Немає в Реєстрі</b> ≠ небезпечний (якщо МОЗ не визнало інше)</p></div>
+        <div class="card" style="padding:12px 14px;"><p class="xs"><b class="t">Вміст</b> не вище максимально допустимих рівнів (МДР)</p></div>
+      </div>
+    </div>
+    <aside class="notes">До складу ароматизаторів входять органічні речовини різних класів: альдегіди, кетони, спирти, кислоти, ефіри, меркаптани, сульфіди, піразини, тіазоли, оксазоли, тіофени, фурани, гетероцикли та інші. Суміші можуть налічувати десятки й сотні речовин: запах свіжоспеченого хліба — понад 200 сполук, чорного байхового чаю — понад 300, вина — близько 400, смаженої кави — близько 500. Тому цифрові коди ароматизаторам не присвоюються.
+Загальні вимоги:
+1. Застосування ароматизаторів не повинно збільшувати ризик для споживачів і вводити їх в оману.
+2. Наявність ароматизатора в Реєстрі означає, що він може вільно перебувати в обігу в Україні та використовуватися для виробництва без погоджень, дозволів, санітарно-епідеміологічної експертизи.
+3. Відсутність у Реєстрі не означає автоматично, що він небезпечний — крім випадків, коли МОЗ прямо визнало його небезпечним.
+4. Вміст ароматичних речовин (і речовин, що утворюються внаслідок їх використання) не повинен перевищувати максимальних допустимих рівнів. Для безпечних навіть у великих дозах МДР визначає документація виробника.
+Довжина смужок пропорційна кількості сполук (200/300/400/500).</aside>
+  </section>
+
+  <!-- ================= 21. Ефірні олії, есенції, рідкий дим ================= -->
+  <section class="slide" data-title="2 · Ефірні олії та есенції">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="360" cy="300" r="380" fill="url(#glowM)"/><circle cx="960" cy="320" r="340" fill="url(#glowP)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">2 · <i>Ефірні олії та ароматичні есенції</i></p><h2 class="rv">Концентрований запах</h2></div></div>
+    <div class="card" data-depth="0.6" style="position:absolute;left:80px;top:176px;width:560px;height:300px;">
+      <div style="display:flex;gap:16px;align-items:center;">
+        <svg width="56" height="100" viewBox="0 0 60 120" style="color:#E6B83A;flex-shrink:0"><use href="#dropper"/></svg>
+        <div><h3 class="g">Ефірні олії</h3><p class="xs m" style="margin-top:6px;">пахучі рідкі суміші летких речовин, що виробляють рослини; прозорі, нерозчинні у воді, окиснюються світлом і киснем</p></div>
+      </div>
+      <p class="xs" style="margin-top:14px;"><b>Як одержують:</b></p>
+      <div class="pills" style="margin-top:8px;gap:7px;"><span class="pill g sm">екстракція розчинниками</span><span class="pill g sm">поглинання свіжим жиром</span><span class="pill g sm">відгонка з водяною парою</span></div>
+    </div>
+    <div class="card" data-depth="0.8" style="position:absolute;left:660px;top:176px;width:540px;height:300px;">
+      <h3 class="pl">Ароматичні есенції</h3>
+      <p class="xs m" style="margin-top:6px;">композиції природних, ідентичних чи штучних запашних речовин у розчиннику — до <b style="color:var(--text)">20–50 компонентів</b>; виготовляють на спецпідприємствах під контролем МОЗ</p>
+      <div class="pills" style="margin-top:12px;gap:6px;"><span class="pill pl">ванільна</span><span class="pill pl">ромова</span><span class="pill pl">мигдальна</span><span class="pill pl">кавова</span><span class="pill pl">карамельна</span><span class="pill pl">м’ятна</span><span class="pill pl">тархун</span><span class="pill pl">полунична</span><span class="pill pl">вишнева</span><span class="pill pl">лимон-лайм</span><span class="pill pl">апельсинова</span></div>
+    </div>
+    <div class="L" data-depth="0.5">
+      <svg width="1280" height="720" aria-label="Як одержують рідкий дим">
+        <rect x="80" y="496" width="1120" height="150" rx="22" fill="#242019" stroke="#3B342B"/>
+        <text x="110" y="532" font-family="Unbounded" font-weight="700" font-size="18" fill="#F5EDDF">Рідкий дим</text>
+        <text x="110" y="556" font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B">ефект копчення</text>
+        <g transform="translate(320 560)"><use href="#log" x="-46" y="-26" width="92" height="50"/></g>
+        <path d="M380 570H450" stroke="#F2A541" stroke-width="4" marker-end="url(#ah)"/>
+        <g transform="translate(470 520)"><g fill="#C98A3C"><circle cx="14" cy="64" r="4"/><circle cx="26" cy="58" r="3"/><circle cx="36" cy="66" r="4"/><circle cx="20" cy="72" r="3"/><circle cx="44" cy="60" r="3"/></g></g>
+        <path d="M540 570H610" stroke="#F2A541" stroke-width="4" marker-end="url(#ah)"/>
+        <use href="#flame" x="628" y="520" width="56" height="70"/>
+        <g class="steam" style="color:#8A7A62"><use href="#steamS" x="696" y="510" width="40" height="54"/></g>
+        <path d="M750 570H820" stroke="#F2A541" stroke-width="4" marker-end="url(#ah)"/>
+        <g style="color:#62A9E0"><use href="#jarC" x="842" y="512" width="80" height="96"/></g>
+        <path d="M940 570H1010" stroke="#F2A541" stroke-width="4" marker-end="url(#ah)"/>
+        <g style="color:#8A4B1E"><use href="#dropper" x="1040" y="510" width="48" height="96"/></g>
+        <g font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B" text-anchor="middle"><text x="320" y="626">деревина</text><text x="500" y="626">тирса</text><text x="680" y="626">спалювання</text><text x="882" y="626">дим + пара води</text><text x="1064" y="626">рідкий дим</text></g>
+      </svg>
+    </div>
+    <aside class="notes">Ефірні олії відомі з давніх часів як лікувальні та косметичні засоби; вони важливий компонент харчових ароматизаторів. Ефірні олії — пахучі рідкі суміші летких органічних речовин, що виробляються рослинами і обумовлюють їх запах. Прозорі рідини, нерозчинні у воді, розчинні в органічних розчинниках; під дією світла й кисню окиснюються, змінюючи колір і запах (рис. 3.4).
+Одержують: екстракцією легкими органічними розчинниками (спирт, ефір, бензин) з наступною їх відгонкою; поглинанням свіжим жиром; відгонкою з водяною парою. Часто способи комбінують.
+Ароматичні есенції — складні композиції природних, ідентичних природним або штучних запашних речовин у розчиннику; можуть містити 20–50 компонентів: екстракти рослинної та тваринної сировини, ефірні олії, настої, синтетичні ароматизатори, спирти (рис. 3.5). Есенція — рідкий ароматизатор. Під час створення рецептури синтетичної есенції важлива чистота інгредієнтів. Створення синтетичних есенцій контролює МОЗ; діють ДСТУ й ТУ; виготовлення дозволено на спеціальних підприємствах.
+Найпоширеніші есенції: мигдальна, ромова, шоколадна, коньячна, амаретто, джин, ванільна, ванільний бісквіт, ваніль-ром, тірамісу, крем-брюле, кавова, карамельна, крем Шарлотт, м’ятна, ментол, тархун, медова, фундук, фісташка, горіх, полунична, журавлина, кавун, сунична, вишнева, малинова, лісові ягоди, виноградна, чорна смородина, барбарисова, абрикосова, персикова, грушева, дюшес, яблуко, диня, чорнослив, ананасова, бананова, кокосова, лимон-лайм, апельсинова, цитринова, мандаринова.
+Рідкий дим: деревину розмелюють у тирсу і спалюють у печі; паралельно воду доводять до певної температури, її пара і дим надходять у ємності, де змішуються. На виході — «рідкий дим», що надає продуктам ефекту копчення.
+⚠ Кількість компонентів есенцій у лекції наведено по-різному: 20–50 та «іноді до 10–15 інгредієнтів».</aside>
+  </section>
+
+  <!-- ================= 22. Прянощі ================= -->
+  <section class="slide" data-title="2 · Прянощі та приправи">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="420" r="500" fill="url(#glowT)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">2 · <i>Прянощі та приправи</i></p><h2 class="rv">Яку частину рослини беремо</h2><p class="s m rv" style="margin-top:8px;">Прянощі — висушені частини рослин, що впливають на смак і аромат</p></div></div>
+    <div class="L" data-depth="0.95" id="spiceGrid"></div>
+    <div class="L" data-depth="0.95">
+      <p class="xs m rv" style="position:absolute;left:80px;top:614px;width:1120px;"><b style="color:var(--text)">Якість:</b> аромат і смак, колір, вміст вологи, ефірної олії, золи, домішок; пошкоджені плоди; зараженість шкідниками</p>
+    </div>
+    <aside class="notes">Прянощі — висушені частини рослин, що містять речовини, які впливають на смак і поліпшують аромат продуктів (рис. 3.6). Відомо понад 150 прянощів, найуживаніших — близько 40. До їх складу входять ефірні олії, глікозиди, алкалоїди. Класифікують за частиною рослини:
+1) насіннєві: гірчиця, мускатний горіх;
+2) плодові: кмин, аніс, перець, ваніль;
+3) квіткові: гвоздика, шафран;
+4) листкові: лавровий лист, м’ята;
+5) корові: кориця китайська;
+6) кореневі: імбир, петрушка;
+7) вся рослина: кріп, петрушка.
+Прянощі не включені до переліку харчових добавок, але широко застосовуються. Показники якості: аромат і смак; колір; масова частка вологи, ефірної олії, золи, домішок рослинного походження; вміст ушкоджених плодів; зараженість шкідниками.</aside>
+  </section>
+
+  <!-- ================= 17. Класифікація ================= -->
+  <section class="slide" data-title="3 · Класифікація ароматизаторів">
+    <div class="L" data-depth="0.12"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="200" cy="380" r="320" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">3 · <i>Класифікація ароматизаторів</i></p><h2 class="rv">Понад 5000 ароматизаторів — три ознаки</h2></div></div>
+    <div class="L" data-depth="0.45">
+      <svg width="1280" height="720" aria-hidden="true">
+        <g stroke="#4D443A" stroke-width="3" fill="none">
+          <path class="draw" style="--len:300" d="M300 400C340 400 340 236 380 236"/>
+          <path class="draw" style="--len:120" d="M300 400H380"/>
+          <path class="draw" style="--len:300" d="M300 400C340 400 340 564 380 564"/>
+          <path d="M620 236C660 236 660 186 700 186M620 236H700M620 236C660 236 660 286 700 286"/>
+          <path d="M620 400C660 400 660 350 700 350M620 400H700M620 400C660 400 660 450 700 450"/>
+          <path d="M620 564C660 564 660 539 700 539M620 564C660 564 660 589 700 589"/>
+        </g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:362px;width:220px;padding:14px 18px;background:linear-gradient(135deg,#F2A541,#E8573A);border:none;"><h3 style="color:#1B1408;font-size:17px;">Харчові ароматизатори</h3></div>
+      <div class="card frag" style="position:absolute;left:380px;top:210px;width:240px;padding:13px 18px;border-color:#6CC3A0;"><h3 style="font-size:17px;white-space:nowrap;" class="g">За походженням</h3></div>
+      <div class="card frag" style="position:absolute;left:380px;top:374px;width:240px;padding:13px 18px;border-color:#62A9E0;"><h3 style="font-size:17px;white-space:nowrap;" class="sk">За консистенцією</h3></div>
+      <div class="card frag" style="position:absolute;left:380px;top:538px;width:240px;padding:13px 18px;border-color:#A387E6;"><h3 style="font-size:17px;white-space:nowrap;" class="pl">За характером</h3></div>
+      <span class="pill g frag" style="position:absolute;left:700px;top:168px;width:250px;">натуральні</span>
+      <span class="pill g frag" style="position:absolute;left:700px;top:218px;width:250px;">ідентичні натуральним</span>
+      <span class="pill g frag" style="position:absolute;left:700px;top:268px;width:250px;">штучні</span>
+      <span class="pill frag" style="position:absolute;left:700px;top:332px;width:250px;">рідкі</span>
+      <span class="pill frag" style="position:absolute;left:700px;top:382px;width:250px;">сухі</span>
+      <span class="pill frag" style="position:absolute;left:700px;top:432px;width:250px;">пастоподібні</span>
+      <span class="pill pl frag" style="position:absolute;left:700px;top:521px;width:250px;">гострі (пряні)</span>
+      <span class="pill pl frag" style="position:absolute;left:700px;top:571px;width:250px;">солодкі</span>
+      <p class="xs m frag" style="position:absolute;left:970px;top:173px;width:230px;">лише природні речовини</p>
+      <p class="xs m frag" style="position:absolute;left:970px;top:223px;width:230px;">синтезовані, але тотожні природним</p>
+      <p class="xs m frag" style="position:absolute;left:970px;top:273px;width:230px;">є компонент, якого немає в природі</p>
+      <p class="xs m frag" style="position:absolute;left:970px;top:337px;width:230px;">розчини, емульсії</p>
+      <p class="xs m frag" style="position:absolute;left:970px;top:387px;width:230px;">на носії або в мікрокапсулах</p>
+      <p class="xs m frag" style="position:absolute;left:970px;top:437px;width:230px;">з емульгаторами й наповнювачами</p>
+      <p class="xs m frag" style="position:absolute;left:970px;top:526px;width:230px;">спеції, трави, м’ясо, дим, сир…</p>
+      <p class="xs m frag" style="position:absolute;left:970px;top:576px;width:230px;">фрукти, ваніль, кава, мед…</p>
+    </div>
+    <aside class="notes">Кількість запропонованих харчових ароматизаторів перевищує 5000, тому їх класифікують за кількома ознаками:
+1) за походженням: природні, ідентичні природним, штучні;
+2) за консистенцією: рідкі, сухі, пастоподібні;
+3) за характером аромату і смаку: гострі і солодкі.
+Гострі (пряні) мають аромат і смак спецій, прянощів, овочів, трав, квітів, м’яса, риби, молока, вершків, сиру, диму. Солодкі — фруктові, ягідні, цитрусові, шоколадні, ванільні, кавові, медові та інші.
+Гілки з’являються автоматично по черзі.</aside>
+  </section>
+
+  <!-- ================= 18. За походженням ================= -->
+  <section class="slide" data-title="3 · Натуральні, ідентичні, штучні">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="420" r="520" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">3 · <i>Класифікація за походженням</i></p><h2 class="rv">Натуральний, ідентичний чи штучний</h2></div></div>
+    <div class="L" data-depth="0.95">
+      <div class="cmp sm" style="top:172px;grid-template-columns:190px 1fr 1fr 1fr;gap:7px 8px;">
+        <div class="h"></div><div class="h g">Натуральні</div><div class="h a">Ідентичні натуральним</div><div class="h t">Штучні</div>
+        <div class="c rv">Склад</div><div class="rv">лише природні ароматичні речовини</div><div class="rv">≥ 1 компонент, тотожний природному, але синтезований</div><div class="rv">≥ 1 компонент, досі не знайдений у природі</div>
+        <div class="c rv">Як одержують</div><div class="rv">екстракція, дистиляція, пресування, біотехнологія</div><div class="rv">хімічний синтез або хімічне виділення</div><div class="rv">хімічний синтез</div>
+        <div class="c rv">Стабільність</div><div class="rv no">аромат нестабільний у часі</div><div class="rv ok">висока, аромат інтенсивний</div><div class="rv ok">висока, аромат інтенсивний</div>
+        <div class="c rv">Ціна</div><div class="rv no">висока, сировини мало</div><div class="rv ok">дешеві</div><div class="rv ok">найдешевші</div>
+        <div class="c rv">Приклади</div><div class="rv">природні харчові есенції, ефірні олії</div><div class="rv">ванілін, кетон малини, етилацетат, амілацетат</div><div class="rv">етилванілін — у 3–4 рази сильніший за ванілін</div>
+      </div>
+      <div class="card rv" style="position:absolute;left:80px;top:556px;width:1120px;padding:14px 22px;display:flex;gap:18px;align-items:center;border-color:rgba(108,195,160,.55);">
+        <p class="big g" style="font-size:40px;flex-shrink:0;">95%</p>
+        <p class="xs">«<b>Натуральний ароматизатор з малини</b>» — так можна назвати, лише якщо щонайменше 95% ароматичних компонентів отримано саме з малини. <span class="m">Більшість ароматизаторів у виробництві — ідентичні натуральним.</span></p>
+      </div>
+    </div>
+    <aside class="notes">Природні ароматизатори містять тільки природні ароматичні речовини та їх суміші. Їх вилучають з харчових продуктів і сировини фізичними методами (екстракція, дистиляція, пресування) або біотехнологічно. Різновид — природні харчові есенції (водні, спиртові, водно-спиртові або дистиляти летких речовин). Через високу вартість, обмеженість сировини, нестабільність аромату використання природних ароматизаторів дуже обмежене.
+Натуральний аромат / ароматизатор — ефірна олія, есенція, екстракт, гідролізат білка або продукт обсмажування, нагрівання чи ферментації з ароматичними компонентами з прянощів, фруктів, соків, овочів, дріжджів, трав, кори, коренів, листя, м’яса, морепродуктів, яєць, молочних продуктів. Термін «натуральний ароматизатор» із назвою джерела можна використовувати, лише якщо ≥ 95% ароматичних компонентів одержано з названого джерела (напр., «Натуральний ароматизатор з малини»).
+Ідентичні природним містять хоча б один компонент, тотожний за структурою і властивостями природному, але одержаний хімічним синтезом або виділений хімічними методами. Більшість харчових ароматизаторів — саме такі. Для організму ці речовини не сторонні, але синтетичні компоненти можуть містити шкідливі вихідні чи проміжні речовини. Мають високу стабільність, інтенсивний аромат, дешеві. Приклади: ванілін, кетон малини, етилацетат, амілацетат, етилформіат.
+Штучні мають хоча б один компонент, не ідентифікований у природній сировині (поряд можуть бути природні й ідентичні). Висока стабільність, інтенсивність і дешевизна — тому популярні. Приклад: етилванілін (арованілон) для морозива, кондитерських виробів, молочних концентратів — аромат у 3–4 рази інтенсивніший за природний ванілін і в сотні разів дешевший.</aside>
+  </section>
+
+  <!-- ================= 19. Консистенція ================= -->
+  <section class="slide" data-title="3 · Рідкі, сухі, пастоподібні">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="320" r="480" fill="url(#glowS)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">3 · <i>Класифікація за консистенцією та характером</i></p><h2 class="rv">У якій формі приходить аромат</h2></div></div>
+    <div class="card" data-depth="0.55" style="position:absolute;left:80px;top:176px;width:360px;height:310px;">
+      <svg width="140" height="78" viewBox="0 0 180 100" aria-hidden="true"><g style="color:#F2A541"><use href="#dropper" x="0" y="0" width="50" height="100"/></g><g style="color:#A387E6"><use href="#dropper" x="56" y="10" width="45" height="90"/></g><g class="fall" style="color:#F2A541"><use href="#drop" x="120" y="10" width="22" height="30"/></g></svg>
+      <h3 style="margin-top:6px;">Рідкі</h3>
+      <p class="xs m" style="margin-top:6px;">розчини й емульсії у спирті, 1,2-пропіленгліколі, триацетині — від розчинника залежать якість і стійкість</p>
+      <p class="xs" style="margin-top:10px;">напої, морозиво, кондитерські, молочні та олієжирові продукти</p>
+    </div>
+    <div class="card" data-depth="0.75" style="position:absolute;left:460px;top:176px;width:360px;height:310px;">
+      <svg width="160" height="78" viewBox="0 0 200 100" aria-hidden="true"><g fill="#F5EDDF" opacity=".85"><circle cx="16" cy="70" r="7"/><circle cx="34" cy="80" r="6"/><circle cx="28" cy="58" r="5"/><circle cx="46" cy="64" r="7"/></g><g><circle cx="110" cy="50" r="30" fill="rgba(98,169,224,.18)" stroke="#62A9E0" stroke-width="4"/><circle cx="110" cy="50" r="13" fill="#F2A541"/><circle cx="168" cy="40" r="18" fill="rgba(98,169,224,.18)" stroke="#62A9E0" stroke-width="3"/><circle cx="168" cy="40" r="7" fill="#A387E6"/><circle cx="160" cy="82" r="12" fill="rgba(98,169,224,.18)" stroke="#62A9E0" stroke-width="3"/><circle cx="160" cy="82" r="5" fill="#E8573A"/></g></svg>
+      <h3 style="margin-top:6px;">Сухі</h3>
+      <p class="xs m" style="margin-top:6px;"><b style="color:var(--text)">стійкі</b> — на носій (сіль, цукор, крохмаль); <b style="color:var(--text)">леткі</b> — мікрокапсулювання (желатин, мальтодекстрини, смола акації) і розпилювальне сушіння</p>
+      <p class="xs" style="margin-top:10px;">ковбасне, м’ясне, рибне, харчоконцентратне виробництво</p>
+    </div>
+    <div class="card" data-depth="0.95" style="position:absolute;left:840px;top:176px;width:360px;height:310px;">
+      <svg width="140" height="78" viewBox="0 0 180 100" aria-hidden="true"><path d="M20 80Q20 40 60 36Q70 10 100 20Q130 10 140 40Q170 46 160 80Z" fill="#C98A3C"/><path d="M40 62Q70 48 100 60T150 60" stroke="#F2C98A" stroke-width="6" fill="none" stroke-linecap="round"/><rect x="10" y="80" width="160" height="12" rx="6" fill="#3B342B"/></svg>
+      <h3 style="margin-top:6px;">Пастоподібні</h3>
+      <p class="xs m" style="margin-top:6px;">емульсійні та пастоподібні — на спеціальному обладнанні з емульгаторами й наповнювачами</p>
+      <p class="xs" style="margin-top:10px;">ковбасні, м’ясні, рибні продукти, пастоподібні молочні й олієжирові</p>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:80px;top:506px;width:550px;padding:14px 20px;border-color:rgba(163,135,230,.55);">
+        <h3 class="pl" style="font-size:18px;">Гострі (пряні)</h3>
+        <p class="xs" style="margin-top:6px;">спеції, прянощі, овочі, трави, квіти, м’ясо, риба, молоко, вершки, сир, дим</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:650px;top:506px;width:550px;padding:14px 20px;border-color:rgba(242,165,65,.55);">
+        <h3 class="a" style="font-size:18px;">Солодкі</h3>
+        <p class="xs" style="margin-top:6px;">фруктові, ягідні, цитрусові, шоколадні, ванільні, кавові, медові</p>
+      </div>
+    </div>
+    <aside class="notes">Рідкі ароматизатори — розчини та емульсії: ароматизатори або їх суміші розчиняють у спирті, 1,2-пропіленгліколі, триацетині чи інших спеціальних розчинниках. Від вибору розчинника залежать якість, стійкість і галузь використання. Застосування — напої, морозиво, цукристі та борошняні кондитерські вироби, молочні й олієжирові продукти.
+Сухі ароматизатори: стійкі до окиснення й нелеткі наносять на порошковий носій (сіль, цукор, нативні чи модифіковані крохмалі) і ретельно перемішують; нестійкі та леткі — мікрокапсулюють гідроколоїдами (желатин, мальтодекстрини, смоли акації) з наступним розпилювальним сушінням. Застосування — ковбасне, м’ясоконсервне, м’ясне, рибопродуктове, харчоконцентратне виробництва.
+Пастоподібні (і емульсійні) одержують на спеціальному обладнанні з емульгаторами й наповнювачами. Застосування — ковбасні, м’ясні, рибні продукти й напівфабрикати, пастоподібні молочні та олієжирові продукти.
+Гострі (пряні) — аромат і смак спецій, прянощів, овочів, трав, квітів, м’яса, риби, молока, вершків, сиру, диму. Солодкі — фруктові, ягідні, цитрусові, шоколадні, ванільні, кавові, медові.
+⚠ У лекції — «триацетон»; правильна назва розчинника — триацетин (гліцерилтриацетат, Е1518).</aside>
+  </section>
+
+  <!-- ================= 20. Ванілін ================= -->
+  <section class="slide" data-title="3 · Ванілін">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="280" cy="360" r="360" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">3 · <i>Ароматизатор ванілін</i></p><h2 class="rv">Ваніль, якої не вистачає на всіх</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Стручки ванілі">
+        <g class="bob"><use href="#vanilla" x="90" y="180" width="320" height="114"/></g>
+        <g class="bob2"><use href="#vanilla" x="130" y="230" width="280" height="100"/></g>
+        <circle cx="130" cy="432" r="54" fill="none" stroke="#3B342B" stroke-width="16"/>
+        <circle cx="130" cy="432" r="54" fill="none" stroke="#F2A541" stroke-width="16" stroke-dasharray="3.4 340" transform="rotate(-90 130 432)"/>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="rv" style="position:absolute;left:206px;top:384px;width:270px;"><p class="big a" style="font-size:48px;">&lt; 1%</p><p class="xs" style="margin-top:6px;">світової потреби покриває натуральна ваніль</p></div>
+      <p class="xs m rv" style="position:absolute;left:80px;top:510px;width:400px;">Плоди ліани бланшують, сушать за особливою технологією, подрібнюють — це місяці роботи, тому натуральна ваніль дорога</p>
+      <div class="card rv" style="position:absolute;left:520px;top:176px;width:680px;padding:14px 20px;display:flex;gap:16px;align-items:center;">
+        <p class="s" style="white-space:nowrap;"><span class="pill">гваякол</span> <span class="pill">лігнін</span> <span class="a">→</span> <b>ванілін</b></p>
+        <p class="xs m">ідентичний натуральному; виробники — Китай, Франція, Норвегія та ін. (найдорожчий — французький і норвезький)</p>
+      </div>
+      <div style="position:absolute;left:520px;top:290px;width:680px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="card frag" style="padding:14px 18px;"><h3 style="font-size:17px;">Кристалічний</h3><p class="xs m" style="margin-top:6px;">голчасті кристали; аромат — при нагріванні; погано розчинний → подрібнюють</p></div>
+        <div class="card frag" style="padding:14px 18px;"><h3 style="font-size:17px;">Порошкоподібний</h3><p class="xs m" style="margin-top:6px;">найлегше розчиняється — найтехнологічніший; можуть бути домішки, етилванілін</p></div>
+        <div class="card frag" style="padding:14px 18px;border-color:rgba(242,165,65,.55);"><h3 style="font-size:17px;" class="a">Етилванілін</h3><p class="xs m" style="margin-top:6px;">відкритий при синтезі з гваяколу; дорожчий, але аромат майже <b style="color:var(--text)">втричі сильніший</b></p></div>
+        <div class="card frag" style="padding:14px 18px;"><h3 style="font-size:17px;">Рідкий</h3><p class="xs m" style="margin-top:6px;">у спирті, пропіленгліколі; для жирових продуктів — у триацетині</p></div>
+      </div>
+    </div>
+    <aside class="notes">Натуральну ваніль отримують з плодів однойменної ліани: насіння (стручки) збирають, бланшують, сушать за особливою технологією, подрібнюють (рис. 3.3). Процес триває кілька місяців, тому собівартість висока. Світове виробництво натуральної ванілі — менше 1% потреби; решту покриває ванілін, одержаний хімічним синтезом, — з відмінними характеристиками і прийнятною ціною.
+Ванілін, ідентичний натуральному, одержують переважно синтезом з гваяколу та лігніну. Основні виробники — Росія, Китай, Франція, Норвегія (найдорожчий — у Франції та Норвегії).
+Види: 1) кристалічний — безбарвні або біло-жовті голчасті кристали; аромат виділяється при термообробці, розчинність у воді дуже низька, тому кристали подрібнюють (дрібнокристалічний пахне вже при кімнатній температурі, краще розчиняється у воді та спирті); 2) порошкоподібний — найлегше розчиняється, найтехнологічніший; можуть бути домішки, що покращують запах, а також етилванілін; 3) етилванілін — відкритий у процесі синтезу ваніліну з гваяколу; схожа структура, дорожчий за ванілін, але аромат майже втричі сильніший; 4) рідкий — розчинник: етиловий спирт, пропіленгліколь, а для жиророзчинних продуктів — триацетин.
+Кругова діаграма: частка натуральної ванілі (< 1%) — наочно.</aside>
+  </section>
+
+  <!-- ================= 23. Підсилювачі смаку ================= -->
+  <section class="slide" data-title="4 · Підсилювачі смаку та аромату">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="260" r="480" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4 · <i>Підсилювачі смаку та аромату · Е600–Е699</i></p><h2 class="rv">Дозволено в Україні без обмежень</h2></div></div>
+    <div class="L" data-depth="1.0" id="tileRow"></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Кілька волокон продукту плюс підсилювач дають смак, схожий на справжній">
+        <g style="color:#B3263A"><use href="#steak" x="90" y="330" width="120" height="82"/></g>
+        <path d="M100 430H210" stroke="#3B342B" stroke-width="2"/>
+        <text x="150" y="452" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B">кілька волокон</text>
+        <text x="250" y="384" text-anchor="middle" font-family="Unbounded" font-weight="700" font-size="28" fill="#F5EDDF">+</text>
+        <g class="bob"><use href="#shaker" x="290" y="318" width="60" height="100"/></g>
+        <text x="320" y="452" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B">підсилювач</text>
+        <text x="400" y="384" text-anchor="middle" font-family="Unbounded" font-weight="700" font-size="28" fill="#F5EDDF">=</text>
+        <g class="bob2" style="color:#C6283F"><use href="#steak" x="440" y="314" width="170" height="116"/></g>
+        <text x="525" y="452" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="15" fill="#F5EDDF">«смак як справжній»</text>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="card rv" style="position:absolute;left:660px;top:318px;width:540px;padding:16px 22px;border-color:rgba(232,87,58,.55);">
+        <h3 class="t" style="font-size:19px;">Ризики</h3>
+        <ul class="ul t" style="margin-top:4px;"><li>маскують низьку якість: переморожене чи старе м’ясо, сою замість м’яса</li><li>допустимі норми легко перевищити</li></ul>
+      </div>
+      <div class="rv" style="position:absolute;left:80px;top:500px;width:1120px;">
+        <p class="xs m">Вигідні виробнику: економія на м’ясі, птиці, рибі, грибах, морепродуктах. Де трапляються:</p>
+        <div class="pills" style="margin-top:10px;gap:7px;"><span class="pill a">напівфабрикати</span><span class="pill a">концентрати</span><span class="pill a">чипси</span><span class="pill a">сухарики</span><span class="pill a">соуси</span><span class="pill a">бульйонні кубики</span><span class="pill a">сухі супи</span><span class="pill a">консерви</span><span class="pill a">фастфуд</span></div>
+      </div>
+    </div>
+    <aside class="notes">Підсилювачі смаку та аромату (Е600–Е699) дуже вигідні виробникам: дозволяють заощадити на натуральних компонентах — м’ясі, птиці, рибі, грибах, морепродуктах. У продукт можна додати кілька подрібнених волокон натурального інгредієнта чи його екстракту, щедро заправити підсилювачем — і смак дуже схожий на справжній.
+Так можна маскувати низьку якість: низькосортне (переморожене чи старе) м’ясо або сою замість м’яса. Підсилювачі широко використовують у напівфабрикатах, концентратах, чипсах, сухариках, соусах, бульйонних кубиках, сухих супах, консервах, а також у ресторанах швидкого харчування. Допустимі норми легко перевищити, щоб створити видимість високої якості.
+Підсилювачі підсилюють властивий продуктам смак чи аромат. В Україні без обмежень дозволені: глутамінова кислота L(+) (Е620), глутамат натрію (Е621), калію (Е622), кальцію (Е623), амонію (Е624), магнію (Е625) і гліцин (Е640). Глутамінова кислота та її солі підсилюють природні смакові властивості і відновлюють їх, якщо вони послабились при зберіганні.</aside>
+  </section>
+
+  <!-- ================= 24. Глутамат натрію і гліцин ================= -->
+  <section class="slide" data-title="4 · Глутамат натрію і гліцин">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="300" cy="300" r="360" fill="url(#glowA)"/><circle cx="980" cy="520" r="320" fill="url(#glowM)"/></svg></div>
+    <div class="L" data-depth="0.8"><div class="head"><p class="kicker rv">4 · <i>Е621 · Е640</i></p><h2 class="rv">Глутамат натрію і гліцин</h2></div></div>
+    <div class="L" data-depth="0.55">
+      <svg width="1280" height="720" aria-label="Продукти, де глутамат утворюється природно">
+        <use href="#cheese" x="82" y="380" width="96" height="64"/>
+        <g class="bob"><use href="#mush" x="196" y="370" width="74" height="74"/></g>
+        <g class="bob2"><use href="#tomato" x="288" y="370" width="74" height="74"/></g>
+        <use href="#sauce" x="386" y="360" width="40" height="88"/>
+        <g style="color:#B3263A"><use href="#steak" x="444" y="382" width="96" height="66"/></g>
+        <g font-family="Manrope" font-weight="700" font-size="14" fill="#BDB09B" text-anchor="middle"><text x="130" y="470">сири</text><text x="233" y="470">гриби</text><text x="325" y="470">томати</text><text x="406" y="470">соєвий соус</text><text x="492" y="470">делікатеси</text></g>
+      </svg>
+    </div>
+    <div class="L" data-depth="0.95">
+      <div class="rv" style="position:absolute;left:80px;top:176px;width:540px;display:flex;gap:22px;align-items:center;">
+        <p class="big a" style="font-size:64px;">1:300</p>
+        <p class="xs">навіть у такому розведенні у воді язик відчуває <b>глутамат натрію</b> — «китайська сіль», «цибульна сіль»</p>
+      </div>
+      <p class="xs m rv" style="position:absolute;left:80px;top:270px;width:540px;">Білий дрібнокристалічний порошок, повністю розчинний у воді. Для добавки одержують <b style="color:var(--text)">мікробіологічним синтезом</b>; природно утворюється в продуктах:</p>
+      <div class="card rv" style="position:absolute;left:80px;top:500px;width:540px;padding:14px 20px;">
+        <p class="xs"><b class="g">−10% солі</b> — завдяки глутамату. У суміші <b>Глуринат</b> — з інозинатом і гуанілатом натрію: дешевше й смачніше</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:176px;width:540px;padding:16px 22px;">
+        <h3 style="font-size:19px;" class="a">Е621 застосовують у</h3>
+        <div class="pills" style="margin-top:10px;gap:7px;"><span class="pill">продукти швидкого приготування</span><span class="pill">снеки</span><span class="pill">м’ясні й рибні консерви</span><span class="pill">ковбаси, делікатеси</span><span class="pill">кетчуп, майонез, соуси</span><span class="pill">сухі приправи</span></div>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:388px;width:540px;padding:14px 22px;border-color:rgba(232,87,58,.55);">
+        <p class="xs"><b class="t">Надлишок</b> → «синдром китайського ресторану»: слабкість, серцебиття, втрата чутливості в потилично-спинній ділянці</p>
+      </div>
+      <div class="card rv" style="position:absolute;left:660px;top:500px;width:540px;padding:14px 22px;border-color:rgba(108,195,160,.55);">
+        <h3 class="g" style="font-size:19px;">Гліцин Е640</h3>
+        <p class="xs" style="margin-top:6px;">модифікатор смаку та аромату; амінокислота, кристали <b>солодкі на смак</b>; одержують гідролізом (тваринний клей, гіпурова кислота)</p>
+      </div>
+    </div>
+    <aside class="notes">Органи смаку відчувають глутамат натрію при розчиненні у воді у співвідношенні 1:300. Це дрібнокристалічний білий порошок, що легко й повністю розчиняється у воді. Глутамат натрію 1-заміщений (Е621) — підсилювач смаку та аромату, замінник солі, мононатрієва сіль глутамінової кислоти. Синоніми: глютамат натрію, глутамінат натрію, «китайська сіль», «цибульна сіль». Природно утворюється в сирах, м’ясних делікатесах, грибах, томатах, соєвому соусі.
+Популярна приправа в кухнях Східної Азії. Виробляють мікробіологічним синтезом. Е621 посилює смак, ослаблений під час виробництва й зберігання; також дозволяє приховати дефекти смаку й аромату. Знижує дозування солі на 10%. Часто входить до Глуринату — суміші з інозинатом і гуанілатом натрію: знижує витрати й поліпшує смак.
+Застосування: продукти швидкого приготування; снеки; м’ясні та рибні консерви; ковбасні вироби й м’ясні делікатеси; кетчупи, майонез, соуси; сухі приправи.
+Шкода пов’язана з надлишком: «синдром китайського ресторану» — слабкість, серцебиття, втрата чутливості в потилично-спинній ділянці.
+Гліцин — модифікатор смаку та аромату; моноаміномонокарбонова кислота (tпл 292 °С за лекцією). Одержують кип’ятінням тваринного клею з розведеною сульфатною кислотою або баритовою водою, а також гідролізом гіпурової кислоти. Кристалізується великими кристалами, солодкими на смак.
+⚠ У лекції: «Е621 засвоюється і метаболізується як нуклеїнова кислота» — неточно: глутамат — амінокислота і метаболізується як амінокислота (глутамінова кислота). Зв’язок «синдрому китайського ресторану» з глутаматом у контрольованих дослідженнях не підтверджено однозначно — наведено за лекцією.</aside>
+  </section>
+
+  <!-- ================= 25. Підсумок ================= -->
+  <section class="slide" data-title="Підсумок">
+    <div class="L" data-depth="0.1"><svg width="1280" height="720"><rect width="1280" height="720" fill="url(#dots)"/><circle cx="640" cy="400" r="420" fill="url(#glowA)"/></svg></div>
+    <div class="L" data-depth="0.4"><svg width="1280" height="720" aria-hidden="true">
+      <g class="spin" style="transform-origin:640px 410px"><circle cx="640" cy="410" r="214" fill="none" stroke="#3B342B" stroke-width="2" stroke-dasharray="4 10"/><circle cx="640" cy="196" r="9" fill="#F2A541"/><circle cx="854" cy="410" r="8" fill="#6CC3A0"/><circle cx="640" cy="624" r="9" fill="#A387E6"/><circle cx="426" cy="410" r="8" fill="#E8573A"/></g>
+      <circle cx="640" cy="410" r="140" fill="#242019" stroke="#3B342B" stroke-width="2"/></svg></div>
+    <div class="L" data-depth="0.8">
+      <div class="head"><p class="kicker rv">Підсумок</p><h2 class="rv">П’ять думок про смак і аромат</h2></div>
+      <p class="rv" style="position:absolute;left:520px;top:368px;width:240px;text-align:center;font-family:var(--display);font-weight:700;font-size:20px;line-height:1.35;"><span class="a">смак</span> і <span class="g">аромат</span><br>під контролем</p>
+    </div>
+    <div class="L" data-depth="1.15">
+      <div class="frag card" style="position:absolute;left:510px;top:150px;width:260px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">1</b> Підсолоджувачі — без калорій та інсуліну; цукрозамінники калорійні, але «повільні»</p></div>
+      <div class="frag card" style="position:absolute;left:840px;top:290px;width:270px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">2</b> П = Ц / Ксол; суміші (ацесульфам К + аспартам) дають синергізм</p></div>
+      <div class="frag card" style="position:absolute;left:770px;top:520px;width:280px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">3</b> Ароматизатори: натуральні, ідентичні, штучні; без Е-кодів і не для маскування псування</p></div>
+      <div class="frag card" style="position:absolute;left:230px;top:520px;width:280px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">4</b> Ефірні олії, есенції, прянощі — концентрований аромат рослин</p></div>
+      <div class="frag card" style="position:absolute;left:170px;top:290px;width:270px;padding:12px 16px;text-align:center;"><p class="xs"><b class="a">5</b> Підсилювачі Е620–Е625, Е640 покращують смак, але легко маскують низьку якість</p></div>
+    </div>
+    <aside class="notes">Підсумок лекції:
+1. Підсолоджувачі (Е950–960) — нецукрові речовини без калорій, засвоюються без інсуліну; цукрозамінники (сорбіт, ксиліт, ізомальт, лактит, фруктоза) мають енергетичну цінність, але засвоюються повільніше.
+2. Солодкість оцінюють коефіцієнтом Ксол відносно 9% розчину сахарози; П = Ц / Ксол. Ідеального замінника цукру немає, тому використовують суміші (ацесульфам К + аспартам: 200 + 200 → 300).
+3. Ароматизатори (понад 5000) класифікують за походженням, консистенцією і характером; цифрових кодів не мають; заборонено маскувати ними псування.
+4. Ефірні олії, ароматичні есенції, рідкий дим і прянощі — важливі джерела аромату.
+5. Підсилювачі смаку (Е600–Е699): глутамат натрію і гліцин дозволені, але можуть маскувати низьку якість продуктів.
+Вузли з’являються автоматично.</aside>
+  </section>
+
+  <!-- ===== Нижня панель ===== -->
+  <div class="bar-nav">
+    <div class="ttl" id="ttl"></div>
+    <nav class="dots" id="dots" aria-label="Навігація по слайдах"></nav>
+    <div class="cnt" id="cnt"></div>
+  </div>
+  <div class="notes-panel" id="notesPanel"></div>
+</div>
+
+<script>
+/* ---------- масштабування полотна 1280×720 ---------- */
+const W = 1280, H = 720, stage = document.getElementById('stage');
+function fit(){ const s = Math.min(innerWidth / W, innerHeight / H); stage.style.transform = `scale(${s})`; stage.style.left = (innerWidth - W*s)/2 + 'px'; stage.style.top = (innerHeight - H*s)/2 + 'px'; }
+addEventListener('resize', fit); document.addEventListener('fullscreenchange', fit); fit();
+const STATIC = document.documentElement.classList.contains('static');
+const NS = 'http://www.w3.org/2000/svg';
+
+/* ---------- кольорові кола: [data-wheel="cx,cy,R,r,n"] → n кольорових секторів ---------- */
+document.querySelectorAll('[data-wheel]').forEach(g=>{
+  const [cx, cy, R, r, n] = g.dataset.wheel.split(',').map(Number);
+  let s = '';
+  for(let i=0;i<n;i++){
+    const a0 = i/n*Math.PI*2 - Math.PI/2, a1 = (i+1)/n*Math.PI*2 - Math.PI/2, la = 0;
+    const p = (rad, a)=>`${(cx + rad*Math.cos(a)).toFixed(2)} ${(cy + rad*Math.sin(a)).toFixed(2)}`;
+    const d = r > 0 ? `M${p(R,a0)} A${R} ${R} 0 ${la} 1 ${p(R,a1)} L${p(r,a1)} A${r} ${r} 0 ${la} 0 ${p(r,a0)}Z` : `M${cx} ${cy} L${p(R,a0)} A${R} ${R} 0 ${la} 1 ${p(R,a1)}Z`;
+    s += `<path d="${d}" fill="hsl(${Math.round(i/n*360)} 72% 56%)"/>`;
+  }
+  g.innerHTML = s;
+});
+
+
+/* ---------- слайд 5: калькулятор заміни 1 кг цукру ---------- */
+(function(){
+  const SW = [
+    ['Сукралоза','сукралози',600,600,'y'],['Сахарин','сахарину',300,500,'y'],['Тауматин','тауматину',1600,2500,'n'],
+    ['Стевіозид','стевіозиду',100,300,'n'],['Аспартам','аспартаму',100,200,'y'],['Ацесульфам К','ацесульфаму К',150,200,'y'],
+    ['Цикламат','цикламату',30,50,'y'],['Фруктоза','фруктози',1.7,1.7,'z'],['Ксиліт','ксиліту',0.85,1,'z'],['Сорбіт','сорбіту',0.5,0.6,'z']
+  ];
+  const COL = { y:'#F2A541', n:'#A387E6', z:'#6CC3A0' };
+  const btns = document.getElementById('calcBtns'), svg = document.getElementById('calcSvg'), out = document.getElementById('calcOut');
+  const num = g => g >= 1000 ? [(g/1000).toFixed(1).replace('.', ','), 'кг'] : g >= 10 ? [String(Math.round(g)), 'г'] : [g.toFixed(1).replace('.', ','), 'г'];
+  function range(lo, hi){ const a = num(lo), b = num(hi);
+    if (a[0] === b[0] && a[1] === b[1]) return a.join(' ');
+    return a[1] === b[1] ? `${a[0]}–${b[0]} ${a[1]}` : `${a.join(' ')} – ${b.join(' ')}`; }
+  const S = 120, BASE = 176;
+  svg.innerHTML = `<rect x="20" y="${BASE - S}" width="${S}" height="${S}" rx="6" fill="#F5EDDF" opacity=".9"/>
+    <text x="80" y="${BASE - S/2 + 6}" text-anchor="middle" font-family="Unbounded" font-weight="700" font-size="18" fill="#1B1408">1 кг</text>
+    <text x="80" y="202" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B">цукор</text>
+    <rect id="calcSq" rx="4" style="transition:x .5s,y .5s,width .5s,height .5s,fill .5s"/>
+    <circle id="calcRing" r="16" fill="none" stroke="#F5EDDF" stroke-width="2" stroke-dasharray="4 4" opacity="0"/>
+    <text id="calcLbl" x="388" y="202" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="15" fill="#BDB09B"></text>`;
+  const sq = svg.querySelector('#calcSq'), ring = svg.querySelector('#calcRing'), lbl = svg.querySelector('#calcLbl');
+  function pick(i){
+    const [nm, gen, kmin, kmax, cat] = SW[i];
+    const lo = 1000 / kmax, hi = 1000 / kmin, mid = 1000 / Math.sqrt(kmin * kmax);
+    const side = Math.max(3, S * Math.sqrt(mid / 1000)), x = 388 - side/2, y = BASE - side;
+    for (const [k, v] of [['x', x], ['y', y], ['width', side], ['height', side]]) { sq.setAttribute(k, v); sq.style[k] = v + 'px'; }
+    sq.setAttribute('fill', COL[cat]); sq.style.fill = COL[cat];
+    ring.setAttribute('cx', 388); ring.setAttribute('cy', BASE - side/2); ring.setAttribute('opacity', side < 14 ? 1 : 0);
+    lbl.textContent = nm.toLowerCase();
+    const k = kmin === kmax ? String(kmin).replace('.', ',') : `${String(kmin).replace('.', ',')}–${String(kmax).replace('.', ',')}`;
+    out.innerHTML = `≈ <b style="color:${COL[cat]}">${range(lo, hi)}</b> ${gen} <span class="xs m">· Ксол ${k}</span>`;
+    btns.querySelectorAll('.sel').forEach((b, j) => b.classList.toggle('on', j === i));
+  }
+  SW.forEach((s, i) => { const b = document.createElement('button'); b.className = 'sel'; b.textContent = s[0]; b.onclick = e => { e.stopPropagation(); pick(i); }; btns.appendChild(b); });
+  pick(0);
+})();
+
+/* ---------- слайд 6: шкала солодкості (логарифмічна) ---------- */
+(function(){
+  const D = [
+    ['Лактит Е966',0.3,0.4,'z','0,3–0,4'],['Сорбіт Е420',0.5,0.6,'z','0,5–0,6'],['Ізомальт Е953',0.5,0.5,'z','0,5'],['Ксиліт Е967',0.85,1,'z','0,85–1,0'],
+    ['Сахароза — еталон',1,1,'s','1'],['Фруктоза',1.7,1.7,'z','1,7'],
+    ['Цикламат Е952',30,50,'y','30–50'],['Гліциризин Е958',50,100,'n','50–100'],['Аспартам Е951',100,200,'y','100–200'],['Стевіозид Е960',100,300,'n','100–300'],
+    ['Ацесульфам К Е950',150,200,'y','150–200'],['Сахарин Е954',300,500,'y','300–500'],['Сукралоза Е955',600,600,'y','600'],
+    ['Тауматин Е957',1600,2500,'n','1600–2500'],['Неогесперидин ДГ Е959',1800,2500,'n','1800–2500']
+  ];
+  const COL = { y:'#F2A541', n:'#A387E6', z:'#6CC3A0', s:'#F5EDDF' };
+  const X = v => 340 + (Math.log10(v) + 1) * 168, Y0 = 186, DY = 27;
+  let s = '<g stroke="#3B342B" stroke-width="1.5">';
+  [0.1, 1, 10, 100, 1000, 10000].forEach(t => s += `<path d="M${X(t)} 170V${Y0 + DY*(D.length-1) + 14}"/>`);
+  s += '</g><g font-family="Unbounded" font-weight="600" font-size="14" fill="#BDB09B" text-anchor="middle">';
+  [['0,1',0.1],['1',1],['10',10],['100',100],['1000',1000],['10 000',10000]].forEach(([l, t]) => s += `<text x="${X(t)}" y="${Y0 + DY*(D.length-1) + 36}">${l}</text>`);
+  s += `</g><path d="M${X(1)} 170V${Y0 + DY*(D.length-1) + 14}" stroke="#F2A541" stroke-width="2" stroke-dasharray="5 5"/>`;
+  D.forEach(([nm, lo, hi, cat, txt], i) => {
+    const c = Y0 + i*DY, x0 = X(lo), x1 = X(hi), w = Math.max(x1 - x0, 12), xs = lo === hi ? x0 - 6 : x0;
+    const sugar = cat === 's';
+    s += `<text x="322" y="${c + 5}" text-anchor="end" font-family="Manrope" font-weight="${sugar ? 800 : 700}" font-size="15" fill="${sugar ? '#F5EDDF' : '#BDB09B'}">${nm}</text>`;
+    s += `<rect class="grow" x="${xs.toFixed(1)}" y="${c - 7}" width="${w.toFixed(1)}" height="14" rx="7" fill="${COL[cat]}" style="transform-origin:${xs.toFixed(1)}px ${c}px;animation-delay:${(0.3 + i*0.05).toFixed(2)}s"/>`;
+    s += `<text class="lbl" x="${(xs + w + 10).toFixed(1)}" y="${c + 5}" font-family="Manrope" font-weight="800" font-size="14" fill="#F5EDDF">${txt}</text>`;
+  });
+  document.getElementById('ksolSvg').innerHTML = s;
+})();
+
+/* ---------- слайд 12: картки цукрозамінників (табл. 3.3) ---------- */
+(function(){
+  const Z = [
+    ['Е966','Лактит','0,3–0,4',['підсолоджувач','текстуратор','емульгатор'],'з лактози; легко розчинний, мало гігроскопічний'],
+    ['Е967','Ксиліт','0,85–1,0',['підсолоджувач','вологоутримувач','стабілізатор','емульгатор'],'білий, схожий на цукровий пісок'],
+    ['Е420','Сорбіт','0,5–0,6',['підсолоджувач','вологоутримувач','текстуратор','емульгатор'],'біла кристалічна речовина з приємним смаком'],
+    ['Е953','Ізомальт','0,5',['підсолоджувач','текстуратор','проти грудкування'],'чистий солодкий смак, мало гігроскопічний']
+  ];
+  let h = '';
+  Z.forEach((z, i) => { const x = 560 + (i % 2) * 330, y = 176 + Math.floor(i / 2) * 243, d = (0.75 + i*0.1).toFixed(2);
+    h += `<div class="card rv" data-depth="${d}" style="position:absolute;left:${x}px;top:${y}px;width:310px;height:223px;padding:16px 20px;">
+      <div style="display:flex;gap:10px;align-items:center;"><span class="pill g">${z[0]}</span><h3 style="font-size:19px;">${z[1]}</h3></div>
+      <p class="big g" style="font-size:22px;margin-top:10px;white-space:nowrap;">${z[2]} <span class="xs m" style="font-family:var(--body);font-weight:700;">Ксол</span></p>
+      <div class="pills" style="margin-top:10px;gap:5px;">${z[3].map(f => `<span class="pill" style="font-size:13px;padding:4px 10px;">${f}</span>`).join('')}</div>
+      <p class="xs m" style="margin-top:10px;">${z[4]}</p></div>`; });
+  document.getElementById('szGrid').outerHTML = h;
+})();
+
+/* ---------- слайд 22: прянощі за частиною рослини ---------- */
+(function(){
+  const P = [
+    ['<use href="#nutmeg" x="0" y="8" width="72" height="56"/>','Насіннєві','гірчиця, мускатний горіх'],
+    ['<use href="#pepper" x="0" y="8" width="72" height="56"/>','Плодові','кмин, аніс, перець, ваніль'],
+    ['<use href="#clove" x="10" y="0" width="40" height="72"/><g fill="#A387E6"><circle cx="58" cy="46" r="8"/><circle cx="66" cy="38" r="7"/></g><path d="M58 46l8-20M66 38l4-16" stroke="#E8573A" stroke-width="2.5"/>','Квіткові','гвоздика, шафран'],
+    ['<use href="#leaf" x="6" y="6" width="60" height="60" style="color:#7BA05B"/>','Листкові','лавровий лист, м’ята'],
+    ['<use href="#cinn" x="0" y="16" width="72" height="30"/>','Корові','кориця китайська'],
+    ['<use href="#ginger" x="0" y="12" width="72" height="50"/>','Кореневі','імбир, петрушка'],
+    ['<use href="#dill" x="8" y="0" width="58" height="72"/>','Вся рослина','кріп, петрушка']
+  ];
+  let h = '';
+  P.forEach((p, i) => { const x = 80 + (i % 4) * 285, y = 210 + Math.floor(i / 4) * 200, d = (0.7 + i*0.08).toFixed(2);
+    h += `<div class="card rv" data-depth="${d}" style="position:absolute;left:${x}px;top:${y}px;width:265px;height:180px;padding:18px 20px;">
+      <svg width="72" height="72" viewBox="0 0 72 72" style="overflow:visible">${p[0]}</svg>
+      <h3 style="font-size:18px;margin-top:10px;"><span class="a">${i + 1}</span> ${p[1]}</h3><p class="xs m" style="margin-top:6px;">${p[2]}</p></div>`; });
+  h += `<div class="card rv" data-depth="1.3" style="position:absolute;left:935px;top:410px;width:265px;height:180px;padding:18px 20px;border-color:rgba(242,165,65,.55);">
+    <p class="big a" style="font-size:34px;">150+</p><p class="xs" style="margin-top:4px;">відомо, ~40 — найуживаніші</p>
+    <p class="xs m" style="margin-top:8px;">ефірні олії, глікозиди, алкалоїди; <b style="color:var(--text)">не входять</b> до переліку харчових добавок</p></div>`;
+  document.getElementById("spiceGrid").outerHTML = h;
+})();
+
+/* ---------- слайд 23: «плитки» дозволених підсилювачів ---------- */
+(function(){
+  const T = [['Е620','глутамінова кислота'],['Е621','глутамат натрію'],['Е622','глутамат калію'],['Е623','глутамат кальцію'],['Е624','глутамат амонію'],['Е625','глутамат магнію'],['Е640','гліцин']];
+  let h = '';
+  T.forEach((t, i) => { const hl = i === 1 ? 'border-color:rgba(242,165,65,.8);background:rgba(242,165,65,.12);' : i === 6 ? 'border-color:rgba(108,195,160,.6);' : '';
+    h += `<div class="tile rv" style="left:${80 + i*162}px;top:176px;width:148px;${hl}"><div class="code"${i === 6 ? ' style="color:var(--mint)"' : ''}>${t[0]}</div><div class="nm">${t[1]}</div></div>`; });
+  document.getElementById('tileRow').innerHTML = h;
+})();
+
+
+/* =========================================================
+   ДВИЖОК СЛАЙДІВ З ПАРАЛАКСОМ (як у Темі 1)
+   ========================================================= */
+const slides = [...document.querySelectorAll('.slide')];
+const SHIFT = 520, DUR = 1050, EASE = 'cubic-bezier(.22,.8,.18,1)';
+let cur = -1, busy = false;
+const layers = s => [...s.querySelectorAll('[data-depth]')];
+const frags = s => [...s.querySelectorAll('.frag')];
+const dotsNav = document.getElementById('dots');
+slides.forEach((_, i) => { const b = document.createElement('button'); b.setAttribute('aria-label', 'Слайд ' + (i + 1));
+  b.onclick = e => { e.stopPropagation(); go(i, i > cur ? 1 : -1); }; dotsNav.appendChild(b); });
+function ui(){
+  document.querySelectorAll('#dots button').forEach((d, i) => d.classList.toggle('on', i === cur));
+  document.getElementById('cnt').textContent = `${cur + 1} / ${slides.length}`;
+  document.getElementById('ttl').textContent = slides[cur].dataset.title || '';
+  document.getElementById('prog').style.width = ((cur + 1) / slides.length * 100) + '%';
+  const n = slides[cur].querySelector('.notes'); document.getElementById('notesPanel').textContent = n ? n.textContent.trim() : '';
+  history.replaceState(null, '', '#' + (cur + 1));
+}
+function go(i, dir = 1){
+  if (i < 0 || i >= slides.length || i === cur || busy) return;
+  const from = slides[cur], to = slides[i];
+  to.classList.add('active');
+  const fs = frags(to);
+  fs.forEach(f => { f.style.transitionDelay = '0s'; f.classList.remove('on'); });
+  void to.offsetWidth;
+  fs.forEach((f, k) => { f.style.transitionDelay = STATIC ? '0s' : (0.75 + k * 0.35) + 's'; f.classList.add('on'); });
+  cur = i; ui();
+  if (STATIC || !from) { if (from) from.classList.remove('active'); return; }
+  busy = true;
+  layers(from).forEach(el => { const d = +el.dataset.depth;
+    el.animate([{ transform: 'translateX(0)', opacity: 1 }, { transform: `translateX(${-dir * SHIFT * d}px)`, opacity: 0 }], { duration: DUR * .8, easing: EASE, fill: 'forwards' }); });
+  layers(to).forEach(el => { const d = +el.dataset.depth;
+    el.animate([{ transform: `translateX(${dir * SHIFT * d}px)`, opacity: 0 }, { transform: 'translateX(0)', opacity: 1 }], { duration: DUR, easing: EASE }); });
+  to.querySelectorAll('.rv').forEach((el, k) => el.animate([{ opacity: 0, transform: 'translateY(18px)' }, { opacity: 1, transform: 'none' }], { duration: 650, delay: 250 + Math.min(k, 14) * 60, easing: 'ease-out', fill: 'backwards' }));
+  setTimeout(() => { from.classList.remove('active'); layers(from).forEach(el => el.getAnimations().forEach(a => a.cancel())); busy = false; }, DUR * .8);
+}
+function next(){ go(cur + 1, 1); }
+function prev(){ go(cur - 1, -1); }
+if (!STATIC) stage.addEventListener('mousemove', e => {
+  const mx = e.clientX / innerWidth - .5, my = e.clientY / innerHeight - .5;
+  layers(slides[cur]).forEach(el => { const d = +el.dataset.depth; el.style.translate = `${-mx * d * 30}px ${-my * d * 18}px`; });
+});
+addEventListener('keydown', e => {
+  if (['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)) { e.preventDefault(); next(); }
+  else if (['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === 'Home') go(0, -1);
+  else if (e.key === 'End') go(slides.length - 1, 1);
+  else if (/^[fFаА]$/.test(e.key)) { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
+  else if (/^[nNтТ]$/.test(e.key)) document.getElementById('notesPanel').classList.toggle('on');
+});
+addEventListener('click', e => { if (e.target.closest('button,a,[data-no-nav]')) return; e.clientX > innerWidth / 2 ? next() : prev(); });
+let wheelLock = false;
+addEventListener('wheel', e => { if (wheelLock || Math.abs(e.deltaY) < 12) return; wheelLock = true; setTimeout(() => wheelLock = false, 900); e.deltaY > 0 ? next() : prev(); }, { passive: true });
+let tx = 0; addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+addEventListener('touchend', e => { const d = tx - e.changedTouches[0].clientX; if (Math.abs(d) > 50) d > 0 ? next() : prev(); }, { passive: true });
+
+const start = parseInt(location.hash.slice(1), 10);
+go(start >= 1 && start <= slides.length ? start - 1 : 0, 1);
+addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1), 10) - 1; if (n >= 0 && n < slides.length && n !== cur) go(n, n > cur ? 1 : -1); });
+
+/* перевірка: текст за межами полотна або під нижньою панеллю (дивіться консоль) */
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+  const bad = [];
+  slides.forEach((s, i) => { const was = s.classList.contains('active'); s.classList.add('active');
+    s.querySelectorAll('p,h1,h2,h3,.pill,.chip').forEach(el => { const r = el.getBoundingClientRect(), sr = stage.getBoundingClientRect(), k = sr.width / W;
+      if (r.width && (r.left < sr.left - 1 || r.right > sr.right + 1 || r.top < sr.top - 1 || (r.bottom - sr.top) / k > H - 56)) bad.push(i + 1); });
+    if (!was) s.classList.remove('active'); });
+  document.body.dataset.overflow = [...new Set(bad)].join(',');
+  if (bad.length) console.warn('Елементи за межами / під панеллю на слайдах:', [...new Set(bad)]);
+});
+</script>
+</body>
+</html>
